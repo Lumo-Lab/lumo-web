@@ -356,7 +356,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
 /* ── ABOUT ── */
 function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 64px"}}><W><SL ch="About Us"/>
-    <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver — technology should serve <span style={{color:"var(--blue)"}}>strategy.</span></h1>
+    <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver — we handle the tech so you can focus on the <span style={{color:"var(--blue)"}}>big picture.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480}}>A technology consultancy based in Croatia, advising startups and enterprises worldwide.</p>
   </W></section>
   <section style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",padding:"36px 0",background:"var(--bg2)"}}><W style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24}}>

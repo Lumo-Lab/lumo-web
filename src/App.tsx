@@ -11,6 +11,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
 @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes gridPulse{0%,100%{opacity:0}40%,60%{opacity:.45}}
+@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-3%,-5%)}20%{transform:translate(3%,3%)}30%{transform:translate(-5%,1%)}40%{transform:translate(2%,-4%)}50%{transform:translate(-1%,5%)}60%{transform:translate(4%,-2%)}70%{transform:translate(-4%,3%)}80%{transform:translate(1%,-3%)}90%{transform:translate(-2%,4%)}}
+.hero-grain{position:absolute;inset:-50%;width:200%;height:200%;opacity:.055;animation:grain .35s steps(1) infinite;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:2}
 .grid-bg{background-image:linear-gradient(rgba(0,30,50,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,30,50,.03) 1px,transparent 1px);background-size:56px 56px}
 @keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .fi{animation:fadeUp .8s cubic-bezier(.22,1,.36,1) both}
@@ -46,8 +48,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo div[style*="display: grid"],.lumo div[style*="display:grid"]{display:flex!important;flex-direction:column!important;gap:24px!important}
   .lumo div[style*="grid-column"]{grid-column:auto!important}
   .lumo div[style*="position: sticky"],.lumo div[style*="position:sticky"]{position:static!important}
-  .lumo h1{font-size:clamp(24px,7vw,42px)!important;line-height:1.05!important}
-  .lumo h2{font-size:clamp(22px,5vw,32px)!important;line-height:1.1!important}
+  .lumo h1{font-size:clamp(40px,9vw,64px)!important;line-height:.95!important}
+  .lumo h2{font-size:clamp(24px,5vw,36px)!important;line-height:1.1!important}
   .lumo section{padding-top:56px!important;padding-bottom:56px!important}
   .lumo .hero-s{min-height:auto!important;padding-top:100px!important;padding-bottom:48px!important}
   .lumo .nav-links{display:none!important}
@@ -67,11 +69,15 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .proc-grid>div:first-child>div{padding:8px 0!important;border-bottom:none!important}
 }
 @media(max-width:600px){
-  .hero-stats{flex-direction:column!important;gap:12px!important}
-  .hero-stats>div{border-right:none!important;padding:8px 0!important;border-bottom:1px solid rgba(255,255,255,.06)}
-  .hero-stats>div:last-child{border-bottom:none}
-  .hero-stats>div>div:first-child{font-size:28px!important}
+  .lumo h1{font-size:clamp(38px,11vw,56px)!important;line-height:.92!important}
+  .hero-stats{flex-direction:row!important;gap:0!important;flex-wrap:nowrap!important}
+  .hero-stats>div{border-right:1px solid rgba(255,255,255,.06)!important;padding:8px 12px!important}
+  .hero-stats>div:last-child{border-right:none!important}
+  .hero-stats>div>div:first-child{font-size:30px!important}
   .cta-m,.cta-g{width:100%!important;justify-content:center!important}
+  /* Blog/work horizontal rows → stack on mobile */
+  .lumo .er{flex-direction:column!important;gap:16px!important}
+  .lumo .er>div:first-child{width:100%!important;height:200px!important}
   .sd{padding:24px 18px!important}
   .card{padding:20px 16px!important}
   /* Case study detail sections */
@@ -123,7 +129,7 @@ const tests=[
   {q:"Working with Lumo Lab was a true pleasure. Their team was incredibly collaborative, always open to feedback, and committed to building a strong partnership. Their clear and timely communication kept us informed throughout the entire development process, ensuring a smooth and successful project.",n:"Dalibor Cvek",r:"CEO",co:"Once Sport",linkedin:"https://www.linkedin.com/in/daliborCvek/",website:""},
 ];
 const cases=[
-  {id:"nomo",name:"NOMO Smart Care",cat:"Health",tags:["IoT","AI/ML","Mobile"],client:"Nomo International, Ltd",website:"nomosmartcare.com",period:"March 2021 – Present",brief:"Full-stack smart care ecosystem with AI-powered elderly monitoring — without cameras.",ch:"Aging adults and their families needed a way to monitor safety at home without intrusive cameras or wearables that get forgotten or rejected. Nomo required a complete technology partner to deliver mobile apps, cloud infrastructure, and AI — all working together at roughly $1/day.",ap:"We structured delivery around three pillars: native iOS (Swift) and Android (Kotlin) apps for real-time alerts and emergency response; a scalable AWS backend using TypeScript, REST APIs, MQTT, and Firebase for secure device-to-user communication; and edge-based audio AI with custom TensorFlow Lite models that classify critical sounds — falls, alarms, distress — locally on the device, so no audio ever leaves the home.",re:"Full production deployment across iOS and Android serving caregivers across multiple countries. Sub-1-second alert latency, native 911 integration via RapidSOS, and real-time monitoring of thousands of devices. Caregivers gained genuine confidence — not because it was watching, but because it was listening intelligently.",q:"Our partnership with Lumo has been instrumental in shaping our long-term vision.",qn:"Kevin Ray",qr:"Co-Founder & CEO @ Nomo International",features:[{t:"Fall Detection",d:"Automatically detects falls and sends immediate alerts to the care circle."},{t:"RapidSOS Ready",d:"Direct 911 integration for life-threatening emergencies."},{t:"Real-Time Alerts",d:"Customisable notifications for activity patterns and events."},{t:"Two-Way Voice",d:"Clear communication through the Nomo Hub."},{t:"Unlimited Care Circle",d:"Invite as many caregivers as needed at no extra cost."},{t:"Group Calls",d:"Coordinated communication across the entire care team."}],tech:["Swift","Kotlin","TypeScript","Node.js","AWS","Firebase","TensorFlow Lite","MQTT","RapidSOS","React.js","Next.js"],services:["Web development","Mobile development","DevOps","IoT solutions","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:"/images/nomo_header_1.png"},
+  {id:"nomo",name:"NOMO Smart Care",cat:"Health",tags:["IoT","AI/ML","Mobile"],client:"Nomo International, Ltd",website:"nomosmartcare.com",period:"March 2021 – Present",brief:"Full-stack smart care ecosystem with AI-powered elderly monitoring — without cameras.",ch:"Aging adults and their families needed a way to monitor safety at home without intrusive cameras or wearables that get forgotten or rejected. Nomo required a complete technology partner to deliver mobile apps, cloud infrastructure, and AI — all working together at roughly $1/day.",ap:"We structured delivery around three pillars: native iOS (Swift) and Android (Kotlin) apps for real-time alerts and emergency response; a scalable AWS backend using TypeScript, REST APIs, MQTT, and Firebase for secure device-to-user communication; and edge-based audio AI with custom TensorFlow Lite models that classify critical sounds — falls, alarms, distress — locally on the device, so no audio ever leaves the home.",re:"Full production deployment across iOS and Android serving caregivers across multiple countries. Sub-1-second alert latency, native 911 integration via RapidSOS, and real-time monitoring of thousands of devices. Caregivers gained genuine confidence — not because it was watching, but because it was listening intelligently.",q:"Our partnership with Lumo has been instrumental in shaping our long-term vision.",qn:"Kevin Ray",qr:"Co-Founder & CEO @ Nomo International",features:[{t:"Fall Detection",d:"Automatically detects falls and sends immediate alerts to the care circle."},{t:"RapidSOS Ready",d:"Direct 911 integration for life-threatening emergencies."},{t:"Real-Time Alerts",d:"Customisable notifications for activity patterns and events."},{t:"Two-Way Voice",d:"Clear communication through the Nomo Hub."},{t:"Unlimited Care Circle",d:"Invite as many caregivers as needed at no extra cost."},{t:"Group Calls",d:"Coordinated communication across the entire care team."}],tech:["Swift","Kotlin","TypeScript","Node.js","AWS","Firebase","TensorFlow Lite","MQTT","RapidSOS","React.js","Next.js"],services:["Web development","Mobile development","DevOps","IoT solutions","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:"/images/nomo_header.png"},
   {id:"farmwave",name:"Farmwave",cat:"AgTech",tags:["AgTech","Edge AI","DevOps"],client:"Farmwave, Inc",website:"farmwave.io",period:"May 2024 – Present",brief:"Award-winning vision AI that autonomously monitors harvest loss on farm machinery — even offline.",ch:"Harvest loss of 3–8+ bushels per acre was going undetected because manual checks were impractical during active harvesting. Farmwave needed an AI system that could run in real time on rugged tablets mounted to farm machinery, often in areas with no internet connectivity.",ap:"We delivered an end-to-end platform: a Node.js backend on Google Cloud Platform for scalability and dynamic data handling; a React.js web interface with server-side rendering for fast, responsive dashboards; and a Flutter tablet application providing a consistent cross-platform experience with native features. The Edge AI layer runs Farmwave's vision models directly on the tablet without cloud dependency, enabling real-time grain loss analysis during harvest.",re:"AI Harvest Vision Solution of the Year 2025. Farmers can now identify exactly where loss is coming from on the machine and adjust on-the-go, recovering 3–8+ bushels per acre per season.",q:"Lumo has done more for us in 7 months than internal teams did in 18 months.",qn:"Craig Gannsle",qr:"CEO @ Farmwave Inc",features:[{t:"Harvest Vision System",d:"Real-time camera sensors on machinery capture and analyse grain loss autonomously."},{t:"Edge AI",d:"AI runs directly on rugged tablets — no internet required in the field."},{t:"Multi-Application Support",d:"Integrates with sprayers and transplant machines for crop health and droplet analysis."},{t:"Data Reporting",d:"Detailed post-session field reports exportable in multiple formats."}],tech:["Node.js","GCP","React.js","Flutter","Edge AI","Computer Vision"],services:["Discovery","Web development","DevOps","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#1a3a1a 0%,#2d6a2d 50%,#4a9e4a 100%)", headerImg:"/images/farmwave_header.jpg"},
   {id:"beunity",name:"beUnity",cat:"Social",tags:["Mobile","PWA","Hybrid"],client:"beUnity AG",website:"beunity.io",period:"November 2022 – Present",brief:"Interactive communication platform for community-oriented organisations and their members.",ch:"Organisations were managing member communication across fragmented tools — emails, social media, WhatsApp groups. beUnity needed a platform that could centralise communication, event management, and community engagement without requiring members to install a native app.",ap:"We built beUnity as a Progressive Web App (PWA), allowing users to access it directly from a mobile browser and save it to their home screen — no app store required. We wrapped the PWA with Turbo Native to deliver platform-specific features like push notifications, alerts, and badges, giving members a native-like experience while retaining the PWA's ease of updates and cross-platform compatibility.",re:"Organisations across Switzerland manage all member communication, events, and collaboration through a single channel. Updates deploy instantly without requiring manual app updates from users.",q:"",qn:"",qr:"",features:[{t:"Centralised Communication",d:"All channels in one place — no more fragmented tools."},{t:"Event Management",d:"Integrated calendar to organise and promote community events."},{t:"Marketplace",d:"Members post and respond to offers, requests, and resources."},{t:"Groups & Forums",d:"Topic-specific groups so members only see relevant content."},{t:"Member Profiles",d:"Skills and interests visible across the community."},{t:"Interactive Participation",d:"Polls, reactions, and formats that encourage engagement."}],tech:["PWA","Turbo Native","JavaScript","Push Notifications","iOS","Android"],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#1a0a0a 0%,#5c1a1a 50%,#a83a2e 100%)",  headerImg:"/images/beunity_header.png"},
   {id:"crossiety",name:"Crossiety",cat:"Social",tags:["Mobile","PWA","Community"],client:"Crossiety AG",website:"crossiety.ch",period:"November 2022 – Present",brief:"The resident app for your community, city and region — a digital village square.",ch:"Communities lacked a dedicated digital space for local residents to stay informed and engaged. Crossiety needed a mobile-accessible platform that could connect residents within geographic areas, surface local news and events, and foster genuine community participation — without the friction of app store installation.",ap:"We built Crossiety as a Progressive Web App (PWA) accessible directly from a mobile browser, then wrapped it with Turbo Native to add native mobile capabilities — push notifications, alerts, and badges — while keeping the cross-platform flexibility and instant update cycle of a PWA.",re:"Communities across Switzerland use Crossiety as their digital village square, with residents actively engaging in local news, events, and discussions. Updates reach all users instantly without requiring manual app updates.",q:"",qn:"",qr:"",features:[{t:"Community Building",d:"Residents connect within geographic areas, accessing local news and events."},{t:"Real-Time Communication",d:"News, events, and surveys with comments, bookmarks, and integrated calendars."},{t:"Event & Resource Sharing",d:"Easy sharing across communities with Google Calendar and Apple Calendar integration."},{t:"Push Notifications",d:"Opt-in alerts keep residents informed about important local activities."}],tech:["PWA","Turbo Native","JavaScript","Push Notifications","iOS","Android"],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#0a2e1a 0%,#1a5c3a 50%,#2ea86e 100%)",  headerImg:"/images/crossiety_header.png"},
@@ -215,11 +221,12 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       {/* Gradient overlay for readability */}
       <div style={{position:"absolute",inset:0,zIndex:1,background:"linear-gradient(to bottom,rgba(0,30,50,.3) 0%,rgba(0,30,50,.6) 100%)"}}/>
       <div style={{position:"absolute",top:"-15%",left:"-10%",width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(78,205,196,.1),transparent 70%)",zIndex:1}}/>
-      <W style={{position:"relative",zIndex:2,paddingTop:100,paddingBottom:60,color:"#fff"}}>
-        <h1 className="fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,6vw,72px)",fontWeight:800,lineHeight:.95,letterSpacing:"-0.035em",marginBottom:24,maxWidth:700}}>
-          We advise, guide,<br/>and <span style={{background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:"gradShift 6s ease infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>deliver.</span>
+      <div className="hero-grain"/>
+      <W style={{position:"relative",zIndex:3,paddingTop:100,paddingBottom:60,color:"#fff"}}>
+        <h1 className="fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
+          We advise,<br/>guide, and <span style={{background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:"gradShift 6s ease infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>deliver.</span>
         </h1>
-        <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>Lumo is a technology consultancy that brings clarity to complex decisions — from first assessment to long-term partnership.</p>
+        <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>Lumo Lab takes the guesswork out of technology. We give you honest advice and the expert support you need to get the job done right. We’re with you from the very first step through to a long-term partnership.</p>
         <div className="fi d4" style={{display:"flex",gap:14,flexWrap:"wrap"}}>
           <button onClick={()=>go("cases")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"14px 28px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,border:"none",cursor:"pointer"}}>See our work <Arr s={14} c="var(--blue)"/></button>
           <button onClick={()=>go("about")} className="cta-g" style={{color:"rgba(255,255,255,.7)",borderColor:"rgba(255,255,255,.15)"}}>Learn more</button>
@@ -256,13 +263,13 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32}}>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
           <div style={{width:28,height:2,background:"var(--blue)"}}/>
-          <span style={{fontSize:11,color:"var(--txt4)",fontWeight:700,textTransform:"uppercase",letterSpacing:3,fontFamily:"var(--jk)"}}>Selected work</span>
+          <span style={{fontSize:11,color:"var(--txt4)",fontWeight:700,textTransform:"uppercase",letterSpacing:3,fontFamily:"var(--jk)"}}>Proven deliverables</span>
         </div>
         <button onClick={()=>go("cases")} style={{display:"inline-flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:600,color:"var(--txt3)",fontFamily:"var(--jk)",padding:0,transition:"color .2s"}} onMouseEnter={e=>e.currentTarget.style.color="var(--blue)"} onMouseLeave={e=>e.currentTarget.style.color="var(--txt3)"}>View all <Arr s={13} c="currentColor"/></button>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
-        {[cases[0],cases[1],cases[2],cases[3]].map(c=><div key={c.id} onClick={()=>go("cases",c.id)} style={{borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative",height:200,background:c.cover}} onMouseEnter={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1.05)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(0)");}} onMouseLeave={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(4px)");}}>
-          {(c as any).headerImg&&<img src={(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
+        {[cases[0],cases[1],cases[3],cases[7]].map(c=><div key={c.id} onClick={()=>go("cases",c.id)} style={{borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative",height:200,background:c.cover}} onMouseEnter={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1.05)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(0)");}} onMouseLeave={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(4px)");}}>
+          {(c as any).headerImg&&<img alt="" src={(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"}}/>
           <div className="proj-info" style={{position:"absolute",bottom:0,left:0,right:0,padding:"16px",transform:"translateY(4px)",transition:"transform .3s"}}>
             <span style={{fontSize:10,color:"#fff",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2,display:"inline-block",marginBottom:6,background:"rgba(0,76,115,.7)",padding:"3px 10px",borderRadius:20}}>{c.cat}</span>
@@ -375,7 +382,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
     <div style={{display:"grid",gridTemplateColumns:"360px 1fr",borderRadius:24,overflow:"hidden",border:"1px solid var(--brd)",boxShadow:"0 4px 40px rgba(0,30,50,.06)"}}>
       {/* Photo panel */}
       <div style={{position:"relative",minHeight:520,background:"var(--blue)"}}>
-        <img src="/images/jurica.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
+        <img alt="Jurica Mlinaric" src="/images/jurica.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, rgba(0,20,40,.85) 0%, rgba(0,20,40,.1) 55%, transparent 100%)"}}/>
         <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"28px 28px 32px"}}>
           <h3 style={{fontFamily:"var(--jk)",fontSize:24,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1}}>Jurica Mlinaric</h3>
@@ -466,7 +473,7 @@ function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   },[]);
   return <div ref={ref} data-hero onClick={()=>go("cases",c.id)} className="case-hero" style={{cursor:"pointer",borderRadius:12,overflow:"hidden",position:"relative",height:520,marginBottom:10}}>
     <div ref={imgRef} className="reveal-img d1" style={{position:"absolute",inset:"-10% 0",background:c.cover}}>
-      {(c as any).headerImg&&<img src={(c as any).headerImg} style={{width:"100%",height:"110%",objectFit:"cover",display:"block",transform:"translateY(5%)"}}/>}
+      {(c as any).headerImg&&<img alt="" src={c.id==="nomo"?"/images/nomo_header_1.png":(c as any).headerImg} style={{width:"100%",height:"110%",objectFit:"cover",display:"block",transform:"translateY(5%)"}}/>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.05) 100%)"}}/>
     <div style={{position:"absolute",top:28,left:32}}>
@@ -496,7 +503,7 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   const onLeave=()=>{const el=cardRef.current;if(el)el.style.transform='';};
   return <div ref={ref}><div ref={cardRef} onClick={()=>go("cases",c.id)} onMouseMove={onMove} onMouseLeave={onLeave} className="case-card tilt-card" style={{height:300,borderRadius:12}}>
     <div className="ci reveal-img d1" style={{position:"absolute",inset:0,background:c.cover}}>
-      {(c as any).headerImg&&<img src={(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
+      {(c as any).headerImg&&<img alt="" src={(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.25) 55%,transparent 100%)"}}/>
     <div style={{position:"absolute",top:18,left:18}}>
@@ -515,7 +522,7 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
     {/* Cover */}
     <div style={{height:380,background:ac.cover,position:"relative",overflow:"hidden"}}>
       {(ac as any).headerImg
-        ? <img src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+        ? <img alt="" src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
         : <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)",backgroundSize:"48px 48px",opacity:.4}}/>
       }
       <div style={{position:"absolute",bottom:0,left:0,right:0,height:160,background:"linear-gradient(transparent,rgba(0,0,0,.45))"}}/>
@@ -580,7 +587,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
     {/* Cover */}
     <div style={{height:380,background:ac.cover,position:"relative",overflow:"hidden"}}>
       {(ac as any).headerImg
-        ? <img src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+        ? <img alt="" src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
         : <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)",backgroundSize:"48px 48px",opacity:.4}}/>
       }
       <div style={{position:"absolute",bottom:0,left:0,right:0,height:120,background:"linear-gradient(transparent,rgba(0,0,0,.3))"}}/>
@@ -619,7 +626,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
       {fil.map(p=><div key={p.id} className="er" onClick={()=>go("blog",p.id)} style={{cursor:"pointer",display:"flex",gap:32,alignItems:"flex-start"}}>
         <div style={{width:320,flexShrink:0,height:210,borderRadius:12,overflow:"hidden",background:p.cover}}>
           {(p as any).headerImg
-            ? <img src={(p as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+            ? <img alt="" src={(p as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
             : <div style={{width:"100%",height:"100%",backgroundImage:"linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",opacity:.5}}/>
           }
         </div>

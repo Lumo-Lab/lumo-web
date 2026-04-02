@@ -269,7 +269,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
         {[cases[0],cases[1],cases[3],cases[7]].map(c=><div key={c.id} onClick={()=>go("cases",c.id)} style={{borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative",height:200,background:c.cover}} onMouseEnter={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1.05)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(0)");}} onMouseLeave={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(4px)");}}>
-          {(c as any).headerImg&&<img alt="" src={c.id==="farmwave"?"/images/farmwave_home.png":c.id==="crossiety"?"/images/crossiety_home.png":c.id==="muvr"?"/images/muvr_home.jpg":(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
+          {(c as any).headerImg&&<img alt="" src={c.id==="farmwave"?(process.env.PUBLIC_URL + "/images/farmwave_home.png"):c.id==="crossiety"?(process.env.PUBLIC_URL + "/images/crossiety_home.png"):c.id==="muvr"?(process.env.PUBLIC_URL + "/images/muvr_home.jpg"):(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"}}/>
           <div className="proj-info" style={{position:"absolute",bottom:0,left:0,right:0,padding:"16px",transform:"translateY(4px)",transition:"transform .3s"}}>
             <span style={{fontSize:10,color:"#fff",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2,display:"inline-block",marginBottom:6,background:"rgba(0,76,115,.7)",padding:"3px 10px",borderRadius:20}}>{c.cat}</span>
@@ -488,7 +488,7 @@ function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   },[]);
   return <div ref={ref} data-hero onClick={()=>go("cases",c.id)} className="case-hero" style={{cursor:"pointer",borderRadius:12,overflow:"hidden",position:"relative",height:520,marginBottom:10}}>
     <div ref={imgRef} className="reveal-img d1" style={{position:"absolute",inset:"-10% 0",background:c.cover}}>
-      {(c as any).headerImg&&<img alt="" src={c.id==="nomo"?"/images/nomo_header_1.png":c.id==="farmwave"?"/images/farmwave_cover.jpeg":(c as any).headerImg} style={{width:"100%",height:"110%",objectFit:"cover",display:"block",transform:"translateY(5%)"}}/>}
+      {(c as any).headerImg&&<img alt="" src={c.id==="nomo"?(process.env.PUBLIC_URL + "/images/nomo_header_1.png"):c.id==="farmwave"?(process.env.PUBLIC_URL + "/images/farmwave_cover.jpeg"):(c as any).headerImg} style={{width:"100%",height:"110%",objectFit:"cover",display:"block",transform:"translateY(5%)"}}/>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.05) 100%)"}}/>
     <div style={{position:"absolute",top:28,left:32}}>
@@ -518,7 +518,7 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   const onLeave=()=>{const el=cardRef.current;if(el)el.style.transform='';};
   return <div ref={ref}><div ref={cardRef} onClick={()=>go("cases",c.id)} onMouseMove={onMove} onMouseLeave={onLeave} className="case-card tilt-card" style={{height:300,borderRadius:12}}>
     <div className="ci reveal-img d1" style={{position:"absolute",inset:0,background:c.cover}}>
-      {(c as any).headerImg&&<img alt="" src={c.id==="farmwave"?"/images/farmwaveapp_cover.jpeg":c.id==="beunity"?"/images/beunity_showcase.png":c.id==="crossiety"?"/images/crossiety_showcase.png":c.id==="drift"?"/images/drift_showcase.png":(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
+      {(c as any).headerImg&&<img alt="" src={c.id==="farmwave"?(process.env.PUBLIC_URL + "/images/farmwaveapp_cover.jpeg"):c.id==="beunity"?(process.env.PUBLIC_URL + "/images/beunity_showcase.png"):c.id==="crossiety"?(process.env.PUBLIC_URL + "/images/crossiety_showcase.png"):c.id==="drift"?(process.env.PUBLIC_URL + "/images/drift_showcase.png"):(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.25) 55%,transparent 100%)"}}/>
     <div style={{position:"absolute",top:18,left:18}}>

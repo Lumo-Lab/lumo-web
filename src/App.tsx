@@ -518,7 +518,7 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   const onLeave=()=>{const el=cardRef.current;if(el)el.style.transform='';};
   return <div ref={ref}><div ref={cardRef} onClick={()=>go("cases",c.id)} onMouseMove={onMove} onMouseLeave={onLeave} className="case-card tilt-card" style={{height:300,borderRadius:12}}>
     <div className="ci reveal-img d1" style={{position:"absolute",inset:0,background:c.cover}}>
-      {(c as any).headerImg&&<img alt="" src={c.id==="farmwave"?"/images/farmwaveapp_cover.jpeg":c.id==="beunity"?"/images/beunity_showcase.png":c.id==="crossiety"?"/images/crossiety_showcase.png":c.id==="drift"?"/images/drift_showcase.png":(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
+      {(c as any).headerImg&&<img alt="" src={c.id==="farmwave"?"/images/farmwave_tablet.jpeg":c.id==="beunity"?"/images/beunity_showcase.png":c.id==="crossiety"?"/images/crossiety_showcase.png":c.id==="drift"?"/images/drift_showcase.png":(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.25) 55%,transparent 100%)"}}/>
     <div style={{position:"absolute",top:18,left:18}}>
@@ -527,7 +527,7 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
     <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"22px 24px"}}>
       <h2 className="reveal d2" style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"#fff",marginBottom:8,lineHeight:1.15}}>{c.name}</h2>
       <p className="reveal d3" style={{fontSize:13,color:"rgba(255,255,255,.6)",lineHeight:1.6,marginBottom:12}}>{c.brief}</p>
-      <div className="reveal d3" style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.tags.map(t=><span key={t} style={{fontSize:10,color:"rgba(255,255,255,.7)",fontWeight:600,border:"1px solid rgba(255,255,255,.18)",padding:"3px 9px",borderRadius:4,fontFamily:"var(--jk)",background:"rgba(255,255,255,.08)"}}>{t}</span>)}</div>
+      <div className="reveal d3" style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.tags.map(t=><span key={t} style={{fontSize:11,color:"rgba(255,255,255,.7)",fontWeight:600,border:"1px solid rgba(255,255,255,.18)",padding:"4px 12px",borderRadius:20,fontFamily:"var(--jk)",background:"rgba(255,255,255,.08)",backdropFilter:"blur(8px)"}}>{t}</span>)}</div>
     </div>
   </div></div>;
 }

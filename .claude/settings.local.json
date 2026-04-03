@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/jurica.mlinaric/Desktop/projects/lumo-web/public/images/nomo_cover.png)",
+      "Bash(ls /Users/jurica.mlinaric/Desktop/projects/lumo-web/public/images/nomo*)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/jurica.mlinaric/Desktop/projects/lumo-web/public/images/nomo_cover.jpeg)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/jurica.mlinaric/Desktop/projects/lumo-web/public/images/farmwave_cover.jpeg)",
+      "Bash(sed -i '' 's|headerImg:/images/nomo_cover\\\\.jpeg|headerImg:\"/images/nomo_cover.jpeg\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
+      "Bash(sed -i '' 's|headerImg:/images/beunity_showcase\\\\.png|headerImg:\"/images/beunity_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
+      "Bash(sed -i '' 's|headerImg:/images/crossiety_showcase\\\\.png|headerImg:\"/images/crossiety_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
+      "Bash(sed -i '' 's|headerImg:/images/drift_showcase\\\\.png|headerImg:\"/images/drift_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
+      "Bash(sed -i '' 's|headerImg:/images/noctrix_showcase\\\\.png|headerImg:\"/images/noctrix_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)"
+    ]
+  }
+}

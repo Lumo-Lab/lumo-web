@@ -139,7 +139,7 @@ const cases=[
   {id:"muvr",name:"Muvr",cat:"Health",tags:["iOS","Swift","Wearables"],client:"Muvr Labs, Inc",website:"muvrlabs.com",period:"May 2020 – April 2022",brief:"Native iOS platform simplifying diagnostics and big data for orthopedic post-operative care.",ch:"Orthopedic surgeons had no effective way to monitor patient recovery remotely after surgery. Muvr needed a native iOS app that could integrate wearable sensor data, provide real-time analytics, and facilitate communication between patients and their medical teams.",ap:"We developed a native iOS application in Swift, using SnapKit for code-based UI constraints and responsive layout management, and RxSwift for reactive programming to handle asynchronous wearable data streams smoothly. The result was a robust, interactive tool tailored precisely for iOS — reliable enough for clinical use.",re:"A dependable clinical tool that streamlined post-operative care for orthopedic practices, empowering surgeons to monitor patient recovery remotely and reducing unnecessary in-person visits.",q:"",qn:"",qr:"",features:[{t:"Wearable Integration",d:"Real-time data tracking from wearables to monitor patient recovery."},{t:"Remote Monitoring",d:"Surgeons track progress without requiring in-person visits."},{t:"Patient Communication",d:"Streamlined messaging between patients and medical teams."},{t:"Big Data Insights",d:"Data-driven analytics to improve outcomes and reduce clinical burden."}],tech:["Swift","iOS","SnapKit","RxSwift"],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#0a1a2e 0%,#0d3d5c 50%,#1a7a8a 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/muvr_home.jpg")},
 ];
 const vals=[{n:"01",t:"Understand First",d:"Every engagement starts with listening."},{n:"02",t:"Strategic Clarity",d:"We turn complexity into clear direction."},{n:"03",t:"Long-term Advisory",d:"Partnerships, not one-off projects."},{n:"04",t:"One Team",d:"We embed alongside your people."},{n:"05",t:"Outcome-driven",d:"Every recommendation tied to results."},{n:"06",t:"Delivery Excellence",d:"Strategy backed by engineering."}];
-const tl=[{y:"2017",t:"Founded in Croatia",d:"Jurica starts Lumo: understand the challenge before recommending technology."},{y:"2018",t:"First international clients",d:"Strategic partnerships with NOMO and Farmwave."},{y:"2021",t:"Enterprise scale",d:"MobilityOne expands advisory into fleet management."},{y:"2025",t:"Technology consultancy",d:"Lumo formally positions as a consultancy."}];
+const tl=[{y:"2017",t:"Went independent",d:"Traded the agency paycheck for full autonomy. Started building apps under MCODE for clients across health, AgTech, and enterprise — whatever the problem needed, regardless of platform or stack."},{y:"2021",t:"Long-term partnerships",d:"Early clients like Nomo evolved into multi-year relationships. The work became less about shipping features and more about being a genuine technical partner — embedded, strategic, ongoing."},{y:"2022",t:"Lumo Lab",d:"Solo freelancing had grown into a team with a shared way of working. Formalised it as Lumo Lab — built around one principle: understand the problem properly before writing a single line of code."},{y:"2025",t:"Award-winning work",d:"Farmwave's Harvest Vision was named AI Harvest Vision Solution of the Year. A signal that the approach — honest advice, real delivery — was producing results that stood out."},{y:"2026",t:"The formula works",d:"Multi-year partnerships, award-winning products, clients who keep coming back. It turns out that doing the unglamorous things well — listening, planning, delivering — compounds over time."}];
 type BlogBlock={type:"text",content:string}|{type:"img",src:string,caption?:string};
 const blogs=[
   {id:"b1",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"6 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform — from edge audio models to native mobile apps.",body:[
@@ -160,7 +160,7 @@ const blogs=[
     {type:"text",content:"Training requires attention to data augmentation. Time stretching, pitch shifting, and adding background noise all help models generalise to real-world recording conditions. We evaluate using cross entropy loss and track accuracy, precision, recall, and F1 score throughout training."},
     {type:"text",content:"The field continues to advance rapidly. As these systems mature, edge deployment — running classification directly on the device rather than in the cloud — is becoming increasingly viable, enabling privacy-preserving audio AI at scale."},
   ] as BlogBlock[]},
-  {id:"b3",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic",cover:"linear-gradient(135deg,#062a1a 0%,#065f46 50%,#059669 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers — why it's harder than it sounds, and how we made it work.",body:[
+  {id:"b3",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic, PhD",cover:"linear-gradient(135deg,#062a1a 0%,#065f46 50%,#059669 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers — why it's harder than it sounds, and how we made it work.",body:[
     {type:"text",content:"Running deep learning models on microcontrollers feels like a contradiction. These devices are built for efficiency, not computation — minimal processing power, constrained memory, no operating system to speak of. And yet, for a growing class of privacy-first applications, edge AI is exactly what's needed."},
     {type:"text",content:"We encountered this challenge directly while building the audio classification system for Nomo Smart Care. The platform monitors in-home environments using sensors rather than cameras, prioritising user privacy above all else. Processing audio locally on the device — identifying fire alarms, falls, and other critical events without ever transmitting recordings externally — required running a trained neural network on an ESP32-PICO microcontroller with a 240MHz CPU and 2MB of PSRAM."},
     {type:"text",content:"The approach starts with model training. We used a convolutional neural network architecture with four convolutional layers, max pooling, and dense output layers. After training, the model undergoes full-integer quantisation — converting 32-bit floating-point weights to 8-bit unsigned integers. This single step reduces model size dramatically while preserving most of the accuracy, bringing a 260K parameter model down to roughly 260KB."},
@@ -377,7 +377,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
   <section style={{padding:"80px 0"}}><W><SL ch="Our story"/>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:64,marginBottom:56}}>
       <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.5vw,32px)",fontWeight:800,color:"var(--txt)"}}>From a one-person studio to a global <span style={{color:"var(--blue)"}}>technology consultancy.</span></h2>
-      <p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.8}}>Lumo started in 2017 with a simple belief: the best outcomes happen when you understand the challenge first. Today we advise and deliver for organizations worldwide.</p>
+      <p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.8}}>Jurica spent nearly ten years building mobile products across health, agriculture, IoT, and enterprise before starting Lumo in 2022. The company was built on what that decade proved: the right outcome starts with understanding the problem, not picking the technology.</p>
     </div>
     {tl.map((t,i)=><div key={i} style={{display:"flex",gap:24,padding:"24px 0",borderBottom:i<tl.length-1?"1px solid var(--brd)":"none"}}>
       <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",opacity:.5,minWidth:48}}>{t.y}</span>
@@ -412,10 +412,10 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
       {/* Content panel */}
       <div style={{padding:"48px 44px",background:"#fff",display:"flex",flexDirection:"column",justifyContent:"center"}}>
         <p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:20}}>
-          Jurica started Lumo in 2017 after a pattern kept repeating itself: teams investing in technology before they'd properly understood the problem. He built the company around the opposite approach — diagnosis first, technology second.
+          Jurica has been building mobile products since 2015 — iOS, Android, IoT, wearables, edge AI. After nearly a decade freelancing for clients across Croatia, the US, and Switzerland, he founded Lumo Lab in 2022 to formalise what the work had already become: a team with a clear way of doing things.
         </p>
         <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.9,marginBottom:40}}>
-          Since then he's led projects across healthcare IoT, agricultural AI, mobility, and enterprise SaaS — working with startups finding their footing and enterprises scaling complex systems. The through-line is always the same: get the strategy right, then deliver it properly.
+          He's led projects across healthcare IoT, agricultural AI, mobility, and enterprise SaaS — from early-stage startups to companies scaling globally. The constant across all of it: understand the problem properly before recommending anything.
         </p>
         <div style={{borderLeft:"3px solid var(--blue)",paddingLeft:24}}>
           <p style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:700,color:"var(--txt)",lineHeight:1.5,fontStyle:"italic",marginBottom:0}}>
@@ -423,6 +423,22 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
           </p>
         </div>
       </div>
+    </div>
+  </W></section>
+  <section style={{padding:"80px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
+    <SL ch="Core team"/>
+    <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.5vw,28px)",fontWeight:800,color:"var(--txt)",marginBottom:48}}>The people who <span style={{color:"var(--blue)"}}>build it.</span></h2>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,maxWidth:980}}>
+      {[{n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg"},{n:"Rudolf Lovrencic, PhD",r:"Software Architect"},{n:"Mato Poslon",r:"Full Stack Engineer"},{n:"Matija Sever",r:"Data Scientist"},{n:"Stefan Petrovic",r:"iOS Engineer"}].map((m,i)=>(
+        <div key={i} style={{position:"relative",aspectRatio:"3/4",borderRadius:20,overflow:"hidden",background:"var(--blue)"}}>
+          <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
+          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, rgba(0,20,40,.9) 0%, rgba(0,20,40,.2) 50%, transparent 100%)"}}/>
+          <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"20px 24px 24px"}}>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1.2}}>{m.n}</h3>
+            <p style={{fontSize:12,color:"rgba(255,255,255,.55)",fontWeight:600}}>{m.r}</p>
+          </div>
+        </div>
+      ))}
     </div>
   </W></section>
   <section style={{padding:"80px 0",background:"var(--blue)"}}><W style={{textAlign:"center"}}>

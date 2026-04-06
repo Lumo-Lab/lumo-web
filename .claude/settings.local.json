@@ -9,7 +9,8 @@
       "Bash(sed -i '' 's|headerImg:/images/beunity_showcase\\\\.png|headerImg:\"/images/beunity_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
       "Bash(sed -i '' 's|headerImg:/images/crossiety_showcase\\\\.png|headerImg:\"/images/crossiety_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
       "Bash(sed -i '' 's|headerImg:/images/drift_showcase\\\\.png|headerImg:\"/images/drift_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
-      "Bash(sed -i '' 's|headerImg:/images/noctrix_showcase\\\\.png|headerImg:\"/images/noctrix_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)"
+      "Bash(sed -i '' 's|headerImg:/images/noctrix_showcase\\\\.png|headerImg:\"/images/noctrix_showcase.png\"|g' /Users/jurica.mlinaric/Desktop/projects/lumo-web/src/App.tsx)",
+      "Bash(git restore:*)"
     ]
   }
 }

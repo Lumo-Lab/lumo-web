@@ -5,7 +5,33 @@ const css = `
 *{margin:0;padding:0;box-sizing:border-box}
 ::selection{background:rgba(0,76,115,.15);color:#004C73}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06)}
+:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04)}
+.dark{--bg:#0D1117;--bg2:#161B22;--txt:#E6EDF3;--txt2:#8B949E;--txt3:#6E7681;--txt4:#484F58;--brd:rgba(255,255,255,.08);--bl:rgba(78,205,196,.06);--nav-bg:rgba(13,17,23,.88);--nav-border:rgba(255,255,255,.06)}
+.dark .card{background:var(--bg2)}
+.dark .sd{background:var(--bg2)}
+.dark .fb{background:var(--bg2);color:var(--txt3)}
+.dark .fb.active{background:var(--blue);color:#fff}
+.dark input,.dark textarea,.dark select{background:var(--bg2)!important;color:var(--txt)!important;border-color:var(--brd)!important}
+.dark .ham-overlay-inner{background:var(--bg)!important}
+.dark .footer-brand-drop{background:var(--bg)!important}
+.dark .quote-txt{color:#fff!important}
+.logo-svg{color:#004C73;transition:color .2s}
+.logo-txt{transition:color .2s}
+.dark .logo-svg{color:#fff!important}
+.dark .logo-txt{color:#fff!important}
+/* Testimonial carousel */
+.dark .test-card{background:var(--bg2)!important}
+.dark .test-nav-btn{background:var(--bg2)!important;border-color:var(--brd)!important}
+/* Job listing rows */
+.dark .role-row{background:var(--bg2)!important}
+/* Social icon buttons */
+.dark .social-icon-btn{background:var(--bg2)!important}
+/* File upload zone */
+.dark .upload-zone{background:var(--bg2)!important;border-color:var(--brd)!important}
+/* Section backgrounds with hardcoded #fff - Privacy, About, Services, Contact */
+.dark .prose-section{background:var(--bg)!important}
+/* Inline #fff backgrounds on content cards */
+.dark .content-card-white{background:var(--bg2)!important}
 @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
@@ -44,6 +70,9 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .reveal-img{opacity:0;transform:scale(.97);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}.reveal-img.in{opacity:1;transform:scale(1)}
 .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.22s}.reveal.d3{transition-delay:.36s}.reveal.d4{transition-delay:.5s}.reveal-img.d1{transition-delay:0s}
 .tilt-card{transform-style:preserve-3d;transition:transform .12s ease,box-shadow .35s}.tilt-card:hover{box-shadow:0 24px 56px rgba(0,30,50,.22)}
+.ham-btn{display:none}.ham-overlay{display:none}
+.footer-cta-mobile{display:none}
+.footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px}
 @media(max-width:900px){
   .lumo div[style*="display: grid"],.lumo div[style*="display:grid"]{display:flex!important;flex-direction:column!important;gap:24px!important}
   .lumo div[style*="grid-column"]{grid-column:auto!important}
@@ -53,10 +82,20 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo section{padding-top:56px!important;padding-bottom:56px!important}
   .lumo .hero-s{min-height:auto!important;padding-top:100px!important;padding-bottom:48px!important}
   .lumo .nav-links{display:none!important}
-  .lumo footer{flex-direction:column!important;gap:8px!important;text-align:center!important}
+  .ham-btn{display:flex!important}
+  .ham-overlay{display:flex!important}
+  .lumo footer{flex-direction:column!important;gap:6px!important;align-items:flex-start!important}
   .cf>div:last-child{display:none!important}
+  /* Footer brand row on mobile */
+  .footer-brand{flex-direction:row!important;align-items:center!important;gap:16px!important}
+  .footer-brand>div:first-child{margin-top:0!important;margin-left:0!important}
+  .footer-brand p{margin-bottom:0!important;max-width:none!important;font-size:12px!important}
   /* Footer 3-col fix */
-  .lumo .footer-grid{display:flex!important;flex-direction:column!important;gap:32px!important}
+  .footer-grid{grid-template-columns:1fr 1fr!important;gap:28px 20px!important}
+  .footer-grid>div:first-child{grid-column:1/-1!important}
+  .footer-cta-desktop{display:none!important}
+  .footer-cta-mobile{display:flex!important}
+  .lumo .footer-section{padding-top:40px!important;padding-bottom:40px!important}
   /* Founder bar fix */
   .lumo .founder-bar{flex-direction:column!important;align-items:flex-start!important;gap:16px!important}
   .lumo .founder-bar .cta-m{width:100%!important;justify-content:center!important}
@@ -191,25 +230,77 @@ const perks=[{i:"🌍",t:"Remote-first",d:"Work from anywhere in EU timezones."}
 const catList=["All",...Array.from(new Set(cases.map(c=>c.cat)))];
 
 /* ── NAV ── */
-function Nav({page,go}:{page:string,go:(p:string)=>void}){
-  return <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,background:"rgba(255,255,255,.88)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(0,30,50,.04)",height:60}}>
-    <W style={{display:"flex",justifyContent:"space-between",alignItems:"center",height:"100%"}}>
-      <button onClick={()=>go("home")} style={{display:"flex",alignItems:"center",gap:9,background:"none",border:"none",cursor:"pointer",padding:0}}>
-        <svg height="26" viewBox="90 95 135 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#004C73" d="m123.83,138.8h-23.8v31.7c0,16.71,12.37,28.13,29.73,28.13h30.1v-23.8h-36.03v-36.03Z"/>
-          <ellipse fill="#004C73" cx="112.92" cy="112.91" rx="12.92" ry="12.91"/>
-          <path fill="#004C73" fillOpacity=".5" d="m125.83,112.91c0,7.13-5.78,12.91-12.92,12.91-2.22,0-4.32-.56-6.15-1.55l91.86,50.55v-74.81h-85.71c7.13,0,12.92,5.78,12.92,12.91Z"/>
-        </svg>
-        <span style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:600,color:"var(--blue)",letterSpacing:-.3}}>lumo lab</span>
-      </button>
-      <div className="nav-links" style={{display:"flex",alignItems:"center",gap:2}}>
-        {[{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"}].map(({l,p})=>
-          <button key={l} onClick={()=>go(p)} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
-        )}
-        <button onClick={()=>go("home")} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
+function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boolean,toggleDark:()=>void}){
+  const[open,setOpen]=useState(false);
+  const nav=(p:string)=>{go(p);setOpen(false);};
+  useEffect(()=>{document.body.style.overflow=open?"hidden":"";return()=>{document.body.style.overflow="";};},[open]);
+  return <>
+    <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:200,background:open?"var(--bg)":"var(--nav-bg)",backdropFilter:"blur(16px)",borderBottom:"1px solid var(--nav-border)",height:60,transition:"background .2s"}}>
+      <W style={{display:"flex",justifyContent:"space-between",alignItems:"center",height:"100%"}}>
+        <button onClick={()=>nav("home")} style={{display:"flex",alignItems:"center",gap:9,background:"none",border:"none",cursor:"pointer",padding:0,zIndex:1}}>
+          <svg height="26" viewBox="90 95 135 110" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
+            <path fill="currentColor" d="m123.83,138.8h-23.8v31.7c0,16.71,12.37,28.13,29.73,28.13h30.1v-23.8h-36.03v-36.03Z"/>
+            <ellipse fill="currentColor" cx="112.92" cy="112.91" rx="12.92" ry="12.91"/>
+            <path fill="currentColor" fillOpacity=".5" d="m125.83,112.91c0,7.13-5.78,12.91-12.92,12.91-2.22,0-4.32-.56-6.15-1.55l91.86,50.55v-74.81h-85.71c7.13,0,12.92,5.78,12.92,12.91Z"/>
+          </svg>
+          <span className="logo-txt" style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:600,color:"var(--blue)",letterSpacing:-.3}}>lumo lab</span>
+        </button>
+        <div className="nav-links" style={{display:"flex",alignItems:"center",gap:2}}>
+          {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"}].map(({l,p})=>
+            <button key={l} onClick={()=>nav(p)} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
+          )}
+          <button onClick={()=>nav("contact")} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
+          <button onClick={toggleDark} aria-label="Toggle dark mode" style={{background:"none",border:"1px solid var(--brd)",borderRadius:20,cursor:"pointer",width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",marginLeft:6,transition:"all .2s",flexShrink:0}}>
+            {dark?<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v1M12 20v1M4.22 4.22l.71.71M18.36 18.36l.71.71M3 12h1M20 12h1M4.93 19.07l.71-.71M18.36 5.64l.71-.71M12 7a5 5 0 100 10A5 5 0 0012 7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>:<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+          </button>
+        </div>
+        <button className="ham-btn" onClick={()=>setOpen(o=>!o)} aria-label={open?"Close menu":"Open menu"} style={{display:"none",background:"none",border:"none",cursor:"pointer",padding:6,flexDirection:"column",justifyContent:"center",alignItems:"center",gap:5,width:40,height:40,zIndex:1}}>
+          <span style={{display:"block",width:22,height:2,background:"var(--blue)",borderRadius:2,transition:"transform .3s cubic-bezier(.16,1,.3,1), opacity .2s",transform:open?"rotate(45deg) translateY(7px)":"none"}}/>
+          <span style={{display:"block",width:22,height:2,background:"var(--blue)",borderRadius:2,transition:"opacity .2s",opacity:open?0:1}}/>
+          <span style={{display:"block",width:22,height:2,background:"var(--blue)",borderRadius:2,transition:"transform .3s cubic-bezier(.16,1,.3,1)",transform:open?"rotate(-45deg) translateY(-7px)":"none"}}/>
+        </button>
+      </W>
+    </nav>
+    {/* Full-screen mobile menu */}
+    <div style={{position:"fixed",inset:0,zIndex:199,background:"var(--bg)",display:"flex",flexDirection:"column",transform:open?"translateY(0)":"translateY(-100%)",transition:"transform .4s cubic-bezier(.16,1,.3,1)",pointerEvents:open?"auto":"none"}} className="ham-overlay">
+      <div style={{flex:1,display:"flex",flexDirection:"column",paddingTop:80,paddingBottom:0,overflow:"hidden"}}>
+        {/* Nav links */}
+        <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",paddingBottom:24,padding:"0 clamp(24px,6vw,64px)"}}>
+          <div style={{display:"flex",flexDirection:"column"}}>
+            {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"},{l:"Careers",p:"careers"}].map(({l,p},i)=>(
+              <button key={l} onClick={()=>nav(p)} style={{background:"none",border:"none",borderBottom:"1px solid rgba(0,30,50,.06)",cursor:"pointer",fontFamily:"var(--jk)",fontSize:32,fontWeight:700,color:page===p?"var(--blue)":"var(--txt)",padding:"18px 0",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"color .2s",opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transitionDelay:`${.05+i*.05}s`}}>
+                {l}
+                {page===p?<span style={{width:8,height:8,borderRadius:"50%",background:"var(--blue)",flexShrink:0}}/>:<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="var(--txt4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </button>
+            ))}
+          </div>
+          <button onClick={()=>nav("contact")} className="cta-m" style={{marginTop:28,justifyContent:"center",fontSize:14,opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transition:"opacity .3s, transform .3s",transitionDelay:".4s"}}>Let's talk</button>
+        </div>
       </div>
-    </W>
-  </nav>;
+      {/* Footer strip */}
+      <div style={{borderTop:"1px solid rgba(0,30,50,.07)",padding:"20px clamp(24px,6vw,64px)",background:"var(--bg2)",opacity:open?1:0,transition:"opacity .3s",transitionDelay:".3s"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
+          <div style={{display:"flex",flexDirection:"column",gap:3}}>
+            <span style={{fontSize:12,color:"var(--txt3)",fontFamily:"var(--in)"}}>hello@lumo-lab.com</span>
+            <span style={{fontSize:12,color:"var(--txt3)",fontFamily:"var(--in)"}}>+385 98 901 4448</span>
+          </div>
+          <div style={{display:"flex",gap:10,alignItems:"center"}}>
+            <button onClick={toggleDark} aria-label="Toggle dark mode" style={{background:"none",border:"1px solid var(--brd)",borderRadius:20,cursor:"pointer",width:34,height:34,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)"}}>
+              {dark?<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v1M12 20v1M4.22 4.22l.71.71M18.36 18.36l.71.71M3 12h1M20 12h1M4.93 19.07l.71-.71M18.36 5.64l.71-.71M12 7a5 5 0 100 10A5 5 0 0012 7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>:<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+            </button>
+            {[
+              {href:"https://www.linkedin.com/company/lumo-lab",label:"LinkedIn",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>},
+              {href:"https://www.instagram.com/lumolab",label:"Instagram",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>},
+            ].map(({href,label,icon})=>(
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                style={{width:34,height:34,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",textDecoration:"none",background:"#fff"}}
+              >{icon}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </>;
 }
 function Back({go,to,label}:{go:(to:string)=>void,to:string,label:string}){return <button onClick={()=>go(to)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",color:"var(--txt3)",fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:32,fontFamily:"var(--jk)",padding:0}}><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>{label}</button>;}
 
@@ -237,7 +328,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         <h1 className="fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
           We advise,<br/>guide, and <span style={{background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:"gradShift 6s ease infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>deliver.</span>
         </h1>
-        <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>Lumo Lab takes the guesswork out of technology. We give you honest advice and the expert support you need to get the job done right. We’re with you from the very first step through to a long-term partnership.</p>
+        <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>lumo lab takes the guesswork out of technology. We give you honest advice and the expert support you need. We’re with you from the very first step.</p>
         <div className="fi d4" style={{display:"flex",gap:14,flexWrap:"wrap"}}>
           <button onClick={()=>go("cases")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"14px 28px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,border:"none",cursor:"pointer"}}>See our work <Arr s={14} c="var(--blue)"/></button>
           <button onClick={()=>go("about")} className="cta-g" style={{color:"rgba(255,255,255,.7)",borderColor:"rgba(255,255,255,.15)"}}>Learn more</button>
@@ -321,14 +412,14 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         </div>
         <div style={{display:"flex",alignItems:"center",gap:24}}>
           {/* Prev */}
-          <button onClick={()=>setAt(p=>(p-1+tests.length)%tests.length)} style={{flexShrink:0,width:44,height:44,borderRadius:"50%",border:"1px solid var(--brd)",background:"#fff",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,30,50,.06)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";}}>
+          <button className="test-nav-btn" onClick={()=>setAt(p=>(p-1+tests.length)%tests.length)} style={{flexShrink:0,width:44,height:44,borderRadius:"50%",border:"1px solid var(--brd)",background:"#fff",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,30,50,.06)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";}}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
           {/* Card */}
           <div style={{flex:1,overflow:"hidden"}}>
             <div style={{display:"flex",transform:`translateX(calc(-${at*100}% - ${at*0}px))`,transition:"transform .6s cubic-bezier(.16,1,.3,1)"}}>
               {tests.map((t,i)=><div key={i} style={{minWidth:"100%",padding:"0 8px"}}>
-                <div style={{background:"#fff",borderRadius:16,padding:"36px 44px",border:"1px solid var(--brd)",boxShadow:"0 4px 24px rgba(0,30,50,.04)",textAlign:"center"}}>
+                <div className="test-card" style={{background:"#fff",borderRadius:16,padding:"36px 44px",border:"1px solid var(--brd)",boxShadow:"0 4px 24px rgba(0,30,50,.04)",textAlign:"center"}}>
                   <svg width="28" height="22" viewBox="0 0 48 36" fill="none" style={{marginBottom:16,opacity:.1}}><path d="M0 36V20C0 8.95 8.95 0 20 0h2v8h-2c-6.63 0-12 5.37-12 12v2h12v14H0zm28 0V20c0-11.05 8.95-20 20-20v8c-6.63 0-12 5.37-12 12v2h12v14H28z" fill="#004C73"/></svg>
                   <p style={{fontFamily:"var(--jk)",fontSize:"clamp(14px,1.4vw,17px)",fontWeight:500,lineHeight:1.75,color:"var(--txt)",fontStyle:"italic",maxWidth:600,margin:"0 auto 24px"}}>{t.q}</p>
                   <div style={{width:32,height:1,background:"var(--brd)",margin:"0 auto 18px"}}/>
@@ -352,7 +443,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
             </div>
           </div>
           {/* Next */}
-          <button onClick={()=>setAt(p=>(p+1)%tests.length)} style={{flexShrink:0,width:44,height:44,borderRadius:"50%",border:"1px solid var(--brd)",background:"#fff",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,30,50,.06)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";}}>
+          <button className="test-nav-btn" onClick={()=>setAt(p=>(p+1)%tests.length)} style={{flexShrink:0,width:44,height:44,borderRadius:"50%",border:"1px solid var(--brd)",background:"#fff",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,30,50,.06)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";}}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
         </div>
@@ -410,7 +501,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
         </div>
       </div>
       {/* Content panel */}
-      <div style={{padding:"48px 44px",background:"#fff",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+      <div style={{padding:"48px 44px",background:"var(--bg)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
         <p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:20}}>
           Jurica has been building mobile products since 2015 — iOS, Android, IoT, wearables, edge AI. After nearly a decade freelancing for clients across Croatia, the US, and Switzerland, he founded Lumo Lab in 2022 to formalise what the work had already become: a team with a clear way of doing things.
         </p>
@@ -418,7 +509,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
           He's led projects across healthcare IoT, agricultural AI, mobility, and enterprise SaaS — from early-stage startups to companies scaling globally. The constant across all of it: understand the problem properly before recommending anything.
         </p>
         <div style={{borderLeft:"3px solid var(--blue)",paddingLeft:24}}>
-          <p style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:700,color:"var(--txt)",lineHeight:1.5,fontStyle:"italic",marginBottom:0}}>
+          <p className="quote-txt" style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:700,color:"var(--txt)",lineHeight:1.5,fontStyle:"italic",marginBottom:0}}>
             "Everyone wants to move fast. The ones who slow down to think first always get there sooner."
           </p>
         </div>
@@ -452,11 +543,11 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
 </div>;}
 
 /* ── SERVICES ── */
-function Services({go:_go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);return <div style={{paddingTop:76}}>
+function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 48px"}}><W><SL ch="For Clients"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",textAlign:"center",marginBottom:16}}>The right technology partner <span style={{color:"var(--blue)"}}>changes everything.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480,textAlign:"center",margin:"0 auto 28px"}}>We advise, guide, and deliver.</p>
-    <div style={{textAlign:"center"}}><button className="cta-m">Start a conversation <Arr s={14} c="#fff"/></button></div>
+    <div style={{textAlign:"center"}}><button onClick={()=>go("contact")} className="cta-m">Let's talk <Arr s={14} c="#fff"/></button></div>
   </W></section>
   <section className="grid-bg" style={{padding:"48px 0 80px"}}><W><SL ch="Services in depth"/>
     <div style={{display:"flex",flexDirection:"column",gap:14}}>
@@ -694,7 +785,7 @@ function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){cons
     <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.7,maxWidth:500,marginBottom:36}}>{ac.desc}</p>
     <div style={{marginBottom:36}}><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",marginBottom:14,opacity:.4}}>What we're looking for</p>{ac.reqs.map((r,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8}}><div style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.3,marginTop:7,flexShrink:0}}/><p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.7}}>{r}</p></div>)}</div>
     <div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",marginBottom:14,opacity:.4}}>What we offer</p>{ac.offer.map((o,i)=><div key={i} style={{display:"flex",gap:10,marginBottom:8}}><div style={{width:4,height:4,borderRadius:"50%",background:"var(--teal)",opacity:.5,marginTop:7,flexShrink:0}}/><p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.7}}>{o}</p></div>)}</div>
-    <a href="mailto:hello@lumo-com.com" className="cta-m" style={{marginTop:32,display:"inline-flex"}}>Apply via email <Arr s={14} c="#fff"/></a>
+    <button onClick={()=>go("contact","job")} className="cta-m" style={{marginTop:32}}>Apply <Arr s={14} c="#fff"/></button>
   </W></section></div>;
   return <div style={{paddingTop:76}}>
     <section style={{padding:"48px 0 48px"}}><W><SL ch="Careers"/>
@@ -706,7 +797,7 @@ function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){cons
     </W></section>
     <section style={{padding:"64px 0"}}><W><SL ch="Open positions"/>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
-        {roles.map(r=><div key={r.id} onClick={()=>go("careers",r.id)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"20px 24px",border:"1px solid var(--brd)",borderRadius:12,cursor:"pointer",background:"#fff",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(0,76,115,.1)";e.currentTarget.style.transform="translateY(-2px)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.transform="none";}}>
+        {roles.map(r=><div key={r.id} className="role-row" onClick={()=>go("careers",r.id)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"20px 24px",border:"1px solid var(--brd)",borderRadius:12,cursor:"pointer",background:"#fff",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(0,76,115,.1)";e.currentTarget.style.transform="translateY(-2px)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.transform="none";}}>
           <div><span style={{fontSize:10,fontWeight:700,color:"var(--blue)",fontFamily:"var(--jk)",letterSpacing:2,opacity:.4}}>{r.team}</span><h3 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:700,color:"var(--txt)",marginTop:2}}>{r.title}</h3></div>
           <span style={{fontSize:12,color:"var(--txt4)",fontFamily:"var(--jk)"}}>{r.loc}</span>
         </div>)}
@@ -794,11 +885,87 @@ function Privacy(){
   </div>;
 }
 
+/* ── CONTACT ── */
+function Contact({type="project"}:{type?:"project"|"job"}){
+  const isJob=type==="job";
+  const[sent,setSent]=useState(false);
+  const[file,setFile]=useState<File|null>(null);
+  const[dragOver,setDragOver]=useState(false);
+  const[form,setForm]=useState({name:"",email:"",company:"",budget:"",message:"",role:"",portfolio:""});
+  const set=(k:string)=>(e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>)=>setForm(f=>({...f,[k]:e.target.value}));
+  const inputStyle:CSSProperties={width:"100%",padding:"12px 16px",border:"1px solid var(--brd)",borderRadius:10,fontFamily:"var(--in)",fontSize:14,color:"var(--txt)",background:"#fff",outline:"none",transition:"border-color .2s"};
+  const labelStyle:CSSProperties={display:"block",fontSize:12,fontWeight:600,color:"var(--txt2)",fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:1.2,marginBottom:6};
+  const field=(label:string,key:string,t="text",placeholder="")=>(
+    <div><label style={labelStyle}>{label}</label><input type={t} value={(form as any)[key]} onChange={set(key)} placeholder={placeholder} style={inputStyle} onFocus={e=>{e.target.style.borderColor="var(--blue)"}} onBlur={e=>{e.target.style.borderColor="var(--brd)"}}/></div>
+  );
+  const submit=(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();setSent(true);};
+  return <div style={{paddingTop:76}}>
+    <section style={{padding:"72px 0 80px",background:"var(--bg)"}}>
+      <W>
+        <div style={{maxWidth:680,margin:"0 auto"}}>
+          <SL ch={isJob?"Join us":"Contact"}/>
+          <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,5vw,56px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,letterSpacing:-1.5}}>
+            {isJob?(<>Join the<br/><span style={{color:"var(--blue)"}}>team.</span></>):(<>Let's build something<br/><span style={{color:"var(--blue)"}}>together.</span></>)}
+          </h1>
+          <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.7,marginBottom:40}}>
+            {isJob?"Tell us about yourself and what you're looking for. We read every application.":"Tell us about your project. We'll get back to you within 1–2 business days."}
+          </p>
+          {sent?<div style={{textAlign:"center",padding:"56px 0"}}>
+            <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(0,76,115,.08)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--blue)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:700,color:"var(--txt)",marginBottom:8}}>Message sent!</h3>
+            <p style={{fontSize:15,color:"var(--txt3)"}}>We'll get back to you within 1–2 business days.</p>
+          </div>:
+          <form onSubmit={submit} style={{display:"flex",flexDirection:"column",gap:20}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+              {field("Full name","name","text","Jane Smith")}
+              {field("Email","email","email","jane@company.com")}
+            </div>
+            {!isJob?<>
+              {field("Company / Organisation","company","text","Acme Inc.")}
+
+              <div><label style={labelStyle}>Tell us about your project</label><textarea value={form.message} onChange={set("message")} rows={5} placeholder="What are you building, what's the timeline, any constraints we should know about…" style={{...inputStyle,resize:"vertical"}} onFocus={e=>{e.target.style.borderColor="var(--blue)"}} onBlur={e=>{e.target.style.borderColor="var(--brd)"}}/></div>
+            </>:<>
+              {field("Role you're applying for","role","text","e.g. iOS Engineer")}
+              {field("Portfolio / LinkedIn / GitHub","portfolio","url","https://")}
+              <div><label style={labelStyle}>Cover note</label><textarea value={form.message} onChange={set("message")} rows={5} placeholder="Tell us why you want to join Lumo, what you've built, and what you're looking for…" style={{...inputStyle,resize:"vertical"}} onFocus={e=>{e.target.style.borderColor="var(--blue)"}} onBlur={e=>{e.target.style.borderColor="var(--brd)"}}/></div>
+              <div>
+                <label style={labelStyle}>CV / Resume</label>
+                <div
+                  onDragOver={e=>{e.preventDefault();setDragOver(true)}}
+                  onDragLeave={()=>setDragOver(false)}
+                  onDrop={e=>{e.preventDefault();setDragOver(false);const f=e.dataTransfer.files[0];if(f)setFile(f);}}
+                  onClick={()=>document.getElementById("cv-upload")?.click()}
+                  className="upload-zone" style={{border:`2px dashed ${dragOver?"var(--blue)":"var(--brd)"}`,borderRadius:10,padding:"20px 16px",cursor:"pointer",textAlign:"center",background:dragOver?"rgba(0,76,115,.03)":"#fafbfc",transition:"all .2s"}}
+                >
+                  <input id="cv-upload" type="file" accept=".pdf,.doc,.docx" style={{display:"none"}} onChange={e=>{const f=e.target.files?.[0];if(f)setFile(f);}}/>
+                  {file
+                    ?<div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="var(--blue)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="var(--blue)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <span style={{fontSize:13,fontWeight:600,color:"var(--blue)",fontFamily:"var(--in)"}}>{file.name}</span>
+                        <button type="button" onClick={e=>{e.stopPropagation();setFile(null);}} style={{background:"none",border:"none",cursor:"pointer",color:"var(--txt4)",fontSize:16,lineHeight:1,padding:0}}>×</button>
+                      </div>
+                    :<div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{margin:"0 auto 8px",display:"block"}}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="var(--txt4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        <p style={{fontSize:13,color:"var(--txt3)",margin:0}}><span style={{fontWeight:600,color:"var(--blue)"}}>Click to upload</span> or drag and drop</p>
+                        <p style={{fontSize:11,color:"var(--txt4)",marginTop:4}}>PDF, DOC, DOCX</p>
+                      </div>
+                  }
+                </div>
+              </div>
+            </>}
+            <button type="submit" className="cta-m" style={{alignSelf:"flex-start",marginTop:4}}>Send message <Arr s={14} c="#fff"/></button>
+          </form>}
+        </div>
+      </W>
+    </section>
+  </div>;
+}
+
 /* ── ROUTING ── */
-const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/services",cases:"/work",blog:"/blog",careers:"/careers",privacy:"/privacy-policy"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
+const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/services",cases:"/work",blog:"/blog",careers:"/careers",privacy:"/privacy-policy",contact:"/contact"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
 function parseFromPath():{page:string,subId:string|null}{
   const parts=window.location.pathname.split("/").filter(Boolean);
-  const pageMap:{[k:string]:string}={about:"about",services:"services",work:"cases",blog:"blog",careers:"careers","privacy-policy":"privacy"};
+  const pageMap:{[k:string]:string}={about:"about",services:"services",work:"cases",blog:"blog",careers:"careers","privacy-policy":"privacy",contact:"contact"};
   if(!parts.length)return{page:"home",subId:null};
   const page=pageMap[parts[0]]||"home";
   return{page,subId:parts[1]||null};
@@ -810,6 +977,8 @@ export default function App(){
   const init=parseFromPath();
   const[page,setPage]=useState(init.page);
   const[subId,setSubId]=useState<string|null>(init.subId);
+  const[dark,setDark]=useState(()=>localStorage.getItem("theme")==="dark");
+  const toggleDark=()=>setDark(d=>{const n=!d;localStorage.setItem("theme",n?"dark":"light");return n;});
   useEffect(()=>{
     const onPop=()=>{const{page:p,subId:s}=parseFromPath();setPage(p);setSubId(s);window.scrollTo({top:0,behavior:"auto"});};
     window.addEventListener("popstate",onPop);
@@ -821,9 +990,9 @@ export default function App(){
     window.scrollTo({top:0,behavior:"auto"});
   };
   const pageKey=subId?`${page}/${subId}`:page;
-  return <div className="lumo" style={{fontFamily:"var(--in)",color:"var(--txt)",background:"var(--bg)",lineHeight:1.6,overflowX:"hidden",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+  return <div className={`lumo${dark?" dark":""}`} style={{fontFamily:"var(--in)",color:"var(--txt)",background:"var(--bg)",lineHeight:1.6,overflowX:"hidden",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
     <style>{css}</style>
-    <Nav page={page} go={go}/>
+    <Nav page={page} go={go} dark={dark} toggleDark={toggleDark}/>
     <div style={{flex:1}}>
     <div key={pageKey} className="page-enter">
     {page==="home"&&<Home go={go}/>}
@@ -833,26 +1002,29 @@ export default function App(){
     {page==="blog"&&<Blog go={go} sel={subId}/>}
     {page==="careers"&&<Careers go={go} sel={subId}/>}
     {page==="privacy"&&<Privacy/>}
+    {page==="contact"&&<Contact type={subId==="job"?"job":"project"}/>}
     </div>
     </div>
     {/* SHARED CONTACT FOOTER — every page */}
-    <section style={{padding:"64px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}>
+    <section className="footer-section" style={{padding:"24px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}>
       <W>
-        <div className="footer-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:48}}>
+        <div className="footer-grid">
           <div style={{display:"flex",flexDirection:"column"}}>
-            <div style={{marginTop:-14, marginLeft:-26,display:"flex",alignItems:"flex-start"}}>
-              <svg height="100" viewBox="0 0 201.94 201.91" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill="#004C73" d="m111.52,126.47v23.8h-30.1c-17.36,0-29.73-11.42-29.73-28.13v-31.7h23.8v36.03h36.03Zm-48.62-49.11c8.45,1.07,15.56-6.04,14.49-14.48-.73-5.75-5.37-10.4-11.13-11.13-8.45-1.07-15.56,6.04-14.49,14.48.73,5.75,5.37,10.4,11.13,11.12Z"/>
-                <path fill="#004C73" fillOpacity=".5" d="m77.48,65.08c-.27,6.71-5.87,12.21-12.58,12.38-2.35.06-4.55-.51-6.47-1.55l91.86,50.55V51.64h-85.71c7.31,0,13.2,6.07,12.91,13.44Z"/>
-              </svg>
+            <div className="footer-brand" style={{display:"flex",flexDirection:"column"}}>
+              <div style={{marginTop:-14,marginLeft:-26,display:"flex",alignItems:"flex-start",flexShrink:0}}>
+                <svg height="100" viewBox="0 0 201.94 201.91" fill="none" xmlns="http://www.w3.org/2000/svg" className="logo-svg">
+                  <path fill="currentColor" d="m111.52,126.47v23.8h-30.1c-17.36,0-29.73-11.42-29.73-28.13v-31.7h23.8v36.03h36.03Zm-48.62-49.11c8.45,1.07,15.56-6.04,14.49-14.48-.73-5.75-5.37-10.4-11.13-11.13-8.45-1.07-15.56,6.04-14.49,14.48.73,5.75,5.37,10.4,11.13,11.12Z"/>
+                  <path fill="currentColor" fillOpacity=".5" d="m77.48,65.08c-.27,6.71-5.87,12.21-12.58,12.38-2.35.06-4.55-.51-6.47-1.55l91.86,50.55V51.64h-85.71c7.31,0,13.2,6.07,12.91,13.44Z"/>
+                </svg>
+              </div>
+              <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7,maxWidth:240,marginBottom:20}}>We advise, guide, and deliver. Technology consultancy for startups and enterprises.</p>
             </div>
-            <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7,maxWidth:240,marginBottom:20}}>We advise, guide, and deliver. Technology consultancy for startups and enterprises.</p>
-            <button onClick={()=>go("home")} className="cta-m" style={{padding:"10px 22px",fontSize:12,marginTop:"auto",alignSelf:"flex-start"}}>Let's talk<Arr s={12} c="#fff"/></button>
+            <button onClick={()=>go("contact")} className="cta-m footer-cta-desktop" style={{marginTop:"auto",alignSelf:"flex-start"}}>Let's talk<Arr s={14} c="#fff"/></button>
           </div>
           <div>
             <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Contact</p>
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              {[{l:"Email",v:"hello@lumo-lab.com"},{l:"Phone",v:"+385 98 901 4448"},{l:"Address",v:"Zivtov trg 3, Zabok, Croatia"}].map((c,i)=><div key={i} style={{display:"flex",alignItems:"baseline",gap:10}}><span style={{fontSize:10,color:"var(--txt4)",fontWeight:700,width:52,textTransform:"uppercase",letterSpacing:1.5,fontFamily:"var(--jk)"}}>{c.l}</span><span style={{fontSize:13,fontWeight:500,color:"var(--txt2)"}}>{c.v}</span></div>)}
+              {[{l:"Email",v:"hello@lumo-lab.com"},{l:"Phone",v:"+385 98 901 4448"},{l:"Address",v:"Zivtov trg 3, Zabok, Croatia"}].map((c,i)=><div key={i} style={{display:"flex",alignItems:"baseline",gap:24}}><span style={{fontSize:10,color:"var(--txt4)",fontWeight:700,width:52,textTransform:"uppercase",letterSpacing:1.5,fontFamily:"var(--jk)"}}>{c.l}</span><span style={{fontSize:13,fontWeight:500,color:"var(--txt2)"}}>{c.v}</span></div>)}
             </div>
             <div style={{display:"flex",gap:10,marginTop:20,alignItems:"center"}}>
               {[
@@ -860,9 +1032,9 @@ export default function App(){
                 {href:"https://www.instagram.com/lumolab",label:"Instagram",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>},
               ].map(({href,label,icon})=>(
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  style={{width:36,height:36,minWidth:36,minHeight:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",textDecoration:"none",transition:"all .25s",background:"#fff"}}
+                  className="social-icon-btn" style={{width:36,height:36,minWidth:36,minHeight:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",textDecoration:"none",transition:"all .25s",background:"#fff"}}
                   onMouseEnter={e=>{e.currentTarget.style.background="var(--blue)";e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="#fff";e.currentTarget.style.transform="translateY(-2px)";}}
-                  onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";e.currentTarget.style.transform="none";}}
+                  onMouseLeave={e=>{e.currentTarget.style.background="var(--bg2)";e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";e.currentTarget.style.transform="none";}}
                 >{icon}</a>
               ))}
             </div>
@@ -873,10 +1045,11 @@ export default function App(){
           <div>
             <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Navigate</p>
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
-              {[{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Case Studies",p:"cases"},{l:"Blog",p:"blog"},{l:"Careers",p:"careers"},{l:"Privacy Policy",p:"privacy"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+              {[{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Case Studies",p:"cases"},{l:"Blog",p:"blog"},{l:"Careers",p:"careers"},{l:"Contact",p:"contact"},{l:"Privacy Policy",p:"privacy"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
             </div>
           </div>
         </div>
+        <button onClick={()=>go("contact")} className="cta-m footer-cta-mobile" style={{marginTop:28,width:"100%",justifyContent:"center"}}>Let's talk<Arr s={14} c="#fff"/></button>
       </W>
     </section>
     <footer style={{padding:"28px clamp(16px,4vw,48px)",maxWidth:1200,margin:"0 auto",width:"100%",display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"1px solid var(--brd)"}}>

@@ -34,15 +34,17 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .dark .content-card-white{background:var(--bg2)!important}
 @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes wordIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.word{display:inline-block;opacity:0;animation:wordIn .6s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
 @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes gridPulse{0%,100%{opacity:0}40%,60%{opacity:.45}}
 @keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-3%,-5%)}20%{transform:translate(3%,3%)}30%{transform:translate(-5%,1%)}40%{transform:translate(2%,-4%)}50%{transform:translate(-1%,5%)}60%{transform:translate(4%,-2%)}70%{transform:translate(-4%,3%)}80%{transform:translate(1%,-3%)}90%{transform:translate(-2%,4%)}}
 .hero-grain{position:absolute;inset:-50%;width:200%;height:200%;opacity:.055;animation:grain .35s steps(1) infinite;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:2}
 .grid-bg{background-image:linear-gradient(rgba(0,30,50,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,30,50,.03) 1px,transparent 1px);background-size:56px 56px}
-@keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
 .fi{animation:fadeUp .8s cubic-bezier(.22,1,.36,1) both}
-.page-enter{animation:pageIn .55s cubic-bezier(.16,1,.3,1) both}
+.page-enter{animation:pageIn .4s ease both}
 .d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}.d4{animation-delay:.55s}.d5{animation-delay:.7s}
 .mq-t{display:flex;gap:56px;animation:marquee 40s linear infinite;width:max-content}
 .cta-m{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;padding:14px 28px;border-radius:50px;font-family:var(--jk);font-size:14px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all .3s}
@@ -325,8 +327,9 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       <div style={{position:"absolute",top:"-15%",left:"-10%",width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(78,205,196,.1),transparent 70%)",zIndex:1}}/>
       <div className="hero-grain"/>
       <W style={{position:"relative",zIndex:3,paddingTop:100,paddingBottom:60,color:"#fff"}}>
-        <h1 className="fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
-          We advise,<br/>guide, and <span style={{background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:"gradShift 6s ease infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>deliver.</span>
+        <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
+          {["We","advise,","guide,","and"].map((w,i)=><span key={w} className="word" style={{animationDelay:`${0.1+i*0.08}s`,marginRight:"0.25em"}}>{w}</span>)}
+          <span className="word" style={{animationDelay:"0.44s",marginRight:"0.25em",background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:`gradShift 6s ease infinite, wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",opacity:0,display:"inline-block"}}>deliver.</span>
         </h1>
         <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>lumo lab takes the guesswork out of technology. We give you honest advice and the expert support you need. We’re with you from the very first step.</p>
         <div className="fi d4" style={{display:"flex",gap:14,flexWrap:"wrap"}}>
@@ -992,7 +995,7 @@ export default function App(){
   const pageKey=subId?`${page}/${subId}`:page;
   return <div className={`lumo${dark?" dark":""}`} style={{fontFamily:"var(--in)",color:"var(--txt)",background:"var(--bg)",lineHeight:1.6,overflowX:"hidden",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
     <style>{css}</style>
-    <Nav page={page} go={go} dark={dark} toggleDark={toggleDark}/>
+<Nav page={page} go={go} dark={dark} toggleDark={toggleDark}/>
     <div style={{flex:1}}>
     <div key={pageKey} className="page-enter">
     {page==="home"&&<Home go={go}/>}

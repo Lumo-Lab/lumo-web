@@ -318,7 +318,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       {/* Video background */}
       <video autoPlay muted loop playsInline style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.35}}>
         <source src={process.env.PUBLIC_URL + "/videos/hero.webm"} type="video/webm"/>
-        <source src={process.env.PUBLIC_URL + "/videos/hero.mp4"} type="video/mp4"/>
+        <source src={process.env.PUBLIC_URL + "/videos/hero.mov"} type="video/mp4"/>
       </video>
       {/* Grid overlay — pulses in and out */}
       <div style={{position:"absolute",inset:0,zIndex:1,backgroundImage:"linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px)",backgroundSize:"72px 72px",animation:"gridPulse 8s ease-in-out infinite"}}/>
@@ -328,8 +328,8 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       <div className="hero-grain"/>
       <W style={{position:"relative",zIndex:3,paddingTop:100,paddingBottom:60,color:"#fff"}}>
         <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
-          {["We","advise,","guide,","and"].map((w,i)=><span key={w} className="word" style={{animationDelay:`${0.1+i*0.08}s`,marginRight:"0.25em"}}>{w}</span>)}
-          <span className="word" style={{animationDelay:"0.44s",marginRight:"0.25em",background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:`gradShift 6s ease infinite, wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",opacity:0,display:"inline-block"}}>deliver.</span>
+          {["Light","the","way"].map((w,i)=><span key={w} className="word" style={{animationDelay:`${0.1+i*0.08}s`,marginRight:"0.25em"}}>{w}</span>)}
+          <span className="word" style={{animationDelay:"0.34s",marginRight:"0.25em",background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:`gradShift 6s ease infinite, wordIn .6s cubic-bezier(.16,1,.3,1) .34s forwards`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",opacity:0,display:"inline-block"}}>forward.</span>
         </h1>
         <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>lumo lab takes the guesswork out of technology. We give you honest advice and the expert support you need. We’re with you from the very first step.</p>
         <div className="fi d4" style={{display:"flex",gap:14,flexWrap:"wrap"}}>
@@ -1020,7 +1020,7 @@ export default function App(){
                   <path fill="currentColor" fillOpacity=".5" d="m77.48,65.08c-.27,6.71-5.87,12.21-12.58,12.38-2.35.06-4.55-.51-6.47-1.55l91.86,50.55V51.64h-85.71c7.31,0,13.2,6.07,12.91,13.44Z"/>
                 </svg>
               </div>
-              <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7,maxWidth:240,marginBottom:20}}>We advise, guide, and deliver. Technology consultancy for startups and enterprises.</p>
+              <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7,maxWidth:240,marginBottom:20}}>Technology consultancy for startups and enterprises.</p>
             </div>
             <button onClick={()=>go("contact")} className="cta-m footer-cta-desktop" style={{marginTop:"auto",alignSelf:"flex-start"}}>Let's talk<Arr s={14} c="#fff"/></button>
           </div>
@@ -1057,7 +1057,7 @@ export default function App(){
     </section>
     <footer style={{padding:"28px clamp(16px,4vw,48px)",maxWidth:1200,margin:"0 auto",width:"100%",display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"1px solid var(--brd)"}}>
       <span style={{fontSize:12,color:"var(--blue)",letterSpacing:1.5,textTransform:"uppercase",fontFamily:"var(--jk)",fontWeight:600}}>©2026 by Lumo Lab. All rights reserved.</span>
-      <span style={{fontSize:12,color:"var(--blue)",letterSpacing:1,fontWeight:500}}>We advise, guide, and deliver.</span>
+      <span style={{fontSize:12,color:"var(--blue)",letterSpacing:1,fontWeight:800}}>LIGHT THE WAY FORWARD</span>
     </footer>
   </div>;
 }

@@ -74,7 +74,9 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .tilt-card{transform-style:preserve-3d;transition:transform .12s ease,box-shadow .35s}.tilt-card:hover{box-shadow:0 24px 56px rgba(0,30,50,.22)}
 .ham-btn{display:none}.ham-overlay{display:none}
 .footer-cta-mobile{display:none}
-.footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px}
+.footer-grid{display:flex;justify-content:space-between;align-items:flex-start;gap:48px}
+.footer-cols{display:flex;gap:64px}
+.footer-links-group{display:flex;gap:64px}
 @media(max-width:900px){
   .lumo div[style*="display: grid"],.lumo div[style*="display:grid"]{display:flex!important;flex-direction:column!important;gap:24px!important}
   .lumo div[style*="grid-column"]{grid-column:auto!important}
@@ -92,9 +94,12 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .footer-brand{flex-direction:row!important;align-items:center!important;gap:16px!important}
   .footer-brand>div:first-child{margin-top:0!important;margin-left:0!important}
   .footer-brand p{margin-bottom:0!important;max-width:none!important;font-size:12px!important}
-  /* Footer 3-col fix */
-  .footer-grid{grid-template-columns:1fr 1fr!important;gap:28px 20px!important}
-  .footer-grid>div:first-child{grid-column:1/-1!important}
+  /* Footer mobile */
+  .footer-grid{flex-direction:column!important;gap:28px!important}
+  .footer-cols{flex-direction:row!important;justify-content:space-between!important;align-items:flex-start!important;gap:20px!important}
+  .footer-contact-info{flex:1!important;flex-direction:column!important;gap:0!important}
+  .footer-links-group{flex-direction:column!important;gap:0!important}
+  .footer-links-group>div:first-child{display:none!important}
   .footer-cta-desktop{display:none!important}
   .footer-cta-mobile{display:flex!important}
   .lumo .footer-section{padding-top:40px!important;padding-bottom:40px!important}
@@ -465,7 +470,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480}}>A technology consultancy based in Croatia, advising startups and enterprises worldwide.</p>
   </W></section>
   <section style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",padding:"36px 0",background:"var(--bg2)"}}><W style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24}}>
-    {[{n:10,s:"+",l:"Years"},{n:20,s:"+",l:"Clients"},{n:4,s:"",l:"Verticals"},{n:12,s:"+",l:"Countries"}].map((s,i)=><div key={i} style={{textAlign:"center"}}><div style={{fontFamily:"var(--jk)",fontSize:36,fontWeight:800,color:"var(--blue)"}}><AnimNum end={s.n} suffix={s.s}/></div><p style={{fontSize:10,color:"var(--txt4)",marginTop:6,fontWeight:600,textTransform:"uppercase",letterSpacing:2,fontFamily:"var(--jk)"}}>{s.l}</p></div>)}
+    {[{n:10,s:"+",l:"Years"},{n:15,s:"+",l:"Clients"},{n:4,s:"",l:"Verticals"}].map((s,i)=><div key={i} style={{textAlign:"center"}}><div style={{fontFamily:"var(--jk)",fontSize:36,fontWeight:800,color:"var(--blue)"}}><AnimNum end={s.n} suffix={s.s}/></div><p style={{fontSize:10,color:"var(--txt4)",marginTop:6,fontWeight:600,textTransform:"uppercase",letterSpacing:2,fontFamily:"var(--jk)"}}>{s.l}</p></div>)}
   </W></section>
   <div style={{borderBottom:"1px solid var(--brd)",padding:"14px 0",overflow:"hidden"}}><div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.2}}/></span>)}</div></div>
   <section style={{padding:"80px 0"}}><W><SL ch="Our story"/>
@@ -523,7 +528,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
     <SL ch="Core team"/>
     <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.5vw,28px)",fontWeight:800,color:"var(--txt)",marginBottom:48}}>The people who <span style={{color:"var(--blue)"}}>build it.</span></h2>
     <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,maxWidth:980}}>
-      {[{n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg"},{n:"Rudolf Lovrencic, PhD",r:"Software Architect"},{n:"Mato Poslon",r:"Full Stack Engineer"},{n:"Matija Sever",r:"Data Scientist"},{n:"Stefan Petrovic",r:"iOS Engineer"}].map((m,i)=>(
+      {[{n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg"},{n:"Rudolf Lovrencic, PhD",r:"Software Architect"},{n:"Mato Poslon",r:"Full Stack Engineer"},{n:"Matija Sever",r:"Data Scientist"},{n:"Stefan Petrovic",r:"iOS Engineer",img:"stefan.jpeg"}].map((m,i)=>(
         <div key={i} style={{position:"relative",aspectRatio:"3/4",borderRadius:20,overflow:"hidden",background:"var(--blue)"}}>
           <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
           <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, rgba(0,20,40,.9) 0%, rgba(0,20,40,.2) 50%, transparent 100%)"}}/>
@@ -1024,31 +1029,41 @@ export default function App(){
             </div>
             <button onClick={()=>go("contact")} className="cta-m footer-cta-desktop" style={{marginTop:"auto",alignSelf:"flex-start"}}>Let's talk<Arr s={14} c="#fff"/></button>
           </div>
-          <div>
-            <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Contact</p>
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              {[{l:"Email",v:"hello@lumo-lab.com"},{l:"Phone",v:"+385 98 901 4448"},{l:"Address",v:"Zivtov trg 3, Zabok, Croatia"}].map((c,i)=><div key={i} style={{display:"flex",alignItems:"baseline",gap:24}}><span style={{fontSize:10,color:"var(--txt4)",fontWeight:700,width:52,textTransform:"uppercase",letterSpacing:1.5,fontFamily:"var(--jk)"}}>{c.l}</span><span style={{fontSize:13,fontWeight:500,color:"var(--txt2)"}}>{c.v}</span></div>)}
+          <div className="footer-cols">
+            <div className="footer-contact-info">
+              <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Contact</p>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                {[{l:"Email",v:"hello@lumo-lab.com"},{l:"Phone",v:"+385 98 901 4448"},{l:"Address",v:"Zivtov trg 3, Zabok, Croatia"}].map((c,i)=><div key={i} style={{display:"flex",alignItems:"baseline",gap:24}}><span style={{fontSize:10,color:"var(--txt4)",fontWeight:700,width:52,textTransform:"uppercase",letterSpacing:1.5,fontFamily:"var(--jk)"}}>{c.l}</span><span style={{fontSize:13,fontWeight:500,color:"var(--txt2)"}}>{c.v}</span></div>)}
+              </div>
+              <div style={{display:"flex",gap:10,marginTop:20,alignItems:"center"}}>
+                {[
+                  {href:"https://www.linkedin.com/company/lumo-lab",label:"LinkedIn",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>},
+                  {href:"https://www.instagram.com/lumo_lab_/",label:"Instagram",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>},
+                ].map(({href,label,icon})=>(
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                    className="social-icon-btn" style={{width:36,height:36,minWidth:36,minHeight:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",textDecoration:"none",transition:"all .25s",background:"#fff"}}
+                    onMouseEnter={e=>{e.currentTarget.style.background="var(--blue)";e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="#fff";e.currentTarget.style.transform="translateY(-2px)";}}
+                    onMouseLeave={e=>{e.currentTarget.style.background="var(--bg2)";e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";e.currentTarget.style.transform="none";}}
+                  >{icon}</a>
+                ))}
+              </div>
+              <div style={{marginTop:16}}>
+                <ClutchWidget/>
+              </div>
             </div>
-            <div style={{display:"flex",gap:10,marginTop:20,alignItems:"center"}}>
-              {[
-                {href:"https://www.linkedin.com/company/lumo-lab",label:"LinkedIn",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>},
-                {href:"https://www.instagram.com/lumolab",label:"Instagram",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>},
-              ].map(({href,label,icon})=>(
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  className="social-icon-btn" style={{width:36,height:36,minWidth:36,minHeight:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",textDecoration:"none",transition:"all .25s",background:"#fff"}}
-                  onMouseEnter={e=>{e.currentTarget.style.background="var(--blue)";e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="#fff";e.currentTarget.style.transform="translateY(-2px)";}}
-                  onMouseLeave={e=>{e.currentTarget.style.background="var(--bg2)";e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";e.currentTarget.style.transform="none";}}
-                >{icon}</a>
-              ))}
-            </div>
-            <div style={{marginTop:"auto",paddingTop:16}}>
-              <ClutchWidget/>
-            </div>
-          </div>
-          <div>
-            <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Navigate</p>
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>
-              {[{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Case Studies",p:"cases"},{l:"Blog",p:"blog"},{l:"Careers",p:"careers"},{l:"Contact",p:"contact"},{l:"Privacy Policy",p:"privacy"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+            <div className="footer-links-group">
+              <div>
+                <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Navigate</p>
+                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+                </div>
+              </div>
+              <div>
+                <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Company</p>
+                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  {[{l:"Careers",p:"careers"},{l:"Contact",p:"contact"},{l:"Privacy Policy",p:"privacy"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, ReactNode, CSSProperties } from "react";
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 ::selection{background:rgba(0,76,115,.15);color:#004C73}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
@@ -59,6 +58,10 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .er:hover{padding-left:12px}
 .er:hover h4{color:var(--blue)}
 .er:hover .ea{opacity:1;transform:translateX(4px)}
+.eng-row{transition:padding-left .3s}
+.eng-row:hover{padding-left:12px}
+.eng-row:hover h4{color:var(--blue)}
+.eng-row:hover .ea{opacity:1;transform:translateX(4px)}
 .ea{opacity:0;transition:all .3s;color:var(--blue)}
 .ft{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;border:1px solid rgba(0,76,115,.12);color:var(--blue);font-family:var(--jk);background:var(--bl)}
 .fb{background:#fff;border:1px solid var(--brd);color:var(--txt3);padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--jk)}
@@ -113,6 +116,42 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .proc-grid>div:nth-child(2){display:none!important}
   .lumo .proc-grid>div:first-child{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;gap:8px!important}
   .lumo .proc-grid>div:first-child>div{padding:8px 0!important;border-bottom:none!important}
+  /* For Clients: Week One day rows — collapse 3-col grid to a clean stacked card */
+  .lumo .week-row{display:flex!important;flex-direction:column!important;gap:6px!important;padding:18px 0 18px 16px!important;border-left:2px solid var(--bl)!important}
+  .lumo .week-row .week-dot{display:none!important}
+  .lumo .week-row>span{padding-top:0!important;font-size:11px!important;letter-spacing:1.5px!important}
+  /* For Clients: pricing CTA banner — stack heading and button */
+  .lumo .pricing-banner{flex-direction:column!important;align-items:flex-start!important;gap:14px!important;padding:20px 22px!important}
+  .lumo .pricing-banner .cta-m{width:100%!important;justify-content:center!important}
+  /* About: keep stats row horizontal on mobile, just tighten spacing */
+  .lumo div.about-stats{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
+  .lumo div.about-stats>div>div{font-size:26px!important}
+  .lumo div.about-stats>div>p{font-size:9px!important;letter-spacing:1.4px!important}
+  /* About: team grid — 3 columns on mobile so the photos are smaller */
+  .lumo div.team-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+  .lumo div.team-grid h3{font-size:13px!important}
+  .lumo div.team-grid p{font-size:10px!important}
+  .lumo div.team-grid>div>div:last-child{padding:14px 14px 16px!important}
+  /* Work index: drop the giant hero on mobile, show every case stacked one per row */
+  .lumo .work-hero-wrap{display:none!important}
+  .lumo div.work-grid-m{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+  /* Case detail cover: wide-banner images shrink to a thin strip on phones — give the cover a fixed mobile height and let the image fill via object-fit:cover so the title stays readable */
+  .lumo .case-cover{min-height:340px!important;height:340px!important;max-height:340px!important}
+  .lumo .case-cover-img{height:100%!important;width:100%!important;max-height:none!important;object-fit:cover!important;object-position:center!important;position:absolute!important;inset:0!important}
+  .lumo .case-cover-grad{height:100%!important;background:linear-gradient(to top,rgba(0,20,40,.85) 0%,rgba(0,20,40,.35) 55%,rgba(0,20,40,.15) 100%)!important}
+  .lumo .case-cover-title{padding-bottom:32px!important}
+  .lumo .case-cover-h1{font-size:clamp(28px,7vw,40px)!important;line-height:1.05!important;margin-top:6px!important}
+  /* Case detail metrics strip — clean 2x2 grid on mobile with proper inter-cell borders */
+  .lumo .case-metrics{flex-wrap:wrap!important}
+  .lumo .case-metrics>div{flex:1 1 50%!important;min-width:0!important;max-width:50%!important;border-right:none!important;border-bottom:1px solid var(--brd)!important;padding:14px 12px!important;min-height:96px!important}
+  .lumo .case-metrics>div:nth-child(2n+1){border-right:1px solid var(--brd)!important}
+  .lumo .case-metrics>div:nth-last-child(-n+2){border-bottom:none!important}
+  .lumo .case-metrics>div>div:first-child{font-size:18px!important;min-height:auto!important}
+  .lumo .case-metrics>div>div:last-child{font-size:10.5px!important;min-height:auto!important}
+}
+@media(max-width:420px){
+  /* About: tighter stats numbers on the smallest phones */
+  .lumo div.about-stats>div>div{font-size:22px!important}
 }
 @media(max-width:600px){
   .lumo h1{font-size:clamp(38px,11vw,56px)!important;line-height:.92!important}
@@ -148,7 +187,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 }
 `;
 
-const W=({children,style={}}:{children:ReactNode,style?:CSSProperties})=><div style={{maxWidth:1200,margin:"0 auto",padding:"0 clamp(16px,4vw,48px)",...style}}>{children}</div>;
+const W=({children,style={},className}:{children:ReactNode,style?:CSSProperties,className?:string})=><div className={className} style={{maxWidth:1200,margin:"0 auto",padding:"0 clamp(16px,4vw,48px)",...style}}>{children}</div>;
 const SL=({ch,light}:{ch:string,light?:boolean})=><div style={{display:"flex",alignItems:"center",gap:12,marginBottom:36}}><div style={{width:28,height:2,background:light?"rgba(255,255,255,.3)":"var(--blue)"}}/><span style={{fontSize:11,color:light?"rgba(255,255,255,.4)":"var(--txt4)",fontWeight:700,textTransform:"uppercase",letterSpacing:3,fontFamily:"var(--jk)"}}>{ch}</span></div>;
 const Arr=({s=14,c="currentColor"})=><svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke={c} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const QSvg=()=><svg width="32" height="24" viewBox="0 0 48 36" fill="none" style={{marginBottom:16,opacity:.1}}><path d="M0 36V20C0 8.95 8.95 0 20 0h2v8h-2c-6.63 0-12 5.37-12 12v2h12v14H0zm28 0V20c0-11.05 8.95-20 20-20v8c-6.63 0-12 5.37-12 12v2h12v14H28z" fill="#004C73"/></svg>;
@@ -162,78 +201,125 @@ const cl3=[...cl,...cl,...cl];
 const svcs=[
   {n:"01",t:"Technology Strategy & Advisory",hl:"We diagnose before we prescribe.",d:"We immerse in your business context and user needs to build a strategic roadmap that reduces risk and maximizes ROI.",del:["Technology assessment","Strategic roadmap","Architecture advisory","Risk analysis"],tech:["Workshops","Market Analysis","System Design","Roadmapping"],span:true},
   {n:"02",t:"Product & Experience Design",hl:"Interfaces informed by insight.",d:"Research-driven design aligning user needs with business outcomes.",del:["User research","Wireframes & prototypes","Design system strategy","Usability validation"],tech:["Figma","User Testing","Design Systems","Accessibility"]},
-  {n:"03",t:"Solution Engineering",hl:"Strategy-led delivery.",d:"Native iOS, Android, cross-platform, and web solutions — architected for scale.",del:["Native iOS & Android","Cross-platform","Web applications","CI/CD & DevOps"],tech:["React","Swift","Kotlin","Node.js","TypeScript","AWS"]},
-  {n:"04",t:"IoT & Connected Systems",hl:"From sensor to insight.",d:"End-to-end IoT ecosystems — architecture, data pipelines, edge computing.",del:["Architecture advisory","Cloud infrastructure","Data pipelines","Edge computing"],tech:["BLE","MQTT","AWS IoT","Edge AI","C++"]},
+  {n:"03",t:"Solution Engineering",hl:"Strategy-led delivery.",d:"Native iOS, Android, cross-platform, and web solutions, architected for scale.",del:["Native iOS & Android","Cross-platform","Web applications","CI/CD & DevOps"],tech:["React","Swift","Kotlin","Node.js","TypeScript","AWS"]},
+  {n:"04",t:"IoT & Connected Systems",hl:"From sensor to insight.",d:"End-to-end IoT ecosystems: architecture, data pipelines, edge computing.",del:["Architecture advisory","Cloud infrastructure","Data pipelines","Edge computing"],tech:["BLE","MQTT","AWS IoT","Edge AI","C++"]},
   {n:"05",t:"AI & Data Strategy",hl:"Turn data into a strategic asset.",d:"AI/ML solutions that automate decisions, surface insights, and create intelligent capabilities.",del:["AI/ML strategy","Data pipelines","Analytics infrastructure","Automation"],tech:["Python","TensorFlow","Data Engineering","ML Ops"]},
 ];
 const engs=[{t:"Technology Strategy & Advisory",d:"We assess your landscape and recommend a clear path forward."},{t:"Embedded Consulting Teams",d:"Our team integrates with yours and delivers alongside you."},{t:"Defined Engagements",d:"Scoped initiative, dedicated team, predictable outcome."},{t:"Knowledge Transfer & Workshops",d:"Sessions that level up your in-house capabilities."},{t:"Startup Partnership",d:"We co-invest our expertise. Risk, vision, and equity shared."}];
 const proc=[{ph:"Assess",n:"01",d:"Deep-dive into your business and technology landscape."},{ph:"Advise",n:"02",d:"Every recommendation backed by research and aligned with objectives."},{ph:"Deliver",n:"03",d:"Clean, scalable solutions in iterative sprints."},{ph:"Evolve",n:"04",d:"Ongoing advisory. We guide your technology evolution."}];
 const tests=[
-  {q:"Our partnership with Lumo Lab has been instrumental in shaping our long-term vision. They've consistently delivered innovative solutions that align with our strategic goals. The team's deep understanding of our business, coupled with their technical expertise, has been invaluable. We're excited to continue our journey with Lumo Lab as we embark on new challenges and opportunities.",n:"Kevin Ray",r:"Co-Founder & CEO",co:"Nomo International Inc",linkedin:"https://www.linkedin.com/in/kevinjray/",website:"https://nomosmartcare.com",img:process.env.PUBLIC_URL+"/images/kev.png"},
-  {q:"It's been great working with Lumo Lab. Jurica and his team have consistently delivered results with clear communication and a regular cadence of updates and insights into progress. Lumo has done more for us in 7 months than internal teams did in 18 months. We look forward to a long term strategy with Lumo Lab.",n:"Craig Ganssle",r:"CEO",co:"Farmwave Inc",linkedin:"https://www.linkedin.com/in/craigganssle/",website:"https://farmwave.io",img:process.env.PUBLIC_URL+"/images/craig.jpeg"},
-  {q:"Lumo Lab has been a key partner in our mobile app development and deployment efforts. Their strong communication, timely delivery, and user-centric approach have significantly contributed to the success of our app. We're grateful for their partnership and look forward to future collaborations.",n:"Jen McCarthy",r:"Business Development",co:"Drift App Inc",linkedin:"https://www.linkedin.com/in/jen-mccarthy/",website:"",img:process.env.PUBLIC_URL+"/images/jen.jpg"},
-  {q:"Working with Lumo Lab was a true pleasure. Their team was incredibly collaborative, always open to feedback, and committed to building a strong partnership. Their clear and timely communication kept us informed throughout the entire development process, ensuring a smooth and successful project.",n:"Dalibor Cvek",r:"CEO",co:"Once Sport",linkedin:"https://www.linkedin.com/in/daliborCvek/",website:"",img:process.env.PUBLIC_URL+"/images/dalibor.jpeg"},
+  {q:"Our partnership with Lumo Lab has been instrumental in shaping our long-term vision. They've consistently delivered innovative solutions that align with our strategic goals. The team's deep understanding of our business, coupled with their technical expertise, has been invaluable. We're excited to continue our journey with Lumo Lab as we embark on new challenges and opportunities.",n:"Kevin Ray",r:"Co-Founder & CEO",co:"Nomo International Inc",linkedin:"https://www.linkedin.com/in/kevinjray/",website:"https://nomosmartcare.com",img:process.env.PUBLIC_URL+"/images/kev.png",caseId:"nomo"},
+  {q:"It's been great working with Lumo Lab. Jurica and his team have consistently delivered results with clear communication and a regular cadence of updates and insights into progress. Lumo has done more for us in 7 months than internal teams did in 18 months. We look forward to a long term strategy with Lumo Lab.",n:"Craig Ganssle",r:"CEO",co:"Farmwave Inc",linkedin:"https://www.linkedin.com/in/craigganssle/",website:"https://farmwave.io",img:process.env.PUBLIC_URL+"/images/craig.jpeg",caseId:"farmwave"},
+  {q:"Lumo Lab has been a key partner in our mobile app development and deployment efforts. Their strong communication, timely delivery, and user-centric approach have significantly contributed to the success of our app. We're grateful for their partnership and look forward to future collaborations.",n:"Jen McCarthy",r:"Business Development",co:"Drift App Inc",linkedin:"https://www.linkedin.com/in/jen-mccarthy/",website:"",img:process.env.PUBLIC_URL+"/images/jen.jpg",caseId:"drift"},
+  {q:"Working with Lumo Lab was a true pleasure. Their team was incredibly collaborative, always open to feedback, and committed to building a strong partnership. Their clear and timely communication kept us informed throughout the entire development process, ensuring a smooth and successful project.",n:"Dalibor Cvek",r:"CEO",co:"Once Sport",linkedin:"https://www.linkedin.com/in/daliborCvek/",website:"",img:process.env.PUBLIC_URL+"/images/dalibor.jpeg",caseId:null as string|null},
 ];
 const cases=[
-  {id:"nomo",name:"NOMO Smart Care",cat:"Health",tags:["IoT","AI/ML","Mobile"],client:"Nomo International, Ltd",website:"nomosmartcare.com",period:"March 2021 – Present",brief:"Full-stack smart care ecosystem with AI-powered elderly monitoring — without cameras.",ch:"Aging adults and their families needed a way to monitor safety at home without intrusive cameras or wearables that get forgotten or rejected. Nomo required a complete technology partner to deliver mobile apps, cloud infrastructure, and AI — all working together at roughly $1/day.",ap:"We structured delivery around three pillars: native iOS (Swift) and Android (Kotlin) apps for real-time alerts and emergency response; a scalable AWS backend using TypeScript, REST APIs, MQTT, and Firebase for secure device-to-user communication; and edge-based audio AI with custom TensorFlow Lite models that classify critical sounds — falls, alarms, distress — locally on the device, so no audio ever leaves the home.",re:"Full production deployment across iOS and Android serving caregivers across multiple countries. Sub-1-second alert latency, native 911 integration via RapidSOS, and real-time monitoring of thousands of devices. Caregivers gained genuine confidence — not because it was watching, but because it was listening intelligently.",q:"Our partnership with Lumo has been instrumental in shaping our long-term vision.",qn:"Kevin Ray",qr:"Co-Founder & CEO @ Nomo International",features:[{t:"Fall Detection",d:"Automatically detects falls and sends immediate alerts to the care circle."},{t:"RapidSOS Ready",d:"Direct 911 integration for life-threatening emergencies."},{t:"Real-Time Alerts",d:"Customisable notifications for activity patterns and events."},{t:"Two-Way Voice",d:"Clear communication through the Nomo Hub."},{t:"Unlimited Care Circle",d:"Invite as many caregivers as needed at no extra cost."},{t:"Group Calls",d:"Coordinated communication across the entire care team."}],tech:["Swift","Kotlin","TypeScript","Node.js","AWS","Firebase","TensorFlow Lite","MQTT","RapidSOS","React.js","Next.js"],services:["Web development","Mobile development","DevOps","IoT solutions","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL+"/images/nomo_cover.jpeg")},
-  {id:"farmwave",name:"Farmwave",cat:"AgTech",tags:["AgTech","Edge AI","DevOps"],client:"Farmwave, Inc",website:"farmwave.io",period:"May 2024 – Present",brief:"Award-winning vision AI that autonomously monitors harvest loss on farm machinery — even offline.",ch:"Harvest loss of 3–8+ bushels per acre was going undetected because manual checks were impractical during active harvesting. Farmwave needed an AI system that could run in real time on rugged tablets mounted to farm machinery, often in areas with no internet connectivity.",ap:"We delivered an end-to-end platform: a Node.js backend on Google Cloud Platform for scalability and dynamic data handling; a React.js web interface with server-side rendering for fast, responsive dashboards; and a Flutter tablet application providing a consistent cross-platform experience with native features. The Edge AI layer runs Farmwave's vision models directly on the tablet without cloud dependency, enabling real-time grain loss analysis during harvest.",re:"AI Harvest Vision Solution of the Year 2025. Farmers can now identify exactly where loss is coming from on the machine and adjust on-the-go, recovering 3–8+ bushels per acre per season.",q:"Lumo has done more for us in 7 months than internal teams did in 18 months.",qn:"Craig Gannsle",qr:"CEO @ Farmwave Inc",features:[{t:"Harvest Vision System",d:"Real-time camera sensors on machinery capture and analyse grain loss autonomously."},{t:"Edge AI",d:"AI runs directly on rugged tablets — no internet required in the field."},{t:"Multi-Application Support",d:"Integrates with sprayers and transplant machines for crop health and droplet analysis."},{t:"Data Reporting",d:"Detailed post-session field reports exportable in multiple formats."}],tech:["Node.js","GCP","React.js","Flutter","Edge AI","Computer Vision"],services:["Discovery","Web development","DevOps","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#1a3a1a 0%,#2d6a2d 50%,#4a9e4a 100%)", headerImg:(process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg"),coverImg:(process.env.PUBLIC_URL+"/images/farmwave_cover.png")},
-  {id:"beunity",name:"beUnity",cat:"Social",tags:["Mobile","PWA","Hybrid"],client:"beUnity AG",website:"beunity.io",period:"November 2022 – Present",brief:"Interactive communication platform for community-oriented organisations and their members.",ch:"Organisations were managing member communication across fragmented tools — emails, social media, WhatsApp groups. beUnity needed a platform that could centralise communication, event management, and community engagement without requiring members to install a native app.",ap:"We built beUnity as a Progressive Web App (PWA), allowing users to access it directly from a mobile browser and save it to their home screen — no app store required. We wrapped the PWA with Turbo Native to deliver platform-specific features like push notifications, alerts, and badges, giving members a native-like experience while retaining the PWA's ease of updates and cross-platform compatibility.",re:"Organisations across Switzerland manage all member communication, events, and collaboration through a single channel. Updates deploy instantly without requiring manual app updates from users.",q:"",qn:"",qr:"",features:[{t:"Centralised Communication",d:"All channels in one place — no more fragmented tools."},{t:"Event Management",d:"Integrated calendar to organise and promote community events."},{t:"Marketplace",d:"Members post and respond to offers, requests, and resources."},{t:"Groups & Forums",d:"Topic-specific groups so members only see relevant content."},{t:"Member Profiles",d:"Skills and interests visible across the community."},{t:"Interactive Participation",d:"Polls, reactions, and formats that encourage engagement."}],tech:["PWA","Turbo Native","JavaScript","Push Notifications","iOS","Android"],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#1a0a0a 0%,#5c1a1a 50%,#a83a2e 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/beunity_showcase.png")},
-  {id:"crossiety",name:"Crossiety",cat:"Social",tags:["Mobile","PWA","Community"],client:"Crossiety AG",website:"crossiety.ch",period:"November 2022 – Present",brief:"The resident app for your community, city and region — a digital village square.",ch:"Communities lacked a dedicated digital space for local residents to stay informed and engaged. Crossiety needed a mobile-accessible platform that could connect residents within geographic areas, surface local news and events, and foster genuine community participation — without the friction of app store installation.",ap:"We built Crossiety as a Progressive Web App (PWA) accessible directly from a mobile browser, then wrapped it with Turbo Native to add native mobile capabilities — push notifications, alerts, and badges — while keeping the cross-platform flexibility and instant update cycle of a PWA.",re:"Communities across Switzerland use Crossiety as their digital village square, with residents actively engaging in local news, events, and discussions. Updates reach all users instantly without requiring manual app updates.",q:"",qn:"",qr:"",features:[{t:"Community Building",d:"Residents connect within geographic areas, accessing local news and events."},{t:"Real-Time Communication",d:"News, events, and surveys with comments, bookmarks, and integrated calendars."},{t:"Event & Resource Sharing",d:"Easy sharing across communities with Google Calendar and Apple Calendar integration."},{t:"Push Notifications",d:"Opt-in alerts keep residents informed about important local activities."}],tech:["PWA","Turbo Native","JavaScript","Push Notifications","iOS","Android"],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#0a2e1a 0%,#1a5c3a 50%,#2ea86e 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/crossiety_showcase.png")},
-  {id:"drift",name:"Drift App",cat:"AgTech",tags:["AgTech","iOS","Geospatial"],client:"Drift App Inc",website:"",period:"",brief:"Native iOS tool helping farmers control herbicide spray drift with real-time weather and geospatial data.",ch:"Herbicide spray drift causes crop damage, compliance violations, and wasted product. Farmers needed a mobile tool that combined real-time weather data, geospatial mapping, and compliance recordkeeping in one place.",ap:"We defined the native iOS architecture, integrating weather APIs for real-time wind and temperature data, geospatial mapping for field-level planning, and a compliance recordkeeping module. The result was a focused, fast, and reliable tool built specifically for field conditions.",re:"Adopted across the United States for spray planning and regulatory compliance. Farmers use it daily to make confident spray decisions and maintain accurate records.",q:"Their communication and user-centric approach have significantly contributed to our app's success.",qn:"Jen McCarthy",qr:"Business Development @ Drift App Inc",features:[{t:"Real-Time Weather",d:"Live wind speed, direction, and temperature data for safe spray windows."},{t:"Geospatial Mapping",d:"Field-level maps for precise spray zone planning."},{t:"Compliance Records",d:"Automatic logging of spray events for regulatory requirements."},{t:"iOS Native",d:"Built for performance and reliability in field conditions."}],tech:["Swift","iOS","Weather APIs","Geospatial","MapKit"],services:["Mobile development","Strategy advisory","Quality assurance"],cover:"linear-gradient(135deg,#0d2d3a 0%,#1a5c6e 50%,#2e8fa8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/drift_showcase.png")},
-  {id:"noctrix",name:"Noctrix Health",cat:"Health",tags:["Health","iOS","Bluetooth"],client:"Noctrix Health",website:"",period:"",brief:"iOS clinician app for the NTX100 — a prescription neurostimulation medical device.",ch:"Noctrix needed a digital interface for their NTX100 neurostimulation system — a prescription medical device for treating restless leg syndrome. The app had to meet clinical reliability standards while managing Bluetooth device communication and therapy programming.",ap:"We designed and built the iOS Clinician App with full Bluetooth integration for the NTX100 hardware. The architecture handled real-time device communication, therapy session management, and clinical data capture — all within the constraints of a regulated medical device environment.",re:"A reliable, certified clinical tool used by practitioners to programme and manage neurostimulation therapy remotely.",q:"",qn:"",qr:"",features:[{t:"Bluetooth Integration",d:"Reliable real-time communication with the NTX100 hardware device."},{t:"Therapy Management",d:"Clinicians can programme and adjust therapy sessions remotely."},{t:"Clinical Data Capture",d:"Session data recorded for review and compliance."},{t:"Medical-Grade Reliability",d:"Built to the standards required for a prescription medical device."}],tech:["Swift","iOS","CoreBluetooth","BLE"],services:["Mobile development","Architecture advisory","Quality assurance"],cover:"linear-gradient(135deg,#1f0a2e 0%,#4a1a6e 50%,#7b3fa8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/noctrix_showcase.png")},
-  {id:"mobility",name:"MobilityOne",cat:"Mobility",tags:["SaaS","Frontend"],client:"MobilityOne",website:"",period:"",brief:"SaaS fleet management platform centralising operational data for smarter fleet decisions.",ch:"Fleet operators were managing mileage, fuel, maintenance, and vehicle assignments across disconnected spreadsheets and tools. They needed a single web application that could consolidate all operational data and surface actionable insights.",ap:"We architected a SaaS web platform covering the full fleet operational lifecycle — mileage tracking, fuel management, maintenance scheduling, and vehicle assignment workflows — with a clean dashboard designed for daily use by fleet managers.",re:"Companies using MobilityOne reduced fleet operating costs through data-driven decisions, replacing manual processes with a single source of truth.",q:"",qn:"",qr:"",features:[{t:"Mileage Tracking",d:"Accurate per-vehicle mileage logging and reporting."},{t:"Fuel Management",d:"Monitor fuel consumption and identify inefficiencies."},{t:"Maintenance Scheduling",d:"Proactive maintenance reminders to reduce breakdowns."},{t:"Assignment Management",d:"Track vehicle assignments across drivers and departments."}],tech:["React","Node.js","TypeScript","PostgreSQL","AWS"],services:["Web development","SaaS architecture","Quality assurance"],cover:"linear-gradient(135deg,#0a1a2e 0%,#1a3a5c 50%,#2e6ea8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/mo_showcase.png")},
-  {id:"muvr",name:"Muvr",cat:"Health",tags:["iOS","Swift","Wearables"],client:"Muvr Labs, Inc",website:"muvrlabs.com",period:"May 2020 – April 2022",brief:"Native iOS platform simplifying diagnostics and big data for orthopedic post-operative care.",ch:"Orthopedic surgeons had no effective way to monitor patient recovery remotely after surgery. Muvr needed a native iOS app that could integrate wearable sensor data, provide real-time analytics, and facilitate communication between patients and their medical teams.",ap:"We developed a native iOS application in Swift, using SnapKit for code-based UI constraints and responsive layout management, and RxSwift for reactive programming to handle asynchronous wearable data streams smoothly. The result was a robust, interactive tool tailored precisely for iOS — reliable enough for clinical use.",re:"A dependable clinical tool that streamlined post-operative care for orthopedic practices, empowering surgeons to monitor patient recovery remotely and reducing unnecessary in-person visits.",q:"",qn:"",qr:"",features:[{t:"Wearable Integration",d:"Real-time data tracking from wearables to monitor patient recovery."},{t:"Remote Monitoring",d:"Surgeons track progress without requiring in-person visits."},{t:"Patient Communication",d:"Streamlined messaging between patients and medical teams."},{t:"Big Data Insights",d:"Data-driven analytics to improve outcomes and reduce clinical burden."}],tech:["Swift","iOS","SnapKit","RxSwift"],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#0a1a2e 0%,#0d3d5c 50%,#1a7a8a 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/muvr_home.jpg")},
+  {id:"nomo",name:"NOMO Smart Care",cat:"Health",tags:["IoT","AI/ML","Mobile"],client:"Nomo International, Ltd",website:"nomosmartcare.com",period:"March 2021 to Present",brief:"A whole-home safety platform for families caring for aging parents. A small hub, a few outlet sensors, an app that learns the routine and speaks up when something's off. No cameras, no wearables.",ch:"Millions of older adults live alone, and their adult children live with a low-grade worry about them. A fall, a stroke, a slow drift in daily routine: these things often go unnoticed until they turn serious. The existing options all carry the same compromise. Cameras feel like surveillance, pendants get taken off, wearables sit forgotten on the bedside table. Families were stuck choosing between a parent's safety and a parent's dignity. Nomo set out to build something different: a quiet mesh of sensors that listens for the moments that actually matter instead of watching everything. They needed a full technology partner to deliver it across hardware, mobile, cloud, and on-device AI, at roughly a dollar a day.",ap:"We built the whole stack. A small hub lives in a central room and pairs with low-power satellite sensors that plug into outlets around the home, plus tags for doors, the fridge, and the medicine cabinet. Native iOS (Swift) and Android (Kotlin) apps give every member of the Care Circle instant alerts, two-way voice to the hub, and a shared timeline of the day. A TypeScript back end on AWS, with Firebase for push delivery and MQTT for resilient messaging, keeps devices and caregivers in sync even when cellular networks wobble. The most important piece sits on the hub itself: custom TensorFlow Lite models classify sounds (a fall, a smoke alarm, a cry for help) and motion patterns (prolonged inactivity, a sliding fall, a missed wake-up) locally, and learn each home's normal routine over time so a 4 AM bathroom trip doesn't turn into a 4 AM alert. When something real happens, RapidSOS opens a direct line to 911 in under a second.",re:"Nomo is live on iOS and Android across all 50 US states, with thousands of hubs in real homes. The product runs on a monthly subscription at roughly a dollar a day, with a 60-day risk-free trial. Alert-to-notification latency sits under a second. Routine learning means false alarms stay rare, so caregivers trust the alerts they do get. Families end up with what they actually wanted: peace of mind, without turning a parent's home into a surveillance system.",q:"Our partnership with Lumo has been instrumental in shaping our long-term vision.",qn:"Kevin Ray",qr:"Co-Founder & CEO @ Nomo International",metrics:[{v:"<1s",l:"alert to caregiver"},{v:"AI",l:"learns each home's routine"},{v:"24/7",l:"911 via RapidSOS"},{v:"50 states",l:"US-wide availability"}],features:[{t:"Fall Detection",d:"Catches both impact falls and prolonged inactivity, including the slow / sliding falls that wearables miss."},{t:"Routine Learning",d:"AI learns each household's normal day so unusual events stand out and false alarms stay rare."},{t:"RapidSOS Ready",d:"Direct 911 dispatch in under a second for genuine emergencies."},{t:"Sleep & Activity Insights",d:"Tracks bedroom movement, frequent wake-ups, and bathroom trips, surfacing changes early."},{t:"Two-Way Voice",d:"Caregivers can talk through the hub without an extra device on the parent's side."},{t:"Unlimited Care Circle",d:"Invite every family member who wants to help, at no extra cost per seat."}],stack:[{g:"Mobile",i:["Swift","Kotlin"]},{g:"Backend & infra",i:["TypeScript","Node.js","AWS","Firebase","MQTT"]},{g:"On-device AI",i:["TensorFlow Lite","Audio + motion classifiers"]},{g:"Hardware",i:["Hub","Satellite sensors","Door / fridge tags"]},{g:"Web",i:["React.js","Next.js"]},{g:"Emergency",i:["RapidSOS"]}],why:[{t:"Why on-device AI?",d:"Audio and motion are the most sensitive data in someone's home. Running the classifier on the hub means the data is analysed and discarded locally. Nothing streams to a cloud, nothing is ever recorded. That's a privacy decision first and a latency decision second."},{t:"Why a sensor mesh instead of a wearable or a camera?",d:"Wearables get taken off. Cameras feel like surveillance. A small hub plus a handful of outlet satellites and tags covers the whole home invisibly, runs 24/7, and asks nothing of the parent."},{t:"Why native iOS + Android, not cross-platform?",d:"An alert that lands half a second late is an alert that didn't land. Native gives us the background-process control, push-delivery reliability, and two-way-voice performance that a wrapped framework can't match."},{t:"Why MQTT + Firebase together?",d:"Firebase for push notifications, MQTT for the live duplex channel between hub and app. Cellular drops happen; using both means the next alert still gets through."}],services:["Web development","Mobile development","DevOps","IoT solutions","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL+"/images/nomo_cover.png"),coverImgMobile:(process.env.PUBLIC_URL+"/images/nomo_header_1.png"),cardImgMobile:(process.env.PUBLIC_URL+"/images/nomo_header_1.png")},
+  {id:"farmwave",name:"Farmwave",cat:"AgTech",tags:["AgTech","Edge AI","DevOps"],client:"Farmwave, Inc",website:"farmwave.io",period:"May 2024 to Present",brief:"Award-winning vision AI that retrofits onto any combine harvester, watching for lost grain in real time, offline, from inside the cab.",ch:"Every harvest, a surprising share of the crop spills out of the combine before it ever reaches the grain tank. The losses are invisible: a few kernels here, a few there, spread across hundreds of acres. Over a season they add up to thousands of dollars per field. Manual checks (getting out of the cab, pacing, counting kernels on the ground) don't scale when the combine is running. The factory telemetry on most machines tells the operator everything is fine when grain is actually leaking. Farmwave needed an AI that could do this job continuously, from the cab, on any combine new or old, and crucially without internet, because the fields where this matters most have no signal at all.",ap:"We built an end-to-end platform. In the cab, a Flutter app on a rugged tablet gives the operator a consistent interface across different machinery. Up on the combine, three to ten cameras (held in place by industrial magnets) capture an image every three seconds and feed an on-device vision model that pinpoints where grain is escaping: the header, a section of the combine body, or further down the machine. The operator sees losses live and adjusts settings on the fly, no stopping. A Node.js back end on Google Cloud Platform handles the seasonal spikes without paying for idle capacity off-season; a React dashboard lets agronomists and farm managers review sessions and compare fields on the web. The whole system retrofits onto any combine make or model in a few hours.",re:"Farmers recover 3 to 8+ bushels per acre per season by catching losses as they happen, with more than 140 measurements per acre going into each session. The platform runs on more than a dozen crops, from corn and soybeans to peanuts, cotton, and edible beans. Farmwave won AI Harvest Vision Solution of the Year 2025 for the work, and rolled into Brazil the same year through a partnership with VRO. The product proved out in the field, not just in a deck.",q:"Lumo has done more for us in 7 months than internal teams did in 18 months.",qn:"Craig Gannsle",qr:"CEO @ Farmwave Inc",metrics:[{v:"3-8+",l:"bu/acre recovered"},{v:"Every 3s",l:"image capture per camera"},{v:"Any combine",l:"retrofit in hours"},{v:"Award 2025",l:"AI Harvest Vision"}],features:[{t:"Harvest Vision System",d:"Real-time camera sensors on the combine capture and analyse grain loss autonomously."},{t:"Edge AI",d:"The vision model runs directly on the rugged tablet in the cab. No internet required in the field."},{t:"Multi-Camera Setup",d:"3 to 10 cameras mount with industrial magnets, configurable per machine, all the way up to peanut harvesters."},{t:"Loss Source Pinpoint",d:"Identifies whether grain is escaping from the header, the combine body, or a specific section so the operator knows exactly what to adjust."},{t:"Crop Variety",d:"Works across corn, soybeans, wheat, peanuts, cotton, edible beans, canola, barley, oats, lentils, and peas."},{t:"Live Recommendations",d:"The 2025 software update suggests real-time adjustments based on detected losses, especially valuable for less experienced operators."}],stack:[{g:"In-cab tablet",i:["Flutter","Edge AI","Computer Vision"]},{g:"Hardware",i:["3-10 cameras","Industrial magnet mounts","Rugged tablet"]},{g:"Backend & infra",i:["Node.js","Google Cloud Platform"]},{g:"Web dashboard",i:["React.js","SSR"]}],why:[{t:"Why Edge AI on the tablet?",d:"The fields Farmwave serves often have no cellular signal. Cloud inference would mean no inference. The AI has to run on the device, full stop. Everything else in the architecture follows from that one constraint."},{t:"Why a retrofit instead of an OEM integration?",d:"Farmers don't replace combines. They use the one in the shed, often for 15+ years. A retrofit that goes onto any make or model in a few hours reaches the operators who need this most, without waiting on a manufacturer roadmap."},{t:"Why Flutter in the cab?",d:"Farmwave runs across different tablet makers and machinery brands. Flutter lets us ship one codebase that feels consistent on every rig, instead of maintaining separate native forks for each OEM."},{t:"Why Google Cloud, not AWS?",d:"Usage is violently seasonal: a six-week harvest window, then quiet. GCP's scaling and per-second billing suit that shape better than reserved-capacity thinking."}],services:["Discovery","Web development","DevOps","AI solutions","Quality assurance"],press:[{l:"AI Harvest Vision Solution of the Year 2025",u:"https://www.agribusinessrevieweurope.com/farmwave"}],cover:"linear-gradient(135deg,#1a3a1a 0%,#2d6a2d 50%,#4a9e4a 100%)", headerImg:(process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg"),coverImg:(process.env.PUBLIC_URL+"/images/farmwave_cover.png")},
+  {id:"beunity",name:"beUnity",cat:"Social",tags:["Mobile","PWA","Hybrid"],client:"beUnity AG",website:"beunity.io",period:"November 2022 to Present",brief:"A central member platform for clubs, churches, associations and parish groups, replacing the scatter of email chains, WhatsApp groups, and noticeboards with one app every member actually opens.",ch:"Member organisations (associations, clubs, parish groups, cooperatives, settlements, churches) had the same problem wherever we looked. Announcements went out by email, event reminders on WhatsApp, polls on Facebook, the marketplace on a noticeboard. Nothing lived in one place. New members couldn't find anything. Long-standing members missed half of what was happening. Organisations needed a single, trusted space where all of this would live, and they needed it to be instantly accessible, without every member having to hunt down an app in the App Store first.",ap:"We built beUnity as a Progressive Web App: users open it in their phone browser, tap 'Add to Home Screen', and from that moment on it looks and feels like any other app. No App Store review, no long install. We wrapped it with Turbo Native so it can still do the native-only bits (push notifications, badges, alerts) without losing the biggest advantage of a PWA: we can ship updates instantly, without every member having to update anything. All data is hosted exclusively on European servers and the platform is fully GDPR-compliant, non-negotiable for the Swiss organisations that founded the product.",re:"Founded in 2020 as a spin-off of Crossiety AG, beUnity now powers 500+ member organisations: clubs, churches, settlements, parish groups, associations. Updates go out the same day we ship them. Members get one app that actually replaces the pile of tools they used to juggle, with forums, events, surveys, file sharing, and groups all in one place.",q:"",qn:"",qr:"",metrics:[{v:"500+",l:"member organisations"},{v:"Instant",l:"install via PWA"},{v:"Same-day",l:"updates ship"},{v:"GDPR",l:"EU-only data residency"}],features:[{t:"Centralised Communication",d:"Forums, posts, comments, and chat in one place. No more fragmented tools."},{t:"Event Management",d:"Built-in calendar with personal-calendar sync and attendance tracking."},{t:"Surveys & Polls",d:"Quick decisions and member input without leaving the platform."},{t:"File Sharing",d:"Files attached to posts and chats are auto-stored in one searchable place."},{t:"Groups & Forums",d:"Topic-specific spaces so members only see content relevant to them."},{t:"Web, iOS & Android",d:"One platform across browser, smartphone, and tablet. No separate logins."}],stack:[{g:"Frontend",i:["PWA","JavaScript"]},{g:"Native wrapper",i:["Turbo Native","iOS","Android"]},{g:"Hosting",i:["EU-only servers","GDPR-compliant"]},{g:"Messaging",i:["Push Notifications"]}],why:[{t:"Why a PWA, not a native app?",d:"Onboarding a new member is the highest-friction moment in a community product. A PWA skips the App Store entirely. Someone shares a link, the recipient opens it, and they're in. That's a 10-second path instead of a 10-minute one."},{t:"Why Turbo Native on top?",d:"A pure PWA can't do push notifications on iOS with full reliability, and doesn't get a real home-screen icon on every OS. Wrapping it with Turbo Native gives us the native features where they matter and keeps the deploy-instantly advantage of the PWA everywhere else."},{t:"Why EU-only data residency?",d:"Many of the organisations on beUnity are based in Switzerland and the broader EU, where members trust the platform with personal data on the assumption it doesn't cross a border it shouldn't. Storing exclusively on European servers makes that promise architectural, not aspirational."}],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#1a0a0a 0%,#5c1a1a 50%,#a83a2e 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/beunity_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/beunity_cover.jpeg"),coverImgMobile:(process.env.PUBLIC_URL+"/images/beunity_header_2.png")},
+  {id:"crossiety",name:"Crossiety",cat:"Social",tags:["Mobile","PWA","Community"],client:"Crossiety AG",website:"crossiety.ch",period:"November 2022 to Present",brief:"A trusted digital village square for towns, villages, and city neighbourhoods. Real neighbours, real names, GIS-based local radius, GDPR by design.",ch:"Local life (the lost cat, the bake sale, the new shop opening, the council meeting) was drifting onto Facebook and WhatsApp, where it either got buried by algorithms or trapped in chat groups half the neighbourhood wasn't in. Nobody wanted a second Facebook for their town. What residents actually wanted was a trusted space tied to the place they lived: real names only, no anonymous drama, and a feed that belongs to the community rather than a global platform optimising for outrage.",ap:"We built Crossiety as a Progressive Web App so residents can open it on any phone browser and use it immediately. No App Store install stands between them and their neighbourhood. Turbo Native gives it the native feel where it counts: push notifications for new local posts, badges, alerts. SMS verification with real first and last names is the quiet backbone, the cheapest, most privacy-respecting way to make sure the person across the feed is actually a neighbour, not a bot or a troll. A GIS-based radius lets each resident pick the towns and neighbourhoods they care about, so the feed feels truly local instead of platform-wide.",re:"Founded in 2015 in Zurich, Crossiety is now used by communities across Switzerland and Germany as their digital village square. Local news, events, classifieds, groups, and chat all live in one place, tied to a verified residency. Updates ship instantly, and the feed feels like the place it actually represents, not the algorithmic noise of a global platform.",q:"",qn:"",qr:"",metrics:[{v:"SMS-verified",l:"real neighbours, real names"},{v:"GIS radius",l:"truly local feed"},{v:"CH & DE",l:"deployed across"},{v:"GDPR",l:"data-minimal by design"}],features:[{t:"Trusted Identity",d:"Real first + last name with SMS verification. Bots and trolls don't make it through."},{t:"Local Radius (GIS)",d:"Residents choose which towns and neighbourhoods they want in their feed."},{t:"Multiple Post Types",d:"News, events, share, survey, organize. One platform replaces five."},{t:"Real-time Comments & Chat",d:"Two-way conversation directly with neighbours, secure and private."},{t:"Event & Resource Sharing",d:"Sync with Google Calendar and Apple Calendar; share across communities."},{t:"Push Notifications",d:"Opt-in alerts keep residents informed about local news, events, and emergencies."}],stack:[{g:"Frontend",i:["PWA","JavaScript"]},{g:"Native wrapper",i:["Turbo Native","iOS","Android"]},{g:"Trust layer",i:["SMS verification","Real-name identity"]},{g:"Geo",i:["GIS","Radius selection"]},{g:"Messaging",i:["Push Notifications"]}],why:[{t:"Why a PWA here too?",d:"Crossiety competes with a three-second Facebook Group. Any friction in getting the first post in front of a resident loses the user. A PWA removes the install. Open the link, you're in the community feed."},{t:"Why SMS verification?",d:"A Swiss mobile number is the cheapest identity check that doesn't demand more personal data than we actually need. It's enough friction to keep bots and trolls out, and no more than that."},{t:"Why a GIS-based radius instead of fixed cities?",d:"A neighbour at the edge of one town reads the same local feed as someone in the next village over. Fixed administrative boundaries don't match how residents actually live. A radius around home does."}],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#0a2e1a 0%,#1a5c3a 50%,#2ea86e 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/crossiety_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/crossiety_cover.jpeg"),coverImgMobile:(process.env.PUBLIC_URL+"/images/crossiety_home.png")},
+  {id:"drift",name:"Drift App",cat:"AgTech",tags:["AgTech","iOS","Geospatial"],client:"Drift App Inc",website:"ditchdrift.com",period:"",brief:"A native iOS tool that tells US farmers when conditions are safe to spray, automatically maps adjacent fields, shares crop traits with neighbours, and produces a paper trail for every spray decision.",ch:"Spraying herbicide is one of the riskiest moves a farmer makes in a season. If the wind lifts the spray off your field onto a neighbour's, you've just damaged their crop, and invited a lawsuit, an insurance claim, and a very expensive conversation. Farmers needed two things: a tool that told them, from the cab, whether conditions were genuinely safe on this specific field right now, and an automated way to know what's growing across the fence so they could pick the right product in the first place. A generic weather app isn't enough; phone calls to neighbours don't scale.",ap:"We defined a native iOS architecture around three things a farmer actually cares about: maps, live weather, and a paper trail. MapKit handles field-level geospatial planning (your fields, your neighbours' fields, their crop types and herbicide traits) and the system automatically detects adjacent fields once a farmer draws their boundaries. A live-weather integration pulls wind, direction, and temperature for the specific field the farmer is about to spray, and combines it with their sprayer setup (custom tank mixes, nozzle size, pump pressure) to produce a clear Sprayability Index and a 4-day Spray Planner forecast. Visual drift-pattern overlays show how spray would carry under current conditions. Every spray event is logged automatically for compliance, with an exportable report covering weather, drift pattern, and surrounding crop traits at the time.",re:"The Drift App became the industry's first crop-type and seed-trait sharing tool. Farmers use it daily to plan sprays, share crop traits with adjacent operators automatically (no more phone calls), and keep regulators, neighbours, and insurance companies happy. They make more confident decisions, and when a claim does come up, the records are already there.",q:"Their communication and user-centric approach have significantly contributed to our app's success.",qn:"Jen McCarthy",qr:"Business Development @ Drift App Inc",metrics:[{v:"Sprayability Index",l:"go/no-go score"},{v:"4-day",l:"spray forecast"},{v:"Auto",l:"crop trait sharing with neighbours"},{v:"Industry-first",l:"crop & trait sharing tool"}],features:[{t:"Sprayability Index",d:"A clear go/no-go score combining live wind, temperature, nozzle size, pump pressure, and tank mix."},{t:"4-day Spray Planner",d:"Forecast that lists your fields by sprayability or proximity, so you plan the week, not the moment."},{t:"Adjacent Field Detection",d:"Draw your boundaries once, the app automatically finds neighbouring fields and prompts to invite them."},{t:"Visual Drift Patterns",d:"Overlay shows how spray would carry under current weather conditions."},{t:"Custom Sprayer Setup",d:"Build your herbicide list, custom tank mixes, and enter nozzle and pressure for accurate scoring."},{t:"Compliance Reports",d:"Print or export a record of weather, drift pattern, and surrounding traits at the moment of spraying."}],stack:[{g:"Mobile",i:["Swift","iOS 13+"]},{g:"Geospatial",i:["MapKit","CoreLocation"]},{g:"Integrations",i:["Weather APIs","Sprayer telemetry"]}],why:[{t:"Why native iOS, not cross-platform?",d:"Maps, location permissions, background fetch and offline persistence are all areas where first-party iOS APIs are simply better. Going cross-platform here would have added wrappers and bugs for zero user-visible benefit."},{t:"Why field-level weather, not regional?",d:"The wind on the edge of your own field matters more than a reading at the nearest airport 20 km away. We integrate weather data at the granularity of the actual spray decision, which is the only granularity that matters."},{t:"Why build trait sharing into the same app?",d:"The single most expensive mistake in spraying is spraying the wrong product on a field next to one with sensitive traits. Putting trait sharing inside the planner means the relevant information is right there at the decision moment, not three apps and two phone calls away."},{t:"Why build compliance logs into the flow?",d:"A farmer won't remember to log every spray by hand, and that's exactly when insurance claims fail. Logging is a byproduct of using the app, not a separate step."}],services:["Mobile development","Strategy advisory","Quality assurance"],cover:"linear-gradient(135deg,#0d2d3a 0%,#1a5c6e 50%,#2e8fa8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/drift_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/drift_cover.jpeg")},
+  {id:"noctrix",name:"Noctrix Health",cat:"Health",tags:["Health","iOS","Bluetooth"],client:"Noctrix Health",website:"noctrixhealth.com",period:"",brief:"The iOS clinician app for the NTX100 TOMAC system: the first FDA-authorised, drug-free therapy for moderate-to-severe Restless Legs Syndrome.",ch:"Restless Legs Syndrome keeps millions of people awake at night with an involuntary urge to move their legs. For patients who've tried every medication and still can't sleep, options run out. Noctrix developed the NTX100 TOMAC (Tonic Motor Activation): two small therapy units paired with electrode patches worn below the knees that gently stimulate the peroneal nerves bilaterally to produce a continuous, sleep-compatible muscle activation. They earned FDA De Novo marketing authorisation in April 2023, the first authorised non-drug therapy for RLS. For the device to actually reach patients, a clinician needed a reliable, medical-grade way to programme each therapy unit, calibrate stimulation output per patient, and capture clinical data. Reliability wasn't a nice-to-have: this is a regulated medical device, and a connection that drops mid-session is a safety issue.",ap:"We designed and built the iOS Clinician App in Swift with deep CoreBluetooth integration for the NTX100 hardware. The app ships pre-installed on Noctrix-provided iOS devices given to each clinic, so the deployment surface is fully controlled, no consumer app store, no version drift across devices. The architecture handles the real-time BLE handshake to two paired therapy units, the per-patient calibration of stimulation output, and clinical data capture, all within the constraints of a regulated medical device environment: documented, testable, and predictable. The clinician workflow was kept intentionally narrow: a small number of well-trodden paths, because a medical device isn't the place for clever UX experiments.",re:"A dependable clinical tool that practitioners use to programme and manage NTX100 therapy for their patients. It's part of every clinical deployment of the device, a non-drug option for patients who had effectively run out of them. Noctrix's pivotal RCT met all 7 efficacy endpoints and reported a 72.7% responder rate at week 24.",q:"",qn:"",qr:"",metrics:[{v:"FDA De Novo",l:"authorisation (Apr 2023)"},{v:"7/7",l:"RCT endpoints met"},{v:"72.7%",l:"responder rate at 24 wks"},{v:"First-in-class",l:"non-drug RLS therapy"}],features:[{t:"Bluetooth Integration",d:"Reliable real-time BLE link to both NTX100 therapy units worn by the patient."},{t:"Per-Patient Calibration",d:"Clinician programmes custom stimulation output specific to each patient's tolerance and response."},{t:"Therapy Management",d:"Programme, adjust, and review therapy sessions during clinic visits."},{t:"Clinical Data Capture",d:"Session data recorded for clinical review and regulatory compliance."},{t:"Pre-installed iOS App",d:"Ships on Noctrix-provided iOS devices for a fully controlled deployment surface."},{t:"Medical-Grade Reliability",d:"Built to the standards required for a prescription-authorised medical device."}],stack:[{g:"Mobile",i:["Swift","iOS"]},{g:"Connectivity",i:["CoreBluetooth","BLE"]},{g:"Deployment",i:["Pre-installed Noctrix iOS device"]}],why:[{t:"Why native Swift + CoreBluetooth?",d:"A regulated medical device can't afford a dropped Bluetooth session mid-therapy. Apple's first-party BLE stack, written against in Swift, gives us the most tested path to connection reliability, with documented behaviour that satisfies regulators, not a third-party abstraction."},{t:"Why a controlled hardware deployment?",d:"Every clinic gets a Noctrix-provided iOS device with the app pre-installed. There's no consumer app store, no version mismatch, no clinician downloading the wrong build. For a regulated device, that's the simplest path to a defensible deployment posture."},{t:"Why a narrow, almost boring UI?",d:"This app lives inside a medical device workflow. Every surprise is a risk. We intentionally kept the surface small and the paths well-trodden. Clinicians learn it once, and it behaves the same way every time."}],services:["Mobile development","Architecture advisory","Quality assurance"],cover:"linear-gradient(135deg,#1f0a2e 0%,#4a1a6e 50%,#7b3fa8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/noctrix_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/noctrix_cover.jpeg")},
+  {id:"mobility",name:"MobilityOne",cat:"Mobility",tags:["SaaS","Frontend"],client:"MobilityOne",website:"mobilityone.io",period:"",brief:"A SaaS fleet platform built for corporates and leasing companies. Pulls mileage, fuel, maintenance, assignments, and CO₂ into one source of truth, then hands it straight to ERP.",ch:"Fleet data at most corporates and leasing companies lives in five different places. Mileage sits in spreadsheets, fuel and motorway receipts in email, maintenance in a separate tool, driver assignments on a whiteboard, CO₂ reporting in whatever someone last built in Excel. Nobody has a single view of the fleet, so cost decisions are guesses, audit season is painful, and ESG reports are a scramble. MobilityOne needed a consolidated platform that fleet managers would actually use every day, that finance and sustainability teams could trust, and that handled every vehicle type, not just cars.",ap:"We architected a SaaS web platform that covers the full operational loop: mileage tracking, fuel and motorway expense management, maintenance scheduling, vehicle assignments, and CO₂ reporting per vehicle, organisation unit, vehicle type, and geographic location. The system handles every vehicle type the platform needs to support (cars, vans, trucks, buses, trains, forklifts, heavy machinery) across multiple fuel types. The dashboard is built for daily use, not quarterly reports. It's clean, fast, and keyboard-friendly. Datasets export straight into ERP and finance systems for automated cost allocation and booking, so there's no double-entry at month end. Each function (HR, Procurement, Logistics, Finance, Accounting) gets its own dashboard tailored to what they actually need to see.",re:"Companies using MobilityOne get a single source of truth for their fleet. Operating costs drop because decisions are now based on real numbers; compliance and CO₂ reporting stop being quarterly fire drills. The platform was founded in 2019 in Zagreb by Make IT Easy d.o.o. and now serves corporate and leasing-company deployments across the EU.",q:"",qn:"",qr:"",metrics:[{v:"All vehicle types",l:"cars to heavy machinery"},{v:"Multi-fuel",l:"any powertrain"},{v:"ERP-ready",l:"export datasets"},{v:"CO₂",l:"per car, unit, region"}],features:[{t:"Mileage Tracking",d:"Per-vehicle mileage with import, review, analysis, and export pipelines."},{t:"Fuel & Motorway",d:"Capture all fuel and toll expenses for accurate per-vehicle cost."},{t:"Maintenance Scheduling",d:"Proactive interval reminders to reduce downtime."},{t:"Assignment Management",d:"Track which driver, department, and project a vehicle belongs to."},{t:"CO₂ Reporting",d:"Footprint by vehicle, organisation unit, vehicle type, and geography."},{t:"ERP Export",d:"Datasets ready for direct import into finance and ERP systems for cost allocation and booking."}],stack:[{g:"Frontend",i:["React","TypeScript"]},{g:"Backend",i:["Node.js"]},{g:"Data",i:["PostgreSQL"]},{g:"Infra",i:["AWS"]}],why:[{t:"Why React + TypeScript?",d:"Fleet managers live in this dashboard all day. SPA responsiveness and good keyboard flow matter far more than SEO or first-paint speed. TypeScript earns its keep the moment you start handling money, vehicles, and assignments in the same state."},{t:"Why PostgreSQL, not NoSQL?",d:"Vehicles belong to business units, drivers are assigned to vehicles, events reference drivers and vehicles, invoices reference events. This is relational data, top to bottom. Reaching for NoSQL would have created problems we don't need."},{t:"Why one platform for every vehicle type?",d:"Most fleet tools assume cars. Real corporate fleets are messier — service vans, delivery trucks, factory forklifts, sometimes whole transport divisions. Building once for the full range avoids the per-vehicle-type SaaS sprawl that finance teams end up reconciling at quarter-end."},{t:"Why build export-to-ERP in from day one?",d:"If fleet numbers don't get into finance cleanly, they get re-typed, and re-typed numbers are wrong numbers. We made exporting a first-class feature so month-end closes without drama."}],services:["Web development","SaaS architecture","Quality assurance"],cover:"linear-gradient(135deg,#0a1a2e 0%,#1a3a5c 50%,#2e6ea8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/mo_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/mo_cover.jpeg")},
+  {id:"muvr",name:"Muvr",cat:"Health",tags:["iOS","Swift","Wearables"],client:"Muvr Labs, Inc",website:"muvrlabs.com",period:"May 2020 to April 2022",brief:"An iOS platform that gave orthopedic surgeons continuous insight into how their joint-replacement patients were actually recovering at home. Acquired by Exactech in December 2020 to anchor their Active Intelligence orthopedic platform.",ch:"After a hip or knee replacement, the real work happens at home over weeks of rehab. Surgeons couldn't see any of it, only what the patient said at the 6-week check-up. Step counts from pedometer-style tools didn't help: what matters in orthopedic recovery is the actual range of motion of the joint, not how many times the patient walked to the kitchen. When patients fell behind on exercises or their joint wasn't moving correctly, nobody knew until it was late. Muvr wanted to close that gap: give surgeons the same kind of continuous data they'd have if the patient were still in the clinic, and a way to nudge patients between visits without flooding the practice's phone lines.",ap:"We built a native iOS app in Swift paired to wireless sensors that the patient wears during recovery. The sensors continuously measure joint range of motion, exercise completion, and activity, and stream the data back to the surgeon's team as clean, clinical signal, not step counts. Surgeons see a web dashboard that flags at-risk patients and lets them connect remotely for follow-up. A customisable patient chatbot handles the routine touchpoints (reminders, common questions, between-visit check-ins) without consuming nursing time. SnapKit handled UI constraints and RxSwift handled the live sensor stream. The app had to feel solid enough for orthopedic practices to actually deploy, and fast enough not to stutter under the data rate.",re:"Muvr became a dependable clinical tool for orthopedic practices: surgeons monitored recovery remotely, patients got proactive reminders and guidance, and unnecessary follow-up visits fell. In December 2020, Exactech acquired Muvr to bring the platform into their Active Intelligence orthopedic suite, with plans to extend the technology to shoulder and ankle replacement surgery next.",q:"",qn:"",qr:"",metrics:[{v:"Acquired Dec 2020",l:"by Exactech"},{v:"Hip & knee",l:"recovery monitoring"},{v:"Wearable + chatbot",l:"continuous engagement"},{v:"Active Intelligence",l:"part of Exactech's platform"}],features:[{t:"Wearable Integration",d:"Continuous, real-time range-of-motion data from wireless sensors during recovery."},{t:"Surgeon Dashboard",d:"Web view that flags at-risk patients and supports remote follow-up."},{t:"Patient Chatbot",d:"Customisable text conversations for reminders and common questions, between visits."},{t:"Remote Monitoring",d:"Track exercise compliance and joint progress without requiring in-person visits."},{t:"Big-Data Insights",d:"Aggregated outcomes across the patient cohort to refine clinical pathways."},{t:"Clinical-Grade iOS",d:"Built and tested to the standards required for orthopedic practice deployment."}],stack:[{g:"Mobile",i:["Swift","iOS"]},{g:"UI",i:["SnapKit"]},{g:"Reactive",i:["RxSwift"]},{g:"Wearables",i:["Wireless motion sensors"]},{g:"Engagement",i:["Patient chatbot"]}],why:[{t:"Why native Swift?",d:"Sensor data arrives continuously and the UI has to stay smooth while it's rendered. Native iOS under Swift gives us the tightest control over the main thread, which is where responsive charts happen, or don't happen."},{t:"Why RxSwift?",d:"Live sensor streams map very cleanly onto reactive programming. Compose the signal, filter it, aggregate it, subscribe views to it. Doing this with plain callbacks would have turned the codebase into a pile of state-management tangles."},{t:"Why SnapKit, not Storyboards?",d:"Clinical apps get used on every iPhone screen size in clinics. SnapKit-in-code constraints were faster to iterate on than Storyboards and easier to unit-test."},{t:"Why a chatbot alongside the wearable?",d:"Sensor data tells surgeons what's happening with the joint. The chatbot solves the other half of recovery: keeping the patient on track between visits without burning nursing time on routine reminders. The two together cover the gap that one alone can't."}],services:["Mobile development","Quality assurance"],press:[{l:"2019 App Innovation Award",u:"https://investors.progress.com/news-releases/news-release-details/progress-announces-winners-2019-app-innovation-awards"}],cover:"linear-gradient(135deg,#0a1a2e 0%,#0d3d5c 50%,#1a7a8a 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/muvr_home.jpg"),coverImg:(process.env.PUBLIC_URL+"/images/muvr_cover.jpeg"),coverImgMobile:(process.env.PUBLIC_URL+"/images/muvr_home.jpg")},
 ];
+const caseShowcase:{[k:string]:{src:string,alt:string,caption?:string}[]}={
+  nomo:[
+    {src:process.env.PUBLIC_URL+"/images/nomo_1.png",alt:"Nomo Smart Care app — caregiver dashboard",caption:"One app for the whole Care Circle: live status, alerts, and a shared timeline of the day."},
+    {src:process.env.PUBLIC_URL+"/images/nomo_2.jpg",alt:"Nomo Hub and satellite sensors installed in the home",caption:"A small hub, outlet satellites, and a few tags cover the whole home invisibly."},
+    {src:process.env.PUBLIC_URL+"/images/nomo_3.jpg",alt:"Nomo Smart Care fall detection alert",caption:"Both impact falls and slow / sliding falls are caught and routed to caregivers in under a second."},
+    {src:process.env.PUBLIC_URL+"/images/nomo_4.webp",alt:"Nomo Smart Care routine and sleep insights",caption:"The system learns each home's routine, so unusual events stand out and false alarms stay rare."},
+  ],
+  farmwave:[
+    {src:process.env.PUBLIC_URL+"/images/farmwave_award.png",alt:"AI Harvest Vision Solution of the Year 2025, awarded to Farmwave",caption:"AI Harvest Vision Solution of the Year 2025."},
+    {src:process.env.PUBLIC_URL+"/images/farmwave_1.png",alt:"Farmwave camera mounted on a combine harvester",caption:"Cameras mount with industrial magnets, configurable from three to ten per machine."},
+    {src:process.env.PUBLIC_URL+"/images/farmwave_2.jpg",alt:"Farmwave Harvest Vision in the field during harvest",caption:"In-field harvest with the system running live in the cab, every three seconds, on every camera."},
+  ],
+  beunity:[
+    {src:process.env.PUBLIC_URL+"/images/beunity_header.png",alt:"beUnity communication platform for member organisations",caption:"One platform for member communication, events, and community."},
+  ],
+  crossiety:[
+    {src:process.env.PUBLIC_URL+"/images/crossiety_header.png",alt:"Crossiety, the resident app for your community",caption:"A digital village square for towns, cities, and regions."},
+    {src:process.env.PUBLIC_URL+"/images/crossiety_home.png",alt:"Crossiety mobile home screen with local news and events",caption:"Residents see local news, events, and discussions, all in one place."},
+  ],
+  drift:[
+    {src:process.env.PUBLIC_URL+"/images/drift_header.jpg",alt:"Drift App, real-time weather and spray planning for farmers",caption:"Wind, temperature, and compliance, purpose-built for the cab."},
+  ],
+  noctrix:[
+    {src:process.env.PUBLIC_URL+"/images/noctrix_header.jpg",alt:"Noctrix Health NTX100 clinician iOS app",caption:"Clinicians programme and manage neurostimulation therapy remotely via Bluetooth."},
+  ],
+  mobility:[
+    {src:process.env.PUBLIC_URL+"/images/mobility_header.jpg",alt:"MobilityOne fleet management SaaS dashboard",caption:"Mileage, fuel, maintenance, and assignments, in one source of truth."},
+  ],
+  muvr:[
+    {src:process.env.PUBLIC_URL+"/images/muvr_header.png",alt:"Muvr iOS app for orthopedic post-operative care",caption:"Wearable-driven recovery tracking for orthopedic practices."},
+  ],
+};
 const vals=[{n:"01",t:"Understand First",d:"Every engagement starts with listening."},{n:"02",t:"Strategic Clarity",d:"We turn complexity into clear direction."},{n:"03",t:"Long-term Advisory",d:"Partnerships, not one-off projects."},{n:"04",t:"One Team",d:"We embed alongside your people."},{n:"05",t:"Outcome-driven",d:"Every recommendation tied to results."},{n:"06",t:"Delivery Excellence",d:"Strategy backed by engineering."}];
-const tl=[{y:"2017",t:"Went independent",d:"Traded the agency paycheck for full autonomy. Started building apps under MCODE for clients across health, AgTech, and enterprise — whatever the problem needed, regardless of platform or stack."},{y:"2021",t:"Long-term partnerships",d:"Early clients like Nomo evolved into multi-year relationships. The work became less about shipping features and more about being a genuine technical partner — embedded, strategic, ongoing."},{y:"2022",t:"Lumo Lab",d:"Solo freelancing had grown into a team with a shared way of working. Formalised it as Lumo Lab — built around one principle: understand the problem properly before writing a single line of code."},{y:"2025",t:"Award-winning work",d:"Farmwave's Harvest Vision was named AI Harvest Vision Solution of the Year. A signal that the approach — honest advice, real delivery — was producing results that stood out."},{y:"2026",t:"The formula works",d:"Multi-year partnerships, award-winning products, clients who keep coming back. It turns out that doing the unglamorous things well — listening, planning, delivering — compounds over time."}];
+const tl=[{y:"2017",t:"Went independent",d:"Traded the agency paycheck for full autonomy. Started building apps under MCODE for clients across health, AgTech, and enterprise. Whatever the problem needed, regardless of platform or stack."},{y:"2021",t:"Long-term partnerships",d:"Early clients like Nomo evolved into multi-year relationships. The work became less about shipping features and more about being a genuine technical partner: embedded, strategic, ongoing."},{y:"2022",t:"Lumo Lab",d:"Solo freelancing had grown into a team with a shared way of working. Formalised it as Lumo Lab, built around one principle: understand the problem properly before writing a single line of code."},{y:"2025",t:"Award-winning work",d:"Farmwave's Harvest Vision was named AI Harvest Vision Solution of the Year. A signal that the approach (honest advice, real delivery) was producing results that stood out."},{y:"2026",t:"The formula works",d:"Multi-year partnerships, award-winning products, clients who keep coming back. It turns out that doing the unglamorous things well (listening, planning, delivering) compounds over time."}];
 type BlogBlock={type:"text",content:string}|{type:"img",src:string,caption?:string};
 const blogs=[
-  {id:"b1",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"6 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform — from edge audio models to native mobile apps.",body:[
-    {type:"text",content:"Nomo International set out to solve a deeply human problem: how do you keep elderly people safe at home without invading their privacy? Traditional elder care solutions relied on wearables or cameras — devices that were often forgotten, rejected, or simply too intrusive. Nomo needed something different."},
+  {id:"b1",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"6 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",body:[
+    {type:"text",content:"Nomo International set out to solve a deeply human problem: how do you keep elderly people safe at home without invading their privacy? Traditional elder care solutions relied on wearables or cameras, devices that were often forgotten, rejected, or simply too intrusive. Nomo needed something different."},
     {type:"text",content:"Nomo employs motion-sensing and AI-driven audio technology for discreet monitoring without intrusive cameras or wearables. The system detects emergencies through fall detection, sound recognition, and direct 911 integration."},
-    {type:"img",src:"https://lumo-lab.com/wp-content/uploads/2024/09/Screenshot-2024-09-13-at-16.03.26.png",caption:"Nomo Smart Care — iOS app interface"},
-    {type:"text",content:"The challenge was significant. The system had to be completely non-intrusive, capable of understanding behavioural patterns, instantly responsive to emergencies, and easy enough for elderly users and their families to trust. And it needed a full-stack technology partner who could deliver it end to end — mobile apps, cloud infrastructure, and AI, all working together."},
-    {type:"text",content:"We structured our approach around three core pillars. First, native mobile apps built in Swift and Kotlin to ensure real-time updates and reliable emergency response on both iOS and Android. Second, a scalable cloud infrastructure using AWS, REST APIs, MQTT messaging, and Firebase for secure, real-time device-to-user communication. Third, edge-based audio AI — custom TensorFlow Lite models that process critical sounds locally on the device, preserving privacy and delivering sub-second response times."},
-    {type:"text",content:"The AI component was particularly important. Rather than streaming audio to the cloud, we trained models to classify sounds — falls, alarms, distress — directly on the device. This meant no audio ever left the home, addressing one of the primary concerns families had about in-home monitoring technology."},
-    {type:"text",content:"The results speak for themselves. We delivered full production deployment across iOS and Android, real-time monitoring across thousands of devices, sub-1-second alert latency, and native 911 integration for emergency response. The platform gave caregivers genuine confidence — not because it was watching, but because it was listening intelligently."},
+    {type:"img",src:"https://lumo-lab.com/wp-content/uploads/2024/09/Screenshot-2024-09-13-at-16.03.26.png",caption:"Nomo Smart Care iOS app interface"},
+    {type:"text",content:"The challenge was significant. The system had to be completely non-intrusive, capable of understanding behavioural patterns, instantly responsive to emergencies, and easy enough for elderly users and their families to trust. And it needed a full-stack technology partner who could deliver it end to end: mobile apps, cloud infrastructure, and AI, all working together."},
+    {type:"text",content:"We structured our approach around three core pillars. First, native mobile apps built in Swift and Kotlin to ensure real-time updates and reliable emergency response on both iOS and Android. Second, a scalable cloud infrastructure using AWS, REST APIs, MQTT messaging, and Firebase for secure, real-time device-to-user communication. Third, edge-based audio AI: custom TensorFlow Lite models that process critical sounds locally on the device, preserving privacy and delivering sub-second response times."},
+    {type:"text",content:"The AI component was particularly important. Rather than streaming audio to the cloud, we trained models to classify sounds (falls, alarms, distress) directly on the device. This meant no audio ever left the home, addressing one of the primary concerns families had about in-home monitoring technology."},
+    {type:"text",content:"The results speak for themselves. We delivered full production deployment across iOS and Android, real-time monitoring across thousands of devices, sub-1-second alert latency, and native 911 integration for emergency response. The platform gave caregivers genuine confidence, not because it was watching, but because it was listening intelligently."},
     {type:"text",content:"The tech stack included Swift and Kotlin for mobile, Node.js and TypeScript for the backend, AWS and Firebase for cloud infrastructure, Python and TensorFlow Lite for the AI layer, and React.js and Next.js for the web frontend."},
   ] as BlogBlock[]},
-  {id:"b2",title:"Deep Learning for Audio Classification",cat:"Engineering",date:"March 11, 2025",read:"8 min",author:"Matija Sever",cover:"linear-gradient(135deg,#1a0533 0%,#3b0764 50%,#6d28d9 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_2.jpg"),excerpt:"How convolutional neural networks learn to hear — and why spectrograms are the secret ingredient.",body:[
-    {type:"text",content:"Audio classification — assigning sound clips to predefined categories — is quietly transforming industries from security systems and automotive safety to healthcare diagnostics. At the core of modern audio classification systems are convolutional neural networks, originally designed for images but remarkably effective at understanding sound."},
+  {id:"b2",title:"Deep Learning for Audio Classification",cat:"Engineering",date:"March 11, 2025",read:"8 min",author:"Matija Sever",cover:"linear-gradient(135deg,#1a0533 0%,#3b0764 50%,#6d28d9 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_2.jpg"),excerpt:"How convolutional neural networks learn to hear, and why spectrograms are the secret ingredient.",body:[
+    {type:"text",content:"Audio classification (assigning sound clips to predefined categories) is quietly transforming industries from security systems and automotive safety to healthcare diagnostics. At the core of modern audio classification systems are convolutional neural networks, originally designed for images but remarkably effective at understanding sound."},
     {type:"text",content:"The key insight is that raw audio needs to be transformed before a neural network can learn from it. We convert waveforms into spectrograms using the Short Time Fourier Transform, which visually maps frequency intensities across time. Even better are mel spectrograms, which map frequencies to the Mel scale aligned with human auditory perception. These representations emphasise the features that matter most to classification, and they give CNNs something they understand: an image."},
     {type:"text",content:"A standard CNN for audio classification processes these spectrogram images through convolutional layers with learnable filters that slide across the input and produce feature maps. Batch normalisation stabilises training, pooling layers reduce spatial dimensions while preserving prominent features, and dropout prevents overfitting. After flattening the final feature maps, fully connected layers integrate what was learned and softmax produces a probability distribution across classes."},
-    {type:"text",content:"What makes CNNs particularly powerful here is hierarchical feature learning. Early layers capture simple patterns — edges, short-duration tones — while deeper layers learn complex abstractions like the characteristic signature of a smoke alarm or the acoustic profile of a fall event. No manual feature engineering required."},
+    {type:"text",content:"What makes CNNs particularly powerful here is hierarchical feature learning. Early layers capture simple patterns (edges, short-duration tones) while deeper layers learn complex abstractions like the characteristic signature of a smoke alarm or the acoustic profile of a fall event. No manual feature engineering required."},
     {type:"text",content:"Training requires attention to data augmentation. Time stretching, pitch shifting, and adding background noise all help models generalise to real-world recording conditions. We evaluate using cross entropy loss and track accuracy, precision, recall, and F1 score throughout training."},
-    {type:"text",content:"The field continues to advance rapidly. As these systems mature, edge deployment — running classification directly on the device rather than in the cloud — is becoming increasingly viable, enabling privacy-preserving audio AI at scale."},
+    {type:"text",content:"The field continues to advance rapidly. As these systems mature, edge deployment (running classification directly on the device rather than in the cloud) is becoming increasingly viable, enabling privacy-preserving audio AI at scale."},
   ] as BlogBlock[]},
-  {id:"b3",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic, PhD",cover:"linear-gradient(135deg,#062a1a 0%,#065f46 50%,#059669 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers — why it's harder than it sounds, and how we made it work.",body:[
-    {type:"text",content:"Running deep learning models on microcontrollers feels like a contradiction. These devices are built for efficiency, not computation — minimal processing power, constrained memory, no operating system to speak of. And yet, for a growing class of privacy-first applications, edge AI is exactly what's needed."},
-    {type:"text",content:"We encountered this challenge directly while building the audio classification system for Nomo Smart Care. The platform monitors in-home environments using sensors rather than cameras, prioritising user privacy above all else. Processing audio locally on the device — identifying fire alarms, falls, and other critical events without ever transmitting recordings externally — required running a trained neural network on an ESP32-PICO microcontroller with a 240MHz CPU and 2MB of PSRAM."},
-    {type:"text",content:"The approach starts with model training. We used a convolutional neural network architecture with four convolutional layers, max pooling, and dense output layers. After training, the model undergoes full-integer quantisation — converting 32-bit floating-point weights to 8-bit unsigned integers. This single step reduces model size dramatically while preserving most of the accuracy, bringing a 260K parameter model down to roughly 260KB."},
+  {id:"b3",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic, PhD",cover:"linear-gradient(135deg,#062a1a 0%,#065f46 50%,#059669 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers: why it's harder than it sounds, and how we made it work.",body:[
+    {type:"text",content:"Running deep learning models on microcontrollers feels like a contradiction. These devices are built for efficiency, not computation: minimal processing power, constrained memory, no operating system to speak of. And yet, for a growing class of privacy-first applications, edge AI is exactly what's needed."},
+    {type:"text",content:"We encountered this challenge directly while building the audio classification system for Nomo Smart Care. The platform monitors in-home environments using sensors rather than cameras, prioritising user privacy above all else. Processing audio locally on the device (identifying fire alarms, falls, and other critical events without ever transmitting recordings externally) required running a trained neural network on an ESP32-PICO microcontroller with a 240MHz CPU and 2MB of PSRAM."},
+    {type:"text",content:"The approach starts with model training. We used a convolutional neural network architecture with four convolutional layers, max pooling, and dense output layers. After training, the model undergoes full-integer quantisation, converting 32-bit floating-point weights to 8-bit unsigned integers. This single step reduces model size dramatically while preserving most of the accuracy, bringing a 260K parameter model down to roughly 260KB."},
     {type:"text",content:"Inference runs using LiteRT for Microcontrollers, formerly TensorFlow Lite. The quantised model is embedded as a C array, the necessary operations are registered (FullyConnected, Conv2D, MaxPool2D, Softmax, and Quantize), and a 100KB tensor arena handles runtime memory. The inference pipeline quantises input data before feeding it to the model and dequantises the outputs to retrieve probability distributions."},
-    {type:"text",content:"The implementation uses standard C++17, which runs on many embedded platforms — making LiteRT for Microcontrollers highly portable. The framework supports a wide range of neural network operations, meaning the constraint isn't capability but rather careful model design and quantisation strategy."},
+    {type:"text",content:"The implementation uses standard C++17, which runs on many embedded platforms, making LiteRT for Microcontrollers highly portable. The framework supports a wide range of neural network operations, meaning the constraint isn't capability but rather careful model design and quantisation strategy."},
     {type:"text",content:"The lesson we took away: edge AI on microcontrollers is absolutely viable, but it requires thinking about the deployment environment from the very beginning of the model design process. Architecture choices, quantisation, and memory budgeting all need to be considered together, not as an afterthought."},
   ] as BlogBlock[]},
-  {id:"b4",title:"Building the Share Location Feature for Nomo Smart Care",cat:"Engineering",date:"April 3, 2026",read:"7 min",author:"Stefan Petrovic",authorImg:(process.env.PUBLIC_URL + "/images/default_user.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a motion-aware, battery-efficient location sharing system that tells caregivers where their loved ones are — without draining the device.",body:[
-    {type:"text",content:"When you're caring for an aging parent or grandparent, one worry never quite goes away: Where are they right now? Are they safe? Caregivers needed a way to stay informed when their loved one steps out — to the pharmacy, a doctor's appointment, or just a walk in the park. That's why we implemented Share Location."},
-    {type:"text",content:"Share Location uses the care recipient's smartphone to securely share their position with authorized caregivers. No additional hardware is required, no complicated setup. Just enable the feature, grant location permission, and the app takes care of the rest. Caregivers see a clean, intuitive screen with two key pieces of information: a map showing the most recent known location with freshness context, and a daily timeline of locations detected throughout the day — complete with place names, addresses, and timestamps."},
+  {id:"b4",title:"Building the Share Location Feature for Nomo Smart Care",cat:"Engineering",date:"April 3, 2026",read:"7 min",author:"Stefan Petrovic",authorImg:(process.env.PUBLIC_URL + "/images/default_user.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header_1.png"),excerpt:"How we built a motion-aware, battery-efficient location sharing system that tells caregivers where their loved ones are without draining the device.",body:[
+    {type:"text",content:"When you're caring for an aging parent or grandparent, one worry never quite goes away: Where are they right now? Are they safe? Caregivers needed a way to stay informed when their loved one steps out, whether to the pharmacy, a doctor's appointment, or just a walk in the park. That's why we implemented Share Location."},
+    {type:"text",content:"Share Location uses the care recipient's smartphone to securely share their position with authorized caregivers. No additional hardware is required, no complicated setup. Just enable the feature, grant location permission, and the app takes care of the rest. Caregivers see a clean, intuitive screen with two key pieces of information: a map showing the most recent known location with freshness context, and a daily timeline of locations detected throughout the day, complete with place names, addresses, and timestamps."},
     {type:"text",content:"The core challenge: caregivers need to know where their care recipients are, especially when they leave home. But continuous GPS tracking is a battery killer, and caregivers don't need a location ping every second when someone is sitting on the couch. We needed a system that is smart about when and how often it reports location."},
     {type:"text",content:"At the heart of our location engine is MyLocationManager, a singleton that wraps CLLocationManager with a layer of intelligence. Instead of polling GPS at a fixed interval, we adapt based on what the user is doing. We detect four motion states: Stationary, Walking, In Vehicle, and Medical ID Scanned. When the device detects the user is stationary, we drastically reduce GPS usage. When they're walking or in a vehicle, we tighten tracking. We use CMMotionActivityManager from CoreMotion to detect these states automatically, combined with accelerometer data to distinguish genuine movement from sensor noise."},
-    {type:"text",content:"One of the most important moments for a caregiver is when their loved one leaves home. We implemented concentric geofences using three monitored regions around the home address: a 10m radius tightly around the home, a 50m radius for the nearby area, and a 200m radius covering the neighborhood boundary. Geofence enter/exit events trigger background updates and home/away state transitions. This uses iOS's built-in region monitoring, which is battery-efficient because iOS can resolve region transitions without continuous high-accuracy GPS polling. We also built jump detection — if the first location report after a home exit is suspiciously far away, we handle it gracefully rather than reporting a false teleportation."},
-    {type:"text",content:"iOS is famously restrictive about background execution. We use a combination of strategies: Significant Location Changes (iOS wakes the app for large movements of ~500m, even if the app was terminated), Background Location Updates for active tracking sessions, and Region Monitoring for passive geofence triggers that don't require the app to be running. The system validates every location update before accepting it — we treat low-accuracy readings cautiously, often requesting a fresh fix and comparing candidates before deciding what to send, filtering out stale or duplicate coordinates."},
-    {type:"text",content:"Raw latitude/longitude isn't useful to a worried caregiver. They want to see 'Mom is at the pharmacy', not coordinates. We combine Apple reverse geocoding (CLGeocoder) with Google Places lookups to enrich coordinates with meaningful place context. We also classify locations into different types, which drive the icons and colors shown in the UI — making the location history scannable at a glance."},
+    {type:"text",content:"One of the most important moments for a caregiver is when their loved one leaves home. We implemented concentric geofences using three monitored regions around the home address: a 10m radius tightly around the home, a 50m radius for the nearby area, and a 200m radius covering the neighborhood boundary. Geofence enter/exit events trigger background updates and home/away state transitions. This uses iOS's built-in region monitoring, which is battery-efficient because iOS can resolve region transitions without continuous high-accuracy GPS polling. We also built jump detection: if the first location report after a home exit is suspiciously far away, we handle it gracefully rather than reporting a false teleportation."},
+    {type:"text",content:"iOS is famously restrictive about background execution. We use a combination of strategies: Significant Location Changes (iOS wakes the app for large movements of ~500m, even if the app was terminated), Background Location Updates for active tracking sessions, and Region Monitoring for passive geofence triggers that don't require the app to be running. The system validates every location update before accepting it. We treat low-accuracy readings cautiously, often requesting a fresh fix and comparing candidates before deciding what to send, filtering out stale or duplicate coordinates."},
+    {type:"text",content:"Raw latitude/longitude isn't useful to a worried caregiver. They want to see 'Mom is at the pharmacy', not coordinates. We combine Apple reverse geocoding (CLGeocoder) with Google Places lookups to enrich coordinates with meaningful place context. We also classify locations into different types, which drive the icons and colors shown in the UI, making the location history scannable at a glance."},
     {type:"text",content:"A unique aspect of Nomo is support for Medical ID scan events. When a care recipient's Medical ID bracelet is scanned, the system captures the scanner's location and immediately reports it. These events appear in the location history with a distinct icon and are treated with the highest priority."},
-    {type:"text",content:"What we learned: battery life is a feature — users will disable location sharing entirely if it drains their battery, and motion-aware throttling made the feature viable for all-day use. Accuracy validation matters — GPS readings in urban environments can be wildly inaccurate, and filtering by horizontal accuracy prevented confusing UI artifacts. Geofencing is underrated — iOS region monitoring is nearly free in terms of battery, and the 'left home' trigger is the single most valuable alert for caregivers. And context beats coordinates — investing in reverse geocoding and place classification transformed the feature from technically functional to genuinely useful."},
+    {type:"text",content:"What we learned. Battery life is a feature: users will disable location sharing entirely if it drains their battery, and motion-aware throttling made the feature viable for all-day use. Accuracy validation matters: GPS readings in urban environments can be wildly inaccurate, and filtering by horizontal accuracy prevented confusing UI artifacts. Geofencing is underrated: iOS region monitoring is nearly free in terms of battery, and the 'left home' trigger is the single most valuable alert for caregivers. And context beats coordinates: investing in reverse geocoding and place classification transformed the feature from technically functional to genuinely useful."},
   ] as BlogBlock[]},
 ].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
 const blogCats=["All","Case Study","Engineering"];
 const roles=[
-  {id:"r1",title:"Senior Frontend Developer",type:"Full-time",loc:"Remote (EU)",team:"Engineering",desc:"Lead frontend architecture and deliver polished interfaces.",reqs:["5+ years React/TypeScript","Design systems experience","Performance & accessibility focus"],offer:["Direct impact on real products","Senior team","Flexible remote"]},
-  {id:"r2",title:"Full-Stack Developer",type:"Full-time",loc:"Remote (EU)",team:"Engineering",desc:"End-to-end development — APIs, frontends, deployment pipelines.",reqs:["3+ years full-stack","AWS experience","CI/CD and testing"],offer:["Diverse tech stacks","Mentorship","Client interaction"]},
-  {id:"r3",title:"IoT Engineer",type:"Full-time",loc:"Remote / Croatia",team:"Engineering",desc:"Design and build connected device systems.",reqs:["4+ years IoT/embedded","BLE, MQTT, AWS IoT","Edge computing"],offer:["Lead IoT architecture","Meaningful products","Equity options"]},
-  {id:"r4",title:"UX/UI Design Lead",type:"Full-time",loc:"Remote (EU)",team:"Design",desc:"Own the design practice — research, systems, and shipped interfaces.",reqs:["5+ years UX/UI","Figma & design systems","User research"],offer:["Define design culture","Diverse domains","Product influence"]},
+  {id:"open",title:"Open application",type:"Rolling",loc:"Hybrid",team:"General",desc:"We're not actively hiring right now, but we always want to hear from great people. Send us your CV and a short note about the work you'd like to do. When a role opens that fits, we'll already know you.",reqs:["Senior experience in engineering, design, or product","A track record of shipping real products","A clear reason you want to work with us"],offer:["Genuine consideration when a role opens","A conversation, even if there's no current fit","Honest feedback on your application"]},
 ];
-const perks=[{i:"🌍",t:"Remote-first",d:"Work from anywhere in EU timezones."},{i:"📈",t:"Growth equity",d:"Senior roles include equity."},{i:"🎯",t:"Meaningful work",d:"Healthcare, agriculture, AI."},{i:"🤝",t:"Client-facing",d:"Direct client access."},{i:"📚",t:"Learning budget",d:"Conferences, courses, tools."},{i:"🏖️",t:"Flexible PTO",d:"Generous time off."}];
+type PerkIconKey="globe"|"chart"|"target"|"handshake"|"book"|"palm";
+const perks:{i:PerkIconKey,t:string,d:string}[]=[
+  {i:"chart",t:"Growth equity",d:"Senior roles include equity."},
+  {i:"target",t:"Meaningful work",d:"Healthcare, agriculture, AI."},
+  {i:"handshake",t:"Client-facing",d:"Direct client access."},
+  {i:"book",t:"Learning budget",d:"Conferences, courses, tools."},
+  {i:"palm",t:"Flexible PTO",d:"Generous time off."},
+];
+function PerkIcon({k}:{k:PerkIconKey}){
+  const common={width:22,height:22,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.6,strokeLinecap:"round" as const,strokeLinejoin:"round" as const};
+  switch(k){
+    case "globe":return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.8 3.8 6 3.8 9s-1.3 6.2-3.8 9c-2.5-2.8-3.8-6-3.8-9s1.3-6.2 3.8-9z"/></svg>;
+    case "chart":return <svg {...common}><path d="M3 20h18"/><path d="M7 16V10M12 16V6M17 16v-3"/></svg>;
+    case "target":return <svg {...common}><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>;
+    case "handshake":return <svg {...common}><path d="M11 17l-1.5 1.5a2 2 0 01-2.8-2.8L11 12"/><path d="M13 17l2 2a2 2 0 002.8-2.8L13 12"/><path d="M3 12l4-4 4 2 3-3 4 2 3-3"/><path d="M7 13l2-2"/></svg>;
+    case "book":return <svg {...common}><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 01-2-2z"/><path d="M4 17a2 2 0 012-2h13"/><path d="M8 7h7M8 11h7"/></svg>;
+    case "palm":return <svg {...common}><circle cx="12" cy="18" r="1.3" fill="currentColor"/><path d="M12 17V8"/><path d="M12 8c-3-1.5-5-1-6 1M12 8c3-1.5 5-1 6 1M12 8c-1-3 1-5 4-5M12 8c1-3-1-5-4-5"/></svg>;
+  }
+}
 const catList=["All",...Array.from(new Set(cases.map(c=>c.cat)))];
 
 /* ── NAV ── */
@@ -297,7 +383,7 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
             </button>
             {[
               {href:"https://www.linkedin.com/company/lumo-lab",label:"LinkedIn",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>},
-              {href:"https://www.instagram.com/lumolab",label:"Instagram",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>},
+              {href:"https://www.instagram.com/lumo_lab_/",label:"Instagram",icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>},
             ].map(({href,label,icon})=>(
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
                 style={{width:34,height:34,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",textDecoration:"none",background:"#fff"}}
@@ -321,11 +407,10 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
     {/* HERO */}
     <section className="hero-s" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"linear-gradient(155deg,#002840,#004C73 40%,#003B5C 70%,#004C73)"}}>
       {/* Video background */}
-      <video autoPlay muted loop playsInline style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.35}}>
-        <source src={process.env.PUBLIC_URL + "/videos/hero.webm"} type="video/webm"/>
+      <video autoPlay muted loop playsInline preload="auto" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.35}}>
         <source src={process.env.PUBLIC_URL + "/videos/hero.mp4"} type="video/mp4"/>
       </video>
-      {/* Grid overlay — pulses in and out */}
+      {/* Grid overlay, pulses in and out */}
       <div style={{position:"absolute",inset:0,zIndex:1,backgroundImage:"linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px)",backgroundSize:"72px 72px",animation:"gridPulse 8s ease-in-out infinite"}}/>
       {/* Gradient overlay for readability */}
       <div style={{position:"absolute",inset:0,zIndex:1,background:"linear-gradient(to bottom,rgba(0,30,50,.3) 0%,rgba(0,30,50,.6) 100%)"}}/>
@@ -333,8 +418,9 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       <div className="hero-grain"/>
       <W style={{position:"relative",zIndex:3,paddingTop:100,paddingBottom:60,color:"#fff"}}>
         <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
-          {["We","advise,","guide,","and"].map((w,i)=><span key={w} className="word" style={{animationDelay:`${0.1+i*0.08}s`,marginRight:"0.25em"}}>{w}</span>)}
-          <span className="word" style={{animationDelay:"0.44s",marginRight:"0.25em",background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:`gradShift 6s ease infinite, wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",opacity:0,display:"inline-block"}}>deliver.</span>
+          {["We","advise,","guide,","and"].map((w,i)=><span key={w}>{i>0?" ":""}<span className="word" style={{animationDelay:`${0.1+i*0.08}s`}}>{w}</span></span>)}
+          {" "}
+          <span className="word" style={{animationDelay:"0.44s",background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:`gradShift 6s ease infinite, wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",opacity:0,display:"inline-block"}}>deliver.</span>
         </h1>
         <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>lumo lab takes the guesswork out of technology. We give you honest advice and the expert support you need. We’re with you from the very first step.</p>
         <div className="fi d4" style={{display:"flex",gap:14,flexWrap:"wrap"}}>
@@ -353,12 +439,25 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
     </section>
     {/* MARQUEE */}
     <div style={{borderBottom:"1px solid var(--brd)",padding:"14px 0",overflow:"hidden"}}><div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.2}}/></span>)}</div></div>
+    {/* AWARD STRIP */}
+    <section onClick={()=>go("cases","farmwave")} className="award-strip" style={{padding:"16px 0",background:"linear-gradient(135deg,rgba(0,76,115,.04),rgba(78,205,196,.05))",borderBottom:"1px solid var(--brd)",cursor:"pointer",transition:"background .25s"}} onMouseEnter={e=>e.currentTarget.style.background="linear-gradient(135deg,rgba(0,76,115,.08),rgba(78,205,196,.09))"} onMouseLeave={e=>e.currentTarget.style.background="linear-gradient(135deg,rgba(0,76,115,.04),rgba(78,205,196,.05))"}>
+      <W>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:14,flexWrap:"wrap"}}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
+          <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2.5,textTransform:"uppercase",opacity:.7}}>Recognised</span>
+          <span style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/>
+          <span style={{fontSize:14,color:"var(--txt)",fontWeight:600,fontFamily:"var(--jk)"}}>AI Harvest Vision Solution of the Year 2025</span>
+          <span style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/>
+          <span style={{fontSize:13,color:"var(--txt3)",display:"inline-flex",alignItems:"center",gap:6}}>Farmwave case study <Arr s={12} c="var(--blue)"/></span>
+        </div>
+      </W>
+    </section>
     {/* SERVICES */}
     <section className="grid-bg" style={{padding:"100px 0"}}><W>
       <SL ch="Services"/>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,marginBottom:48}}>
         <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)"}}>How we help you <span style={{color:"var(--blue)"}}>move forward.</span></h2>
-        <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,paddingTop:4}}>From initial assessment to long-term advisory — always focused on clarity, quality, and measurable outcomes.</p>
+        <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,paddingTop:4}}>From initial assessment to long-term advisory, always focused on clarity, quality, and measurable outcomes.</p>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
         {svcs.map((s,i)=><div key={i} className="card" style={{gridColumn:s.span?"span 2":"span 1",cursor:"pointer"}} onClick={()=>go("services")}>
@@ -379,7 +478,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
         {[cases[0],cases[1],cases[3],cases[7]].map(c=><div key={c.id} onClick={()=>go("cases",c.id)} style={{borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative",height:200,background:c.cover}} onMouseEnter={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1.05)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(0)");}} onMouseLeave={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(4px)");}}>
-          {(c as any).headerImg&&<img alt="" src={c.id==="nomo"?(process.env.PUBLIC_URL+"/images/nomo_header.png"):c.id==="farmwave"?(process.env.PUBLIC_URL+"/images/farmwave_home.png"):c.id==="crossiety"?(process.env.PUBLIC_URL+"/images/crossiety_home.png"):c.id==="muvr"?(process.env.PUBLIC_URL+"/images/muvr_home.jpg"):(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
+          {(c as any).headerImg&&<img alt={`${c.name}, ${c.cat} case study`} loading="lazy" decoding="async" width={640} height={400} src={c.id==="nomo"?(process.env.PUBLIC_URL+"/images/nomo_header.png"):c.id==="farmwave"?(process.env.PUBLIC_URL+"/images/farmwave_home.png"):c.id==="crossiety"?(process.env.PUBLIC_URL+"/images/crossiety_home.png"):c.id==="muvr"?(process.env.PUBLIC_URL+"/images/muvr_home.jpg"):(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
           <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"}}/>
           <div className="proj-info" style={{position:"absolute",bottom:0,left:0,right:0,padding:"16px",transform:"translateY(4px)",transition:"transform .3s"}}>
             <span style={{fontSize:10,color:"#fff",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2,display:"inline-block",marginBottom:6,background:"rgba(0,76,115,.7)",padding:"3px 10px",borderRadius:20}}>{c.cat}</span>
@@ -432,7 +531,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
                   <p style={{fontFamily:"var(--jk)",fontSize:"clamp(14px,1.4vw,17px)",fontWeight:500,lineHeight:1.75,color:"var(--txt)",fontStyle:"italic",maxWidth:600,margin:"0 auto 24px"}}>{t.q}</p>
                   <div style={{width:32,height:1,background:"var(--brd)",margin:"0 auto 18px"}}/>
                   <div style={{display:"flex",alignItems:"center",gap:14,justifyContent:"center"}}>
-                    <img src={(t as any).img||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={t.n} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:64,height:64,borderRadius:"50%",objectFit:"cover",objectPosition:"top",flexShrink:0,border:"2px solid var(--brd)"}}/>
+                    <img src={(t as any).img||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={t.n} loading="lazy" decoding="async" width={64} height={64} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:64,height:64,borderRadius:"50%",objectFit:"cover",objectPosition:"top",flexShrink:0,border:"2px solid var(--brd)"}}/>
                     <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
                     {t.linkedin
                       ? <a href={t.linkedin} target="_blank" rel="noopener noreferrer" style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)",textDecoration:"none",transition:"color .2s"}} onMouseEnter={e=>e.currentTarget.style.color="var(--blue)"} onMouseLeave={e=>e.currentTarget.style.color="var(--txt)"}>{t.n}</a>
@@ -446,6 +545,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
                     </span>
                     </div>
                   </div>
+                  {t.caseId&&(()=>{const isCase=t.caseId==="nomo";const onClick=isCase?()=>go("blog","b1"):()=>go("cases",t.caseId!);const label=isCase?"View case study":"Check the project";return <button onClick={onClick} style={{marginTop:16,display:"inline-flex",alignItems:"center",gap:5,background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:500,color:"var(--blue)",padding:0,transition:"gap .2s,opacity .2s"}} onMouseEnter={e=>{e.currentTarget.style.gap="8px";e.currentTarget.style.opacity=".75";}} onMouseLeave={e=>{e.currentTarget.style.gap="5px";e.currentTarget.style.opacity="1";}}>{label} <Arr s={10} c="var(--blue)"/></button>;})()}
                 </div>
               </div>)}
             </div>
@@ -466,10 +566,10 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
 /* ── ABOUT ── */
 function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 64px"}}><W><SL ch="About Us"/>
-    <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver — we handle the tech so you can focus on the <span style={{color:"var(--blue)"}}>big picture.</span></h1>
+    <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver. We handle the tech so you can focus on the <span style={{color:"var(--blue)"}}>big picture.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480}}>A technology consultancy based in Croatia, advising startups and enterprises worldwide.</p>
   </W></section>
-  <section style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",padding:"36px 0",background:"var(--bg2)"}}><W style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:24}}>
+  <section style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",padding:"36px 0",background:"var(--bg2)"}}><W style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:24}} className="about-stats">
     {[{n:10,s:"+",l:"Years"},{n:15,s:"+",l:"Clients"},{n:4,s:"",l:"Verticals"}].map((s,i)=><div key={i} style={{textAlign:"center"}}><div style={{fontFamily:"var(--jk)",fontSize:36,fontWeight:800,color:"var(--blue)"}}><AnimNum end={s.n} suffix={s.s}/></div><p style={{fontSize:10,color:"var(--txt4)",marginTop:6,fontWeight:600,textTransform:"uppercase",letterSpacing:2,fontFamily:"var(--jk)"}}>{s.l}</p></div>)}
   </W></section>
   <div style={{borderBottom:"1px solid var(--brd)",padding:"14px 0",overflow:"hidden"}}><div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.2}}/></span>)}</div></div>
@@ -492,7 +592,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
     <div style={{display:"grid",gridTemplateColumns:"360px 1fr",borderRadius:24,overflow:"hidden",border:"1px solid var(--brd)",boxShadow:"0 4px 40px rgba(0,30,50,.06)"}}>
       {/* Photo panel */}
       <div style={{position:"relative",minHeight:520,background:"var(--blue)"}}>
-        <img alt="Jurica Mlinaric" src={process.env.PUBLIC_URL + "/images/jurica.png"} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
+        <img alt="Jurica Mlinaric" src={process.env.PUBLIC_URL + "/images/jurica.png"} decoding="async" width={720} height={900} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, rgba(0,20,40,.85) 0%, rgba(0,20,40,.1) 55%, transparent 100%)"}}/>
         <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"28px 28px 32px"}}>
           <h3 style={{fontFamily:"var(--jk)",fontSize:24,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1}}>Jurica Mlinaric</h3>
@@ -511,10 +611,10 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
       {/* Content panel */}
       <div style={{padding:"48px 44px",background:"var(--bg)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
         <p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:20}}>
-          Jurica has been building mobile products since 2015 — iOS, Android, IoT, wearables, edge AI. After nearly a decade freelancing for clients across Croatia, the US, and Switzerland, he founded Lumo Lab in 2022 to formalise what the work had already become: a team with a clear way of doing things.
+          Jurica has been building mobile products since 2015: iOS, Android, IoT, wearables, edge AI. After nearly a decade freelancing for clients across Croatia, the US, and Switzerland, he founded Lumo Lab in 2022 to formalise what the work had already become: a team with a clear way of doing things.
         </p>
         <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.9,marginBottom:40}}>
-          He's led projects across healthcare IoT, agricultural AI, mobility, and enterprise SaaS — from early-stage startups to companies scaling globally. The constant across all of it: understand the problem properly before recommending anything.
+          He's led projects across healthcare IoT, agricultural AI, mobility, and enterprise SaaS, from early-stage startups to companies scaling globally. The constant across all of it: understand the problem properly before recommending anything.
         </p>
         <div style={{borderLeft:"3px solid var(--blue)",paddingLeft:24}}>
           <p className="quote-txt" style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:700,color:"var(--txt)",lineHeight:1.5,fontStyle:"italic",marginBottom:0}}>
@@ -527,10 +627,10 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
   <section style={{padding:"80px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
     <SL ch="Core team"/>
     <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.5vw,28px)",fontWeight:800,color:"var(--txt)",marginBottom:48}}>The people who <span style={{color:"var(--blue)"}}>build it.</span></h2>
-    <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,maxWidth:980}}>
+    <div className="team-grid" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,maxWidth:980}}>
       {[{n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg"},{n:"Rudolf Lovrencic, PhD",r:"Software Architect"},{n:"Mato Poslon",r:"Full Stack Engineer"},{n:"Matija Sever",r:"Data Scientist"},{n:"Stefan Petrovic",r:"iOS Engineer",img:"stefan.jpeg"}].map((m,i)=>(
         <div key={i} style={{position:"relative",aspectRatio:"3/4",borderRadius:20,overflow:"hidden",background:"var(--blue)"}}>
-          <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
+          <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} loading="lazy" decoding="async" width={400} height={480} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
           <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, rgba(0,20,40,.9) 0%, rgba(0,20,40,.2) 50%, transparent 100%)"}}/>
           <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"20px 24px 24px"}}>
             <h3 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1.2}}>{m.n}</h3>
@@ -542,7 +642,7 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
   </W></section>
   <section style={{padding:"80px 0",background:"var(--blue)"}}><W style={{textAlign:"center"}}>
     <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,3vw,36px)",fontWeight:800,color:"#fff",marginBottom:12,lineHeight:1.1}}>Ready to work together?</h2>
-    <p style={{fontSize:15,color:"rgba(255,255,255,.65)",marginBottom:32,maxWidth:420,margin:"0 auto 32px"}}>Tell us about your challenge — we'll tell you if and how we can help.</p>
+    <p style={{fontSize:15,color:"rgba(255,255,255,.65)",marginBottom:32,maxWidth:420,margin:"0 auto 32px"}}>Tell us about your challenge. We'll tell you if and how we can help.</p>
     <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
       <button onClick={()=>go("services")} className="cta-m" style={{background:"#fff",color:"var(--blue)"}}>See how we work <Arr s={14} c="var(--blue)"/></button>
       <button onClick={()=>go("cases")} className="cta-g" style={{color:"rgba(255,255,255,.75)",borderColor:"rgba(255,255,255,.2)"}}>View our work</button>
@@ -551,7 +651,28 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
 </div>;}
 
 /* ── SERVICES ── */
-function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);return <div style={{paddingTop:76}}>
+const pricing=[
+  {n:"01",t:"Advisory retainer",fit:"Embedded strategic guidance over time.",d:"Fractional CTO / architect hours for continuous advisory: roadmap reviews, architecture calls, hiring input, vendor evaluation.",meta:"Monthly, fixed hours",cta:"Best for founders and CTOs who need a thinking partner on tap."},
+  {n:"02",t:"Defined engagement",fit:"Scoped initiative, clear outcome, fixed budget.",d:"A discrete project with agreed deliverables, timeline, and budget. Typical for assessments, MVPs, migrations, and new product builds.",meta:"2 to 16 weeks, fixed fee",cta:"Best when the problem is well-defined and success is measurable."},
+  {n:"03",t:"Embedded team",fit:"Our engineers integrated with yours.",d:"A dedicated, cross-functional pod (engineers, designers, PM) working alongside your team at an agreed weekly capacity.",meta:"Monthly, rolling 3-month minimum",cta:"Best for long-running product work where velocity and continuity matter."},
+  {n:"04",t:"Startup partnership",fit:"Shared risk, shared upside.",d:"For early-stage teams: a blended model where part of our fee converts to equity or milestones, co-investing our expertise in your outcome.",meta:"Custom terms",cta:"Best for founders at seed stage with conviction and runway constraints."},
+];
+const faqs=[
+  {q:"What's the minimum engagement?",a:"For the advisory retainer, one month. For a defined engagement, our assessment week alone is a natural starting point. After that, a typical scoped engagement runs 4 to 16 weeks. We don't chase 1-off hours or sub-week gigs; the work we do best needs a bit of room to breathe."},
+  {q:"Do you ever do fixed-bid?",a:"Yes, for scoped engagements where the outcome is well-defined: an assessment, an MVP with agreed scope, a migration to a known target. We refuse fixed-bid for exploratory or research-heavy work because it incentivises the wrong things; in those cases we'll propose a time-boxed discovery instead."},
+  {q:"How quickly can you start?",a:"Typically 1 to 2 weeks from a signed agreement. If the situation is urgent (an outage, a funding deadline, a critical hire) we can usually mobilise a small senior pair within 3 to 5 business days for triage while we scope the broader engagement."},
+  {q:"Do you take equity?",a:"Sometimes, but only inside our startup partnership model, and only when it's genuinely a fit. We look for founders with clear conviction, a real market signal, and a runway challenge we can help solve. Equity never fully replaces cash; it offsets a portion of the fee so both sides share risk and upside."},
+  {q:"What happens if we're not the right fit?",a:"We say so. As early as we can see it, and with specifics. The assessment week is built around this: by Friday, if we don't think we're the right partner (or you don't), you walk away with the written brief and no obligation. We'd rather turn down work than burn a reputation on the wrong engagement."},
+  {q:"Are you remote, hybrid, or on-site?",a:"Hybrid. We're headquartered in Croatia with a distributed senior team across EU timezones. Most day-to-day work happens remotely through Slack, shared docs, and regular working sessions. For kickoffs, workshops, and key milestones we travel to clients, and we welcome visits to our office."},
+];
+const weekOne=[
+  {d:"Day 1",t:"Kickoff & context",b:"Meet the team, set comms (Slack channel, shared docs, weekly cadence). We walk through your goals, pressures, and the history behind them. No deliverable yet, just listening."},
+  {d:"Day 2",t:"Landscape review",b:"We read the code, docs, tickets, and metrics you share. We interview the people closest to the work: engineers, designers, support. We capture everything in a shared brief."},
+  {d:"Day 3",t:"Discovery & constraints",b:"Technical audit of the systems in scope. We map architecture, data flows, integrations, and known risks. Business constraints (timeline, budget, team) are made explicit."},
+  {d:"Day 4",t:"Synthesis",b:"We separate symptoms from root causes. We draft an initial hypothesis, surface the biggest risks and opportunities, and sketch options with trade-offs."},
+  {d:"Day 5",t:"Alignment & roadmap",b:"A 60-minute working session: we present findings, align on priorities, and agree the shape of the engagement from week two forward. You leave with a written brief and a decision-ready plan."},
+];
+function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 48px"}}><W><SL ch="For Clients"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",textAlign:"center",marginBottom:16}}>The right technology partner <span style={{color:"var(--blue)"}}>changes everything.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480,textAlign:"center",margin:"0 auto 28px"}}>We advise, guide, and deliver.</p>
@@ -574,10 +695,105 @@ function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);return
       </div>)}
     </div>
   </W></section>
+  {/* ENGAGEMENT MODELS */}
   <section style={{padding:"80px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
-    <div style={{display:"grid",gridTemplateColumns:"300px 1fr",gap:64}}>
-      <div style={{position:"sticky",top:80,alignSelf:"start"}}><SL ch="Engagement models"/><h2 style={{fontFamily:"var(--jk)",fontSize:28,fontWeight:800,color:"var(--txt)"}}>Flexible ways to <span style={{color:"var(--blue)"}}>work together.</span></h2></div>
-      <div>{engs.map((e,i)=><div key={i} className="er"><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,color:"var(--blue)",fontWeight:600,fontFamily:"monospace",opacity:.3}}>{String(i+1).padStart(2,"0")}</span><h4 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:600,color:"var(--txt)",margin:0}}>{e.t}</h4></div><span className="ea">→</span></div><p style={{fontSize:13,color:"var(--txt3)",marginTop:4,paddingLeft:32,lineHeight:1.6}}>{e.d}</p></div>)}</div>
+    <div className="svc-2col" style={{display:"grid",gridTemplateColumns:"300px 1fr",gap:64}}>
+      <div style={{position:"sticky",top:80,alignSelf:"start"}}><SL ch="Engagement models"/><h2 style={{fontFamily:"var(--jk)",fontSize:28,fontWeight:800,color:"var(--txt)"}}>Flexible ways to <span style={{color:"var(--blue)"}}>work together.</span></h2><p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,marginTop:14,maxWidth:280}}>No one shape fits every problem. We pick the model that matches your stage, timeline, and risk profile.</p></div>
+      <div>{engs.map((e,i)=><div key={i} className="eng-row" style={{padding:"18px 0",borderBottom:i<engs.length-1?"1px solid var(--brd)":"none"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"baseline",gap:12}}><span style={{fontSize:11,color:"var(--blue)",fontWeight:600,fontFamily:"monospace",opacity:.3}}>{String(i+1).padStart(2,"0")}</span><h4 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:600,color:"var(--txt)",margin:0}}>{e.t}</h4></div><span className="ea">→</span></div><p style={{fontSize:13,color:"var(--txt3)",marginTop:4,paddingLeft:32,lineHeight:1.6}}>{e.d}</p></div>)}</div>
+    </div>
+  </W></section>
+  {/* PRICING */}
+  <section style={{padding:"80px 0",borderTop:"1px solid var(--brd)"}}><W>
+    <div className="svc-2col" style={{display:"grid",gridTemplateColumns:"300px 1fr",gap:64}}>
+      <div style={{position:"sticky",top:80,alignSelf:"start"}}>
+        <SL ch="Pricing"/>
+        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,36px)",fontWeight:800,lineHeight:1.1,color:"var(--txt)"}}>Four ways <span style={{color:"var(--blue)"}}>we price.</span></h2>
+        <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,marginTop:14,maxWidth:280}}>We don't sell hours, we sell outcomes. Pricing is transparent and shaped around the type of engagement, not a rate card.</p>
+      </div>
+      <div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:14}} className="pricing-grid">
+          {pricing.map(p=><div key={p.n} className="card" style={{padding:"28px 28px",display:"flex",flexDirection:"column",gap:12,minHeight:260}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+              <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{p.n}</span>
+              <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt3)",letterSpacing:1.5,textTransform:"uppercase",background:"var(--bg2)",padding:"4px 10px",borderRadius:20,border:"1px solid var(--brd)"}}>{p.meta}</span>
+            </div>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"var(--txt)",lineHeight:1.15}}>{p.t}</h3>
+            <p style={{fontSize:13,fontWeight:600,color:"var(--blue)",lineHeight:1.5}}>{p.fit}</p>
+            <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7,flex:1}}>{p.d}</p>
+            <p style={{fontSize:12,color:"var(--txt4)",lineHeight:1.6,fontStyle:"italic",paddingTop:10,borderTop:"1px solid var(--brd)",marginTop:4}}>{p.cta}</p>
+          </div>)}
+        </div>
+        <div className="pricing-banner" style={{marginTop:24,padding:"22px 26px",border:"1px solid var(--brd)",borderRadius:14,background:"var(--bl)",display:"flex",justifyContent:"space-between",alignItems:"center",gap:20,flexWrap:"wrap"}}>
+          <div>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:800,color:"var(--txt)",marginBottom:4}}>Not sure which model fits?</h3>
+            <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6,maxWidth:520}}>A 30-minute call is often enough for us to recommend the right shape. No pressure, no sales pitch.</p>
+          </div>
+          <button onClick={()=>go("contact")} className="cta-m" style={{flexShrink:0}}>Book an intro call <Arr s={14} c="#fff"/></button>
+        </div>
+      </div>
+    </div>
+  </W></section>
+  {/* FAQ */}
+  <section style={{padding:"80px 0",borderTop:"1px solid var(--brd)"}}><W>
+    <div className="svc-2col" style={{display:"grid",gridTemplateColumns:"300px 1fr",gap:64}}>
+      <div style={{position:"sticky",top:80,alignSelf:"start"}}>
+        <SL ch="FAQ"/>
+        <h2 style={{fontFamily:"var(--jk)",fontSize:28,fontWeight:800,color:"var(--txt)",lineHeight:1.1}}>Questions that <span style={{color:"var(--blue)"}}>usually come up.</span></h2>
+        <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,marginTop:14,maxWidth:280}}>Straight answers to the things people ask before signing: pricing, equity, timelines, and what happens if we're not a fit.</p>
+      </div>
+      <div>
+        {faqs.map((f,i)=>{const open=faqOpen===i;return <div key={i} style={{borderBottom:i<faqs.length-1?"1px solid var(--brd)":"none"}}>
+          <button onClick={()=>setFaqOpen(open?null:i)} aria-expanded={open} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",gap:16,padding:"22px 0",background:"none",border:"none",cursor:"pointer",textAlign:"left"}}>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:700,color:"var(--txt)",lineHeight:1.4,margin:0}}>{f.q}</h3>
+            <span aria-hidden="true" style={{width:28,height:28,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"transform .25s ease, background .25s ease",transform:open?"rotate(45deg)":"none",background:open?"var(--bl)":"#fff"}}>
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="var(--blue)" strokeWidth="1.8" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
+            </span>
+          </button>
+          <div style={{overflow:"hidden",maxHeight:open?440:0,opacity:open?1:0,transition:"max-height .3s ease, opacity .25s ease, padding .3s ease",paddingBottom:open?22:0}}>
+            <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.8,maxWidth:680,margin:0}}>{f.a}</p>
+          </div>
+        </div>;})}
+      </div>
+    </div>
+  </W></section>
+  {/* WEEK ONE */}
+  <section style={{padding:"80px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
+    <div className="svc-2col" style={{display:"grid",gridTemplateColumns:"300px 1fr",gap:64}}>
+      <div style={{position:"sticky",top:80,alignSelf:"start"}}>
+        <SL ch="Week one"/>
+        <h2 style={{fontFamily:"var(--jk)",fontSize:28,fontWeight:800,color:"var(--txt)",lineHeight:1.1}}>What the first <span style={{color:"var(--blue)"}}>five days</span> look like.</h2>
+        <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,marginTop:14,maxWidth:280}}>Every engagement starts with a structured assessment week. By Friday, you have a written brief and a decision-ready plan, not a pitch deck.</p>
+      </div>
+      <div style={{display:"flex",flexDirection:"column"}}>
+        {weekOne.map((w,i)=><div key={i} className="week-row" style={{display:"grid",gridTemplateColumns:"80px 40px 1fr",gap:20,padding:"24px 0",borderBottom:i<weekOne.length-1?"1px solid var(--brd)":"none",alignItems:"flex-start"}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--blue)",letterSpacing:1,textTransform:"uppercase",opacity:.6,paddingTop:6}}>{w.d}</span>
+          <div className="week-dot" style={{display:"flex",flexDirection:"column",alignItems:"center",alignSelf:"stretch"}}>
+            <div style={{width:10,height:10,borderRadius:"50%",background:"var(--blue)",marginTop:8,flexShrink:0}}/>
+            {i<weekOne.length-1&&<div style={{width:1,flex:1,background:"var(--brd)",marginTop:6}}/>}
+          </div>
+          <div>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:700,color:"var(--txt)",marginBottom:6}}>{w.t}</h3>
+            <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.75}}>{w.b}</p>
+          </div>
+        </div>)}
+        <div style={{marginTop:24,padding:"20px 24px",border:"1px solid var(--brd)",borderRadius:12,background:"#fff",display:"flex",gap:14,alignItems:"flex-start"}} className="content-card-white">
+          <div style={{width:36,height:36,borderRadius:"50%",background:"var(--bl)",color:"var(--blue)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:800,color:"var(--txt)",marginBottom:4}}>No-commitment assessment</h3>
+            <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7}}>If, after week one, we don't think we're the right fit (or you don't), we say so. The brief is yours to keep either way.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </W></section>
+  {/* BOTTOM CTA */}
+  <section style={{padding:"64px 0",borderTop:"1px solid var(--brd)"}}><W>
+    <div style={{textAlign:"center",maxWidth:560,margin:"0 auto"}}>
+      <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.6vw,30px)",fontWeight:800,color:"var(--txt)",marginBottom:12,lineHeight:1.15}}>Ready to start with <span style={{color:"var(--blue)"}}>a clear plan?</span></h2>
+      <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,marginBottom:22}}>Tell us about your situation. We'll respond within one business day with next steps.</p>
+      <button onClick={()=>go("contact")} className="cta-m">Let's talk <Arr s={14} c="#fff"/></button>
     </div>
   </W></section>
 </div>;}
@@ -614,7 +830,7 @@ function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   },[]);
   return <div ref={ref} data-hero onClick={()=>go("cases",c.id)} className="case-hero" style={{cursor:"pointer",borderRadius:12,overflow:"hidden",position:"relative",height:520,marginBottom:10}}>
     <div ref={imgRef} className="reveal-img d1" style={{position:"absolute",inset:"-10% 0",background:c.cover}}>
-      {(c as any).headerImg&&<img alt="" src={c.id==="nomo"?(process.env.PUBLIC_URL+"/images/nomo_header_1.png"):c.id==="farmwave"?(process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg"):(c as any).headerImg} style={{width:"100%",height:"110%",objectFit:"cover",display:"block",transform:"translateY(5%)"}}/>}
+      {(c as any).headerImg&&<img alt={`${c.name}, ${c.cat} case study`} loading="lazy" decoding="async" width={1280} height={720} src={c.id==="nomo"?(process.env.PUBLIC_URL+"/images/nomo_header_1.png"):c.id==="farmwave"?(process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg"):(c as any).headerImg} style={{width:"100%",height:"110%",objectFit:"cover",display:"block",transform:"translateY(5%)"}}/>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.05) 100%)"}}/>
     <div style={{position:"absolute",top:28,left:32}}>
@@ -644,7 +860,10 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
   const onLeave=()=>{const el=cardRef.current;if(el)el.style.transform='';};
   return <div ref={ref}><div ref={cardRef} onClick={()=>go("cases",c.id)} onMouseMove={onMove} onMouseLeave={onLeave} className="case-card tilt-card" style={{height:300,borderRadius:12}}>
     <div className="ci reveal-img d1" style={{position:"absolute",inset:0,background:c.cover}}>
-      {(c as any).headerImg&&<img alt="" src={(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>}
+      {(c as any).headerImg&&<picture>
+        {(c as any).cardImgMobile&&<source media="(max-width: 900px)" srcSet={(c as any).cardImgMobile}/>}
+        <img alt={`${c.name}, ${c.cat} case study`} loading="lazy" decoding="async" width={640} height={400} src={(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+      </picture>}
     </div>
     <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.25) 55%,transparent 100%)"}}/>
     <div style={{position:"absolute",top:18,left:18}}>
@@ -659,17 +878,24 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
 }
 
 function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const fil=filt==="All"?cases:cases.filter(c=>c.cat===filt);const ac=sel?cases.find(c=>c.id===sel):null;
-  if(ac)return <div style={{paddingTop:76}}>
+  if(ac)return <div style={{paddingTop:60}}>
     {/* Cover */}
-    <div style={{background:ac.cover,position:"relative",overflow:"hidden",minHeight:120}}>
+    <div className="case-cover" style={{background:ac.cover,position:"relative",overflow:"hidden",minHeight:120,maxHeight:700}}>
       {(ac as any).headerImg
-        ? <img alt="" src={(ac as any).coverImg||(ac as any).headerImg} style={{width:"100%",height:"auto",display:"block"}}/>
+        ? <picture>
+            {(ac as any).coverImgMobile&&<source media="(max-width: 900px)" srcSet={(ac as any).coverImgMobile}/>}
+            <img className="case-cover-img" alt={`${ac.name}, ${ac.cat} case study`} fetchPriority="high" decoding="async" width={2400} height={1260} src={(ac as any).coverImg||(ac as any).headerImg} style={{width:"100%",height:"auto",maxHeight:700,objectFit:"cover",objectPosition:"center",display:"block"}}/>
+          </picture>
         : <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)",backgroundSize:"48px 48px",opacity:.4}}/>
       }
-      <div style={{position:"absolute",bottom:0,left:0,right:0,height:160,background:"linear-gradient(transparent,rgba(0,0,0,.45))"}}/>
-      <W style={{position:"absolute",bottom:0,left:0,right:0,paddingBottom:52,zIndex:2}}>
-        <span style={{fontSize:11,color:"rgba(255,255,255,.55)",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2}}>{ac.cat}</span>
-        <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,4vw,44px)",fontWeight:800,color:"#fff",marginTop:6,lineHeight:1.05}}>{ac.name}</h1>
+      <div className="case-cover-grad" style={{position:"absolute",bottom:0,left:0,right:0,height:160,background:"linear-gradient(transparent,rgba(0,0,0,.45))"}}/>
+      <W className="case-cover-title" style={{position:"absolute",bottom:0,left:0,right:0,paddingBottom:52,zIndex:2}}>
+        <span style={{display:"block",fontSize:11,color:"rgba(255,255,255,.55)",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2}}>{ac.cat}</span>
+        {(ac as any).period&&<p style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:600,color:"rgba(255,255,255,.92)",marginTop:8,letterSpacing:.2,display:"flex",alignItems:"center",gap:8}}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{opacity:.85}}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          {(ac as any).period}
+        </p>}
+        <h1 className="case-cover-h1" style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,4vw,44px)",fontWeight:800,color:"#fff",marginTop:8,lineHeight:1.05}}>{ac.name}</h1>
       </W>
     </div>
     <section style={{padding:"0 0 80px"}}><W>
@@ -678,10 +904,18 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
 <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.7,marginBottom:16}}>{ac.brief}</p>
           <div style={{display:"flex",flexWrap:"wrap",gap:5}}>{ac.tags.map(t=><span key={t} className="ft">{t}</span>)}</div>
         </div>
-        {/* Client meta */}
-        {(ac as any).client&&<div style={{display:"flex",flexWrap:"wrap",gap:24,padding:"24px 0",borderTop:"1px solid var(--brd)"}}>
-          {[{l:"Client"   ,v:(ac as any).client},{l:"Website",v:(ac as any).website},{l:"Period",v:(ac as any).period}].filter(r=>r.v).map((r,i)=><div key={i}><p style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:4}}>{r.l}</p><p style={{fontSize:13,fontWeight:600,color:"var(--txt2)"}}>{r.v}</p></div>)}
+        {/* Metrics strip */}
+        {(ac as any).metrics?.length>0&&<div className="case-metrics" style={{display:"flex",flexWrap:"wrap",gap:0,marginTop:-4,marginBottom:4,borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",borderRadius:12,alignItems:"stretch"}}>
+          {(ac as any).metrics.map((m:any,i:number,a:any[])=><div key={i} style={{flex:"1 1 140px",minWidth:120,padding:"18px 16px",borderRight:i<a.length-1?"1px solid var(--brd)":"none",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3}}>
+            <div style={{fontFamily:"var(--jk)",fontSize:"clamp(16px,1.9vw,22px)",fontWeight:800,color:"var(--blue)",lineHeight:1.15,letterSpacing:-.2,minHeight:"2.3em",display:"flex",alignItems:"flex-end",justifyContent:"center"}}>{m.v}</div>
+            <div style={{fontSize:11,color:"var(--txt3)",fontWeight:500,letterSpacing:.2,lineHeight:1.35,minHeight:"2.7em",display:"flex",alignItems:"flex-start",justifyContent:"center"}}>{m.l}</div>
+          </div>)}
         </div>}
+        {/* Client meta */}
+        {(ac as any).client&&(()=>{const lblStyle:CSSProperties={fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:6,lineHeight:1.2,height:14};const valTextStyle:CSSProperties={fontSize:13,fontWeight:600,color:"var(--txt2)",lineHeight:1.4,margin:0};const valLinkStyle:CSSProperties={fontSize:13,fontWeight:600,color:"var(--blue)",textDecoration:"none",display:"inline-flex",alignItems:"center",gap:5,lineHeight:1.4,transition:"gap .2s,opacity .2s"};return <div style={{display:"flex",flexWrap:"wrap",gap:24,padding:"8px 0 24px",alignItems:"flex-start"}}>
+          {[{l:"Client",v:(ac as any).client},{l:"Website",v:(ac as any).website}].filter(r=>r.v).map((r,i)=><div key={i} style={{display:"flex",flexDirection:"column"}}><p style={lblStyle}>{r.l}</p>{r.l==="Website"?<a href={r.v.startsWith("http")?r.v:`https://${r.v}`} target="_blank" rel="noopener noreferrer" style={valLinkStyle} onMouseEnter={e=>{e.currentTarget.style.gap="8px";e.currentTarget.style.opacity=".75";}} onMouseLeave={e=>{e.currentTarget.style.gap="5px";e.currentTarget.style.opacity="1";}}>{r.v} <Arr s={10} c="var(--blue)"/></a>:<p style={valTextStyle}>{r.v}</p>}</div>)}
+          {((ac as any).press||[]).map((p:{l:string,u:string},i:number)=><div key={`press-${i}`} style={{display:"flex",flexDirection:"column"}}><p style={lblStyle}>Recognition</p><a href={p.u} target="_blank" rel="noopener noreferrer" style={valLinkStyle} onMouseEnter={e=>{e.currentTarget.style.gap="8px";e.currentTarget.style.opacity=".75";}} onMouseLeave={e=>{e.currentTarget.style.gap="5px";e.currentTarget.style.opacity="1";}}>{p.l} <Arr s={10} c="var(--blue)"/></a></div>)}
+        </div>;})()}
         {/* Challenge / Approach / Outcome */}
         {[{l:"The Challenge",t:ac.ch},{l:"Our Approach",t:ac.ap},{l:"The Outcome",t:ac.re}].map((s,i)=><div key={i} style={{display:"grid",gridTemplateColumns:"160px 1fr",gap:32,padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
           <div><span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{String(i+1).padStart(2,"0")}</span><h3 style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:800,marginTop:4,color:"var(--txt)"}}>{s.l}</h3></div>
@@ -697,13 +931,55 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
             </div>)}
           </div>
         </div>}
+        {/* Why this stack */}
+        {(ac as any).why?.length>0&&<div style={{padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
+          <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:6}}>Why this stack</p>
+          <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.6,marginBottom:22,fontStyle:"italic"}}>The thinking behind the technical decisions.</p>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}} className="why-grid">
+            {(ac as any).why.map((w:any,i:number)=><div key={i} className="card" style={{padding:"20px 22px"}}>
+              <h4 style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)",marginBottom:8,display:"flex",alignItems:"flex-start",gap:8,lineHeight:1.35}}>
+                <span style={{color:"var(--blue)",fontWeight:800,flexShrink:0}}>→</span><span>{w.t}</span>
+              </h4>
+              <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7}}>{w.d}</p>
+            </div>)}
+          </div>
+        </div>}
         {/* Tech + Services */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
-          {(ac as any).tech?.length>0&&<div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:12}}>Technologies</p><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{(ac as any).tech.map((t:string)=><span key={t} className="ft">{t}</span>)}</div></div>}
+          {(()=>{const stack=(ac as any).stack as {g:string,i:string[]}[]|undefined;const flat=(ac as any).tech as string[]|undefined;if(stack?.length)return <div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:14}}>Technologies</p><div style={{display:"flex",flexDirection:"column",gap:13}}>{stack.map((s,i)=><div key={i}><p style={{fontSize:10,fontWeight:700,color:"var(--txt4)",textTransform:"uppercase",letterSpacing:1.4,marginBottom:5,opacity:.85}}>{s.g}</p><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{s.i.map(x=><span key={x} className="ft">{x}</span>)}</div></div>)}</div></div>;if(flat?.length)return <div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:12}}>Technologies</p><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{flat.map(t=><span key={t} className="ft">{t}</span>)}</div></div>;return null;})()}
           {(ac as any).services?.length>0&&<div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:12}}>Services</p>{(ac as any).services.map((s:string,i:number)=><div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><div style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.3}}/><span style={{fontSize:13,color:"var(--txt2)"}}>{s}</span></div>)}</div>}
         </div>
         {/* Quote */}
         {ac.q&&<div style={{marginTop:8,border:"1px solid var(--brd)",borderRadius:16,padding:36,background:"var(--bg2)"}}><QSvg/><p style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:500,lineHeight:1.6,color:"var(--txt)",fontStyle:"italic",marginBottom:20}}>{ac.q}</p><p style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)"}}>{ac.qn}</p><p style={{fontSize:12,color:"var(--txt3)",marginTop:2}}>{ac.qr}</p></div>}
+      </div>
+      {/* In action: product imagery */}
+      {(()=>{const imgs=caseShowcase[ac.id];if(!imgs||!imgs.length)return null;const cols=imgs.length===1?"1fr":(imgs.length===2||imgs.length===4)?"1fr 1fr":"1fr 1fr 1fr";return <div style={{marginTop:56,paddingTop:40,borderTop:"1px solid var(--brd)"}}>
+        <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:8,textAlign:"center"}}>In action</p>
+        <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.4vw,28px)",fontWeight:800,color:"var(--txt)",lineHeight:1.15,marginBottom:28,textAlign:"center"}}>What {ac.name} looks like.</h3>
+        <div className="case-gallery" style={{display:"grid",gridTemplateColumns:cols,gap:18}}>
+          {imgs.map((im,i)=><figure key={i} className="case-frame" style={{margin:0,borderRadius:16,overflow:"hidden",background:"#fff",border:"1px solid var(--brd)",boxShadow:"0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)",display:"flex",flexDirection:"column",transition:"transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 4px 8px rgba(0,30,50,.06), 0 22px 48px rgba(0,30,50,.13)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)";}}>
+            <div style={{background:"var(--bg2)",borderBottom:im.caption?"1px solid var(--brd)":"none",overflow:"hidden"}}>
+              <img src={im.src} alt={im.alt} loading="lazy" decoding="async" width={1200} height={800} style={{display:"block",width:"100%",height:"auto"}}/>
+            </div>
+            {im.caption&&<figcaption style={{padding:"16px 20px 18px",fontSize:13,color:"var(--txt2)",lineHeight:1.6,background:"#fff",flex:1,fontWeight:500}}>{im.caption}</figcaption>}
+          </figure>)}
+        </div>
+      </div>;})()}
+    </W></section>
+    {/* Related projects */}
+    {(()=>{const picks=cases.filter(c=>c.id!==ac.id&&c.cat===ac.cat).slice(0,2);if(!picks.length)return null;return <section style={{padding:"64px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
+      <SL ch="More work"/>
+      <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.6vw,30px)",fontWeight:800,color:"var(--txt)",lineHeight:1.1,marginBottom:32}}>Other projects from our practice.</h2>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        {picks.map(c=><CaseGridCard key={c.id} c={c} go={go}/>)}
+      </div>
+    </W></section>;})()}
+    {/* Case CTA */}
+    <section style={{padding:"72px 0",background:"linear-gradient(135deg,var(--blue) 0%,#0a6a99 100%)",color:"#fff"}}><W>
+      <div style={{maxWidth:640,margin:"0 auto",textAlign:"center"}}>
+        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(26px,3vw,36px)",fontWeight:800,lineHeight:1.15,marginBottom:14,color:"#fff"}}>Have a similar challenge?</h2>
+        <p style={{fontSize:16,lineHeight:1.7,opacity:.85,marginBottom:32}}>Tell us about it. We'll set up a short call, listen to the context, and send a written brief on where to start. No commitment.</p>
+        <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",border:"none",padding:"14px 28px",borderRadius:8,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,cursor:"pointer",transition:"transform .2s,box-shadow .2s",boxShadow:"0 2px 8px rgba(0,0,0,.15)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 18px rgba(0,0,0,.22)";}} onMouseLeave={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.15)";}}>Start a conversation <Arr s={14} c="var(--blue)"/></button>
       </div>
     </W></section>
   </div>;
@@ -713,10 +989,17 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:460,marginBottom:36}}>We've advised clients across healthcare, agriculture, fintech, and beyond.</p>
     <div style={{display:"flex",gap:6,marginBottom:40,flexWrap:"wrap"}}>{catList.map(c=><button key={c} className={`fb${filt===c?" active":""}`} onClick={()=>setFilt(c)}>{c}</button>)}</div>
     {fil.length>0&&<>
-      <CaseHeroCard c={fil[0]} go={go}/>
-      {fil.length>1&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        {fil.slice(1).map(c=><CaseGridCard key={c.id} c={c} go={go}/>)}
-      </div>}
+      {/* Desktop layout: featured hero + grid of the rest */}
+      <div className="work-hero-wrap">
+        <CaseHeroCard c={fil[0]} go={go}/>
+        {fil.length>1&&<div className="work-grid-d" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          {fil.slice(1).map(c=><CaseGridCard key={c.id} c={c} go={go}/>)}
+        </div>}
+      </div>
+      {/* Mobile layout: every case as a grid card, no oversized hero */}
+      <div className="work-grid-m" style={{display:"none"}}>
+        {fil.map(c=><CaseGridCard key={`m-${c.id}`} c={c} go={go}/>)}
+      </div>
     </>}
   </W></section></div>;
 }
@@ -727,7 +1010,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
     {/* Cover */}
     <div style={{height:380,background:ac.cover,position:"relative",overflow:"hidden"}}>
       {(ac as any).headerImg
-        ? <img alt="" src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+        ? <img alt={ac.title} fetchPriority="high" decoding="async" width={1600} height={900} src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
         : <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)",backgroundSize:"48px 48px",opacity:.4}}/>
       }
       <div style={{position:"absolute",bottom:0,left:0,right:0,height:120,background:"linear-gradient(transparent,rgba(0,0,0,.3))"}}/>
@@ -739,7 +1022,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
           <div style={{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}}><span className="ft">{ac.cat}</span><span style={{fontSize:12,color:"var(--txt4)"}}>{ac.read} read</span></div>
           <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,3.5vw,34px)",fontWeight:800,color:"var(--txt)",marginBottom:16,lineHeight:1.1}}>{ac.title}</h1>
           <div style={{display:"flex",alignItems:"center",gap:12,paddingBottom:24,borderBottom:"1px solid var(--brd)",marginBottom:28}}>
-            <img src={ac.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={ac.author} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:36,height:36,borderRadius:"50%",objectFit:"cover",objectPosition:"top"}}/>
+            <img src={ac.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={ac.author} loading="lazy" decoding="async" width={36} height={36} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:36,height:36,borderRadius:"50%",objectFit:"cover",objectPosition:"top"}}/>
             <div>
               <p style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)",lineHeight:1}}>{ac.author}</p>
               <p style={{fontSize:12,color:"var(--txt4)",marginTop:3}}>{ac.date}</p>
@@ -748,7 +1031,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
           <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.75,fontStyle:"italic",marginBottom:28}}>{ac.excerpt}</p>
           {ac.body.map((block:BlogBlock,i:number)=>block.type==="img"
             ? <figure key={i} style={{margin:"24px 0"}}>
-                <img src={block.src} alt={block.caption||""} style={{width:"100%",borderRadius:12,display:"block"}}/>
+                <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
                 {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
               </figure>
             : <p key={i} style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:18}}>{block.content}</p>
@@ -757,7 +1040,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
       </div>
     </W></section>
   </div>;
-  return <div style={{paddingTop:76}}><section style={{padding:"48px 0 80px"}}><W>
+  return <div style={{paddingTop:76}}><section style={{padding:"48px 0 48px"}}><W>
     <SL ch="Blog"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,color:"var(--txt)",marginBottom:16}}>Insights on technology <span style={{color:"var(--blue)"}}>strategy.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:440,marginBottom:36}}>Perspectives from our practice.</p>
@@ -766,7 +1049,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
       {fil.map(p=><div key={p.id} className="er" onClick={()=>go("blog",p.id)} style={{cursor:"pointer",display:"flex",gap:32,alignItems:"flex-start"}}>
         <div style={{width:320,flexShrink:0,height:210,borderRadius:12,overflow:"hidden",background:p.cover}}>
           {(p as any).headerImg
-            ? <img alt="" src={(p as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+            ? <img alt={p.title} loading="lazy" decoding="async" width={640} height={400} src={(p as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
             : <div style={{width:"100%",height:"100%",backgroundImage:"linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px)",backgroundSize:"32px 32px",opacity:.5}}/>
           }
         </div>
@@ -775,13 +1058,14 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
           <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:800,color:"var(--txt)",marginBottom:10,lineHeight:1.15}}>{p.title}</h3>
           <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,marginBottom:16}}>{p.excerpt}</p>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            <img src={p.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={p.author} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:26,height:26,borderRadius:"50%",objectFit:"cover",objectPosition:"top"}}/>
+            <img src={p.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={p.author} loading="lazy" decoding="async" width={26} height={26} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:26,height:26,borderRadius:"50%",objectFit:"cover",objectPosition:"top"}}/>
             <span style={{fontSize:13,color:"var(--txt2)",fontWeight:700}}>{p.author}</span>
           </div>
         </div>
       </div>)}
     </div>
-  </W></section></div>;
+  </W></section>
+  </div>;
 }
 
 /* ── CAREERS ── */
@@ -801,7 +1085,7 @@ function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){cons
       <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:460}}>Small, senior team. Meaningful challenges. No bureaucracy.</p>
     </W></section>
     <section style={{borderTop:"1px solid var(--brd)",padding:"56px 0",background:"var(--bg2)"}}><W>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>{perks.map((p,i)=><div key={i} className="card" style={{padding:"20px 18px"}}><div style={{fontSize:22,marginBottom:8}}>{p.i}</div><h3 style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)",marginBottom:4}}>{p.t}</h3><p style={{fontSize:12,color:"var(--txt3)",lineHeight:1.6}}>{p.d}</p></div>)}</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>{perks.map((p,i)=><div key={i} className="card" style={{padding:"20px 18px"}}><div style={{width:40,height:40,borderRadius:10,background:"var(--bl)",color:"var(--blue)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12}}><PerkIcon k={p.i}/></div><h3 style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)",marginBottom:4}}>{p.t}</h3><p style={{fontSize:12,color:"var(--txt3)",lineHeight:1.6}}>{p.d}</p></div>)}</div>
     </W></section>
     <section style={{padding:"64px 0"}}><W><SL ch="Open positions"/>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -813,13 +1097,33 @@ function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){cons
       <div style={{marginTop:32,border:"1px solid var(--brd)",borderRadius:14,padding:"28px 24px",background:"var(--bl)"}}>
         <h3 style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:800,color:"var(--txt)",marginBottom:4}}>Don't see your role?</h3>
         <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6,marginBottom:16}}>We're always looking for great people.</p>
-        <a href="mailto:hello@lumo-com.com" className="cta-m" style={{display:"inline-flex"}}>Send your CV <Arr s={14} c="#fff"/></a>
+        <a href="mailto:hello@lumo-lab.com" className="cta-m" style={{display:"inline-flex"}}>Send your CV <Arr s={14} c="#fff"/></a>
       </div>
     </W></section>
   </div>;
 }
 
 /* ── PRIVACY POLICY ── */
+/* ── 404 ── */
+function NotFound({go}:{go:(p:string,id?:string)=>void}){
+  return <div style={{paddingTop:76,minHeight:"calc(100vh - 160px)",display:"flex",alignItems:"center"}}>
+    <W style={{maxWidth:720}}>
+      <section style={{padding:"80px 0 120px",textAlign:"center"}}>
+        <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:3,textTransform:"uppercase",opacity:.5,marginBottom:16}}>Error 404</p>
+        <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(64px,12vw,140px)",fontWeight:800,color:"var(--txt)",lineHeight:.95,letterSpacing:"-0.04em",marginBottom:20}}>
+          Page <span style={{background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:"gradShift 6s ease infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>not found.</span>
+        </h1>
+        <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.65,maxWidth:480,margin:"0 auto 36px"}}>The page you're looking for doesn't exist or has moved. From here you can head back home, browse our work, or get in touch.</p>
+        <div style={{display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center"}}>
+          <button onClick={()=>go("home")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"var(--blue)",color:"#fff",padding:"14px 26px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,border:"none",cursor:"pointer"}}>Back to home <Arr s={14} c="#fff"/></button>
+          <button onClick={()=>go("cases")} className="cta-g">See our work</button>
+          <button onClick={()=>go("contact")} className="cta-g">Get in touch</button>
+        </div>
+      </section>
+    </W>
+  </div>;
+}
+
 function Privacy(){
   const s=(t:string)=><h3 style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:800,color:"var(--txt)",margin:"36px 0 10px"}}>{t}</h3>;
   const p=(t:string)=><p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:12}}>{t}</p>;
@@ -835,8 +1139,8 @@ function Privacy(){
       {p('At lumo lab, your privacy is our priority.')}
 
       {s('Information We May Collect About You')}
-      <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:8}}><strong>Information you voluntarily provide to us</strong> — data you submit through contact forms or email correspondence.</p>
-      <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:4}}><strong>Information we collect about you and your device</strong> — when you visit our site we automatically collect:</p>
+      <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:8}}><strong>Information you voluntarily provide to us</strong>, including data you submit through contact forms or email correspondence.</p>
+      <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:4}}><strong>Information we collect about you and your device</strong>: when you visit our site we automatically collect:</p>
       {li(['IP address','Browser type and version','Number of visits','Device and operating system','Referral source','Time zone','User settings','Pages visited and interactions'])}
 
       {s('How We Handle Collected Data About You')}
@@ -851,7 +1155,7 @@ function Privacy(){
       {s('With Whom We Share Your Data')}
       {p('We do not sell your personal data. We may share it with trusted partners who assist us in operating our website and services, subject to confidentiality agreements.')}
       <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:4}}><strong>Third Party Collaborations:</strong></p>
-      {li(['Google Analytics — used to understand website traffic and behaviour'])}
+      {li(['Google Analytics, used to understand website traffic and behaviour'])}
       <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.85,marginBottom:4}}>We may also disclose data:</p>
       {li(['If required by law or a court order','To protect the rights or safety of lumo lab or others','In connection with a merger, acquisition, or sale of assets'])}
 
@@ -916,12 +1220,12 @@ function Contact({type="project"}:{type?:"project"|"job"}){
             {isJob?(<>Join the<br/><span style={{color:"var(--blue)"}}>team.</span></>):(<>Let's build something<br/><span style={{color:"var(--blue)"}}>together.</span></>)}
           </h1>
           <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.7,marginBottom:40}}>
-            {isJob?"Tell us about yourself and what you're looking for. We read every application.":"Tell us about your project. We'll get back to you within 1–2 business days."}
+            {isJob?"Tell us about yourself and what you're looking for. We read every application.":"Tell us about your project. We'll get back to you within 1 to 2 business days."}
           </p>
           {sent?<div style={{textAlign:"center",padding:"56px 0"}}>
             <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(0,76,115,.08)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--blue)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
             <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:700,color:"var(--txt)",marginBottom:8}}>Message sent!</h3>
-            <p style={{fontSize:15,color:"var(--txt3)"}}>We'll get back to you within 1–2 business days.</p>
+            <p style={{fontSize:15,color:"var(--txt3)"}}>We'll get back to you within 1 to 2 business days.</p>
           </div>:
           <form onSubmit={submit} style={{display:"flex",flexDirection:"column",gap:20}}>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
@@ -970,15 +1274,333 @@ function Contact({type="project"}:{type?:"project"|"job"}){
 }
 
 /* ── ROUTING ── */
-const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/services",cases:"/work",blog:"/blog",careers:"/careers",privacy:"/privacy-policy",contact:"/contact"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
+const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",privacy:"/privacy-policy",contact:"/contact"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
 function parseFromPath():{page:string,subId:string|null}{
   const parts=window.location.pathname.split("/").filter(Boolean);
-  const pageMap:{[k:string]:string}={about:"about",services:"services",work:"cases",blog:"blog",careers:"careers","privacy-policy":"privacy",contact:"contact"};
+  // Both `/for-clients` (canonical, matches the nav label) and `/services` (legacy alias) resolve to the Services page.
+  const pageMap:{[k:string]:string}={about:"about","for-clients":"services",services:"services",work:"cases",blog:"blog",careers:"careers","privacy-policy":"privacy",contact:"contact"};
   if(!parts.length)return{page:"home",subId:null};
-  const page=pageMap[parts[0]]||"home";
-  return{page,subId:parts[1]||null};
+  const page=pageMap[parts[0]];
+  if(!page)return{page:"notfound",subId:null};
+  const subId=parts[1]||null;
+  // Validate known sub-routes; unknown IDs land on 404 rather than silently rendering the index
+  if(subId){
+    if(page==="cases"&&!cases.find(c=>c.id===subId))return{page:"notfound",subId:null};
+    if(page==="blog"&&!blogs.find(b=>b.id===subId))return{page:"notfound",subId:null};
+    if(page==="careers"&&subId!=="job"&&!roles.find(r=>r.id===subId))return{page:"notfound",subId:null};
+  }
+  return{page,subId};
 }
 
+/* ── SEO ──
+   Single source of truth for per-page titles, descriptions, canonical URLs,
+   Open Graph / Twitter metadata, and schema.org JSON-LD structured data.
+   Updates are applied imperatively on page/subId change so crawlers that
+   execute JS (Googlebot, Bingbot) see the correct tags for every route.
+   For static bots, server-side rendering or pre-rendering is recommended
+   as a follow-up; this implementation is the client-side baseline. */
+const SITE_URL="https://lumo-lab.com";
+const SITE_NAME="Lumo Lab";
+const DEFAULT_OG=`${SITE_URL}/og-image.jpg`;
+const SEO_DEFAULTS:{[k:string]:{title:string,description:string,path:string,keywords?:string}}={
+  home:{title:`${SITE_NAME} | Technology Consultancy. Advise, Guide, Deliver`,description:"Lumo Lab is a technology consultancy. We advise, guide, and deliver for startups and enterprises, from first assessment to long-term partnership.",path:"/",keywords:"technology consultancy, software consulting, AI consulting, IoT, mobile app development, startup technology partner"},
+  about:{title:`About ${SITE_NAME} | Our Story & Approach`,description:"Meet Lumo Lab: an independent technology consultancy built around listening first, advising honestly, and delivering work that compounds over time.",path:"/about",keywords:"about Lumo Lab, technology consultancy team, software consulting company"},
+  services:{title:`For Clients | Technology Consulting Services from ${SITE_NAME}`,description:"Technology strategy, product design, solution engineering, IoT, and AI. End-to-end consulting that reduces risk and delivers measurable outcomes.",path:"/for-clients",keywords:"technology consulting services, software engineering, AI consulting, IoT consulting, product design"},
+  cases:{title:`Case Studies | Health, AgTech, AI & IoT Work by ${SITE_NAME}`,description:"Case studies across health, AgTech, social, IoT, and AI, including Nomo Smart Care, Farmwave, Drift App, Noctrix, MobilityOne, and more.",path:"/work",keywords:"case studies, software portfolio, health tech, AgTech, IoT, AI"},
+  blog:{title:`Insights on Technology, AI & Product | ${SITE_NAME} Blog`,description:"Practical perspectives on technology strategy, AI, edge computing, and software engineering, written by the Lumo Lab team.",path:"/blog",keywords:"technology blog, AI insights, edge computing, software engineering"},
+  careers:{title:`Careers at ${SITE_NAME} | Engineering, Design & Product`,description:"Join a small, senior team building meaningful products. We're not actively hiring right now, but we're always open to hearing from great people.",path:"/careers",keywords:"careers, software jobs, engineering, design, product, open application"},
+  contact:{title:`Contact ${SITE_NAME} | Start Your Technology Partnership`,description:"Talk to Lumo Lab about your next technology initiative. Book an assessment, scope a project, or start a long-term partnership.",path:"/contact",keywords:"contact Lumo Lab, technology consulting inquiry, hire consultants"},
+  privacy:{title:`Privacy Policy | ${SITE_NAME}`,description:"Lumo Lab privacy policy. How we collect, use, and safeguard your personal data.",path:"/privacy-policy"},
+  notfound:{title:`Page Not Found (404) | ${SITE_NAME}`,description:"The page you're looking for doesn't exist. Browse our work, read our insights, or get in touch.",path:"/404"},
+};
+type SeoMeta={title:string,description:string,url:string,image:string,imageAlt?:string,type:"website"|"article",keywords?:string,publishedTime?:string,author?:string,section?:string};
+function clip(s:string,max:number){if(s.length<=max)return s;return s.slice(0,max-1).replace(/\s+\S*$/,"")+"…";}
+// Resolve a relative/public-url image path into an absolute URL suitable for og:image.
+// Images live under /images/... on the canonical domain regardless of build-time PUBLIC_URL
+// (which may be "/lumo-web" on GitHub Pages). We normalise by anchoring to the last "/images/" segment.
+function toAbs(src:string|undefined):string|undefined{
+  if(!src)return undefined;
+  if(/^https?:\/\//i.test(src))return src;
+  const idx=src.lastIndexOf("/images/");
+  const rel=idx>=0?src.slice(idx+1):src.replace(/^\/+/,"");
+  return `${SITE_URL}/${rel}`;
+}
+function getSeo(page:string,subId:string|null):SeoMeta{
+  if(page==="cases"&&subId){
+    const c=cases.find(x=>x.id===subId);
+    if(c){
+      const caseImg=toAbs((c as any).coverImg||(c as any).headerImg)||DEFAULT_OG;
+      return{
+        title:clip(`${c.name} Case Study | ${c.cat} | ${SITE_NAME}`,65),
+        description:clip(c.brief,158),
+        url:`${SITE_URL}/work/${c.id}`,
+        image:caseImg,
+        imageAlt:`${c.name}, ${c.cat} case study by Lumo Lab`,
+        type:"article",
+        keywords:[c.cat,...c.tags,"case study","Lumo Lab"].join(", "),
+        section:c.cat,
+      };
+    }
+  }
+  if(page==="blog"&&subId){
+    const b=blogs.find(x=>x.id===subId);
+    if(b){
+      const blogImg=toAbs((b as any).headerImg)||DEFAULT_OG;
+      return{
+        title:clip(`${b.title} | ${SITE_NAME} Blog`,65),
+        description:clip(b.excerpt,158),
+        url:`${SITE_URL}/blog/${b.id}`,
+        image:blogImg,
+        imageAlt:`${b.title} on ${SITE_NAME} Blog`,
+        type:"article",
+        keywords:[b.cat,"Lumo Lab blog","technology"].join(", "),
+        publishedTime:new Date(b.date).toISOString(),
+        author:b.author,
+        section:b.cat,
+      };
+    }
+  }
+  const d=SEO_DEFAULTS[page]||SEO_DEFAULTS.home;
+  return{title:d.title,description:d.description,url:`${SITE_URL}${d.path}`,image:DEFAULT_OG,imageAlt:"Lumo Lab. We advise, guide, and deliver.",type:"website",keywords:d.keywords};
+}
+function setMeta(attr:"name"|"property",key:string,content:string){
+  let el=document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
+  if(!el){el=document.createElement("meta");el.setAttribute(attr,key);document.head.appendChild(el);}
+  el.setAttribute("content",content);
+}
+function removeMeta(attr:"name"|"property",key:string){
+  const el=document.head.querySelector(`meta[${attr}="${key}"]`);
+  if(el)el.remove();
+}
+function setLink(rel:string,href:string){
+  let el=document.head.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
+  if(!el){el=document.createElement("link");el.setAttribute("rel",rel);document.head.appendChild(el);}
+  el.setAttribute("href",href);
+}
+function setJsonLd(id:string,data:unknown){
+  let el=document.getElementById(id) as HTMLScriptElement|null;
+  if(!el){el=document.createElement("script");el.id=id;el.type="application/ld+json";document.head.appendChild(el);}
+  el.textContent=JSON.stringify(data);
+}
+function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
+  const organization={
+    "@type":["Organization","ProfessionalService"],
+    "@id":`${SITE_URL}/#organization`,
+    name:SITE_NAME,
+    alternateName:"Lumo Lab d.o.o.",
+    url:SITE_URL,
+    logo:{"@type":"ImageObject",url:`${SITE_URL}/android-chrome-512x512.png`,width:512,height:512},
+    image:`${SITE_URL}/android-chrome-512x512.png`,
+    sameAs:["https://www.linkedin.com/company/lumo-lab","https://www.instagram.com/lumo_lab_/"],
+    contactPoint:{"@type":"ContactPoint",email:"hello@lumo-lab.com",telephone:"+385-98-901-4448",contactType:"customer support",areaServed:["EU","US","Global"],availableLanguage:["English"]},
+    address:{"@type":"PostalAddress",streetAddress:"Zivtov trg 3",addressLocality:"Zabok",addressRegion:"Krapina-Zagorje",postalCode:"49210",addressCountry:"HR"},
+    founder:{"@type":"Person",name:"Jurica Mlinaric"},
+    foundingDate:"2022",
+    numberOfEmployees:{"@type":"QuantitativeValue",minValue:10,maxValue:25},
+    slogan:"We advise, guide, and deliver.",
+    description:"Technology consultancy for startups and enterprises. We advise, guide, and deliver across mobile, web, IoT, and AI.",
+    knowsAbout:["Technology Consulting","Software Engineering","Mobile App Development","IoT","Edge AI","Machine Learning","Product Design","SaaS","iOS Development","Android Development","Cloud Architecture","DevOps"],
+    areaServed:["EU","US","Global"],
+    keywords:"technology consultancy, software consulting, AI consulting, IoT, mobile development, edge AI, startup technology partner, product engineering",
+    knowsLanguage:["en"],
+  };
+  const website={
+    "@type":"WebSite",
+    "@id":`${SITE_URL}/#website`,
+    url:SITE_URL,
+    name:SITE_NAME,
+    description:"Technology consultancy. We advise, guide, and deliver.",
+    publisher:{"@id":`${SITE_URL}/#organization`},
+    inLanguage:"en-US",
+  };
+  const graph:unknown[]=[organization,website];
+  // Breadcrumbs for sub-pages
+  if(page!=="home"){
+    const labels:{[k:string]:string}={about:"About",services:"For Clients",cases:"Work",blog:"Blog",careers:"Careers",contact:"Contact",privacy:"Privacy Policy"};
+    const paths:{[k:string]:string}={about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",contact:"/contact",privacy:"/privacy-policy"};
+    const items:unknown[]=[
+      {"@type":"ListItem",position:1,name:"Home",item:`${SITE_URL}/`},
+      {"@type":"ListItem",position:2,name:labels[page]||page,item:`${SITE_URL}${paths[page]||"/"}`},
+    ];
+    if(subId){
+      let subName=subId;
+      if(page==="cases"){const c=cases.find(x=>x.id===subId);if(c)subName=`${c.name} Case Study`;}
+      if(page==="blog"){const b=blogs.find(x=>x.id===subId);if(b)subName=b.title;}
+      items.push({"@type":"ListItem",position:3,name:subName,item:seo.url});
+    }
+    graph.push({"@type":"BreadcrumbList",itemListElement:items});
+  }
+  // Page-specific entities
+  if(page==="services"){
+    graph.push({
+      "@type":"Service",
+      serviceType:"Technology Consulting",
+      provider:{"@id":`${SITE_URL}/#organization`},
+      name:"Technology Consulting Services",
+      description:seo.description,
+      url:seo.url,
+      areaServed:["EU","US","Global"],
+      hasOfferCatalog:{"@type":"OfferCatalog",name:"Consulting Services",itemListElement:[
+        {"@type":"Offer",itemOffered:{"@type":"Service",name:"Technology Strategy & Advisory",description:"Assessment, architecture advisory, and strategic roadmap."}},
+        {"@type":"Offer",itemOffered:{"@type":"Service",name:"Product & Experience Design",description:"Research, wireframes, prototypes, design systems, and usability validation."}},
+        {"@type":"Offer",itemOffered:{"@type":"Service",name:"Solution Engineering",description:"Native iOS, Android, cross-platform, and web solutions, architected for scale."}},
+        {"@type":"Offer",itemOffered:{"@type":"Service",name:"IoT & Connected Systems",description:"End-to-end IoT ecosystems: architecture, data pipelines, edge computing."}},
+        {"@type":"Offer",itemOffered:{"@type":"Service",name:"AI & Data Strategy",description:"AI/ML strategy, data pipelines, analytics, and automation."}},
+      ]},
+    });
+    graph.push({
+      "@type":"FAQPage",
+      mainEntity:faqs.map(f=>({
+        "@type":"Question",
+        name:f.q,
+        acceptedAnswer:{"@type":"Answer",text:f.a},
+      })),
+    });
+  }
+  if(page==="cases"&&!subId){
+    graph.push({
+      "@type":"CollectionPage",
+      name:"Case Studies",
+      description:seo.description,
+      url:seo.url,
+      mainEntity:{"@type":"ItemList",itemListElement:cases.map((c,i)=>({
+        "@type":"ListItem",position:i+1,url:`${SITE_URL}/work/${c.id}`,name:c.name,
+      }))},
+    });
+  }
+  if(page==="cases"&&subId){
+    const c=cases.find(x=>x.id===subId);
+    if(c){
+      graph.push({
+        "@type":"Article",
+        mainEntityOfPage:seo.url,
+        headline:`${c.name} Case Study`,
+        description:c.brief,
+        url:seo.url,
+        author:{"@id":`${SITE_URL}/#organization`},
+        publisher:{"@id":`${SITE_URL}/#organization`},
+        image:[seo.image],
+        articleSection:c.cat,
+        keywords:c.tags.join(", "),
+        about:c.client||c.name,
+        inLanguage:"en-US",
+      });
+    }
+  }
+  if(page==="blog"&&!subId){
+    graph.push({
+      "@type":"Blog",
+      name:`${SITE_NAME} Blog`,
+      description:seo.description,
+      url:seo.url,
+      publisher:{"@id":`${SITE_URL}/#organization`},
+      blogPost:blogs.map(b=>({
+        "@type":"BlogPosting",
+        headline:b.title,
+        url:`${SITE_URL}/blog/${b.id}`,
+        datePublished:new Date(b.date).toISOString(),
+        author:{"@type":"Person",name:b.author},
+      })),
+    });
+  }
+  if(page==="blog"&&subId){
+    const b=blogs.find(x=>x.id===subId);
+    if(b){
+      const authorImg=(b as any).authorImg?toAbs((b as any).authorImg):undefined;
+      const authorEntity:any={"@type":"Person",name:b.author};
+      if(authorImg)authorEntity.image=authorImg;
+      authorEntity.worksFor={"@id":`${SITE_URL}/#organization`};
+      graph.push({
+        "@type":"BlogPosting",
+        mainEntityOfPage:seo.url,
+        headline:b.title,
+        description:b.excerpt,
+        author:authorEntity,
+        publisher:{"@id":`${SITE_URL}/#organization`},
+        datePublished:new Date(b.date).toISOString(),
+        dateModified:new Date(b.date).toISOString(),
+        image:[seo.image],
+        articleSection:b.cat,
+        keywords:[b.cat,"Lumo Lab","technology"].join(", "),
+        wordCount:((b as any).body||[]).filter((x:any)=>x.type==="text").reduce((n:number,x:any)=>n+String(x.content||"").split(/\s+/).length,0),
+        url:seo.url,
+        inLanguage:"en-US",
+      });
+    }
+  }
+  if(page==="careers"){
+    graph.push({
+      "@type":"CollectionPage",
+      name:"Careers at Lumo Lab",
+      description:seo.description,
+      url:seo.url,
+      mainEntity:{"@type":"ItemList",itemListElement:roles.map((r,i)=>({
+        "@type":"ListItem",position:i+1,name:r.title,description:r.desc,
+      }))},
+    });
+  }
+  if(page==="contact"){
+    graph.push({
+      "@type":"ContactPage",
+      name:"Contact Lumo Lab",
+      description:seo.description,
+      url:seo.url,
+      mainEntity:{"@id":`${SITE_URL}/#organization`},
+    });
+  }
+  if(page==="about"){
+    graph.push({
+      "@type":"AboutPage",
+      name:"About Lumo Lab",
+      description:seo.description,
+      url:seo.url,
+      mainEntity:{"@id":`${SITE_URL}/#organization`},
+    });
+  }
+  return {"@context":"https://schema.org","@graph":graph};
+}
+function applySeo(page:string,subId:string|null){
+  const seo=getSeo(page,subId);
+  document.title=seo.title;
+  setMeta("name","description",seo.description);
+  setLink("canonical",seo.url);
+  // Open Graph
+  setMeta("property","og:type",seo.type);
+  setMeta("property","og:site_name",SITE_NAME);
+  setMeta("property","og:title",seo.title);
+  setMeta("property","og:description",seo.description);
+  setMeta("property","og:url",seo.url);
+  setMeta("property","og:image",seo.image);
+  if(seo.imageAlt)setMeta("property","og:image:alt",seo.imageAlt);else removeMeta("property","og:image:alt");
+  setMeta("property","og:image:width","1200");
+  setMeta("property","og:image:height","630");
+  setMeta("property","og:locale","en_US");
+  if(seo.type==="article"){
+    if(seo.publishedTime)setMeta("property","article:published_time",seo.publishedTime);else removeMeta("property","article:published_time");
+    if(seo.author)setMeta("property","article:author",seo.author);else removeMeta("property","article:author");
+    if(seo.section)setMeta("property","article:section",seo.section);else removeMeta("property","article:section");
+  }else{
+    removeMeta("property","article:published_time");
+    removeMeta("property","article:author");
+    removeMeta("property","article:section");
+  }
+  // Twitter
+  setMeta("name","twitter:card","summary_large_image");
+  setMeta("name","twitter:title",seo.title);
+  setMeta("name","twitter:description",seo.description);
+  setMeta("name","twitter:image",seo.image);
+  if(seo.imageAlt)setMeta("name","twitter:image:alt",seo.imageAlt);else removeMeta("name","twitter:image:alt");
+  // Keywords (minor signal only, but harmless)
+  if(seo.keywords)setMeta("name","keywords",seo.keywords);else removeMeta("name","keywords");
+  // Robots: allow indexing everywhere by default; 404 pages should not be indexed
+  if(page==="notfound"){
+    setMeta("name","robots","noindex,nofollow");
+  }else{
+    setMeta("name","robots","index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1");
+  }
+  // Structured data
+  setJsonLd("ld-page",buildJsonLd(page,subId,seo));
+}
 
 /* ── APP ── */
 export default function App(){
@@ -992,6 +1614,8 @@ export default function App(){
     window.addEventListener("popstate",onPop);
     return()=>window.removeEventListener("popstate",onPop);
   },[]);
+  // SEO: update title, meta tags, canonical, OG, Twitter, and JSON-LD on every route change
+  useEffect(()=>{applySeo(page,subId);},[page,subId]);
   const go=(p:string,id?:string)=>{
     window.history.pushState({page:p,id:id||null},"",toPath(p,id));
     setPage(p);setSubId(id||null);
@@ -1011,9 +1635,10 @@ export default function App(){
     {page==="careers"&&<Careers go={go} sel={subId}/>}
     {page==="privacy"&&<Privacy/>}
     {page==="contact"&&<Contact type={subId==="job"?"job":"project"}/>}
+    {page==="notfound"&&<NotFound go={go}/>}
     </div>
     </div>
-    {/* SHARED CONTACT FOOTER — every page */}
+    {/* SHARED CONTACT FOOTER on every page */}
     <section className="footer-section" style={{padding:"24px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}>
       <W>
         <div className="footer-grid">
@@ -1071,8 +1696,8 @@ export default function App(){
       </W>
     </section>
     <footer style={{padding:"28px clamp(16px,4vw,48px)",maxWidth:1200,margin:"0 auto",width:"100%",display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"1px solid var(--brd)"}}>
-      <span style={{fontSize:12,color:"var(--blue)",letterSpacing:1.5,textTransform:"uppercase",fontFamily:"var(--jk)",fontWeight:600}}>©2026 by Lumo Lab. All rights reserved.</span>
-      <span style={{fontSize:12,color:"var(--blue)",letterSpacing:1,fontWeight:500}}>We advise, guide, and deliver.</span>
+      <span style={{fontSize:10,color:"var(--blue)",letterSpacing:1.8,textTransform:"uppercase",fontFamily:"var(--jk)",fontWeight:800}}>©2026 by Lumo Lab. All rights reserved.</span>
+      <span style={{fontSize:10,color:"var(--blue)",letterSpacing:1.8,textTransform:"uppercase",fontFamily:"var(--jk)",fontWeight:800}}>We advise, guide, and deliver.</span>
     </footer>
   </div>;
 }

@@ -73,6 +73,37 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .case-card{border-radius:6px;overflow:hidden;position:relative;cursor:pointer;transition:box-shadow .35s,transform .35s}.case-card:hover{box-shadow:0 16px 48px rgba(0,30,50,.15);transform:translateY(-3px)}.case-card .ci{transition:transform .6s cubic-bezier(.22,1,.36,1)}.case-card:hover .ci{transform:scale(1.06)}
 .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}.reveal.in{opacity:1;transform:translateY(0)}
 .reveal-img{opacity:0;transform:scale(.97);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}.reveal-img.in{opacity:1;transform:scale(1)}
+/* Case detail polish */
+.why-card{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s,border-color .35s}
+.why-card:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,30,50,.05),0 18px 40px rgba(0,30,50,.10);border-color:rgba(0,76,115,.18)}
+.why-card:hover h4 span:first-child{transform:translateX(2px)}
+.why-card h4 span:first-child{transition:transform .3s}
+.case-section{position:relative}
+.case-cover::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--sweep-x,30%) 30%,rgba(255,255,255,.08),transparent 60%);animation:heroSweep 9s ease-in-out infinite alternate;z-index:1}
+@keyframes heroSweep{0%{--sweep-x:20%}100%{--sweep-x:80%}}
+@property --sweep-x{syntax:'<percentage>';initial-value:30%;inherits:false}
+.metric-cell{opacity:0;transform:translateY(8px);transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1)}
+.metric-cell.in{opacity:1;transform:translateY(0)}
+.case-toc{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:6px;padding:14px 4px 14px 14px;border-left:1px solid var(--brd);max-width:200px}
+.case-toc a{display:block;font-family:var(--jk);font-size:11px;font-weight:600;color:var(--txt4);text-decoration:none;letter-spacing:.5px;padding:4px 0;transition:color .2s,padding-left .2s,border-color .2s;border-left:2px solid transparent;padding-left:10px;margin-left:-12px}
+.case-toc a:hover{color:var(--txt2)}
+.case-toc a.active{color:var(--blue);border-color:var(--blue);padding-left:12px}
+.next-case{position:relative;display:block;text-decoration:none;color:#fff;overflow:hidden;cursor:pointer}
+.next-case-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.04);transition:transform .8s cubic-bezier(.22,1,.36,1),filter .8s}
+.next-case:hover .next-case-bg{transform:scale(1.08);filter:brightness(.85)}
+.next-case-inner{position:relative;z-index:2;padding:88px clamp(20px,5vw,72px);min-height:340px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg,rgba(0,30,50,.78) 0%,rgba(0,30,50,.45) 60%,rgba(0,30,50,.3) 100%)}
+.next-case:hover .next-case-arrow{transform:translateX(8px)}
+.next-case-arrow{display:inline-block;transition:transform .3s}
+.lb-overlay{position:fixed;inset:0;background:rgba(8,18,30,.88);backdrop-filter:blur(8px);z-index:400;display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,40px);animation:lbFade .25s ease}
+@keyframes lbFade{from{opacity:0}to{opacity:1}}
+.lb-stage{max-width:1280px;width:100%;display:flex;flex-direction:column;gap:14px;align-items:center}
+.lb-img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:12px;box-shadow:0 24px 80px rgba(0,0,0,.5);background:#0a141e}
+.lb-cap{font-size:14px;color:rgba(255,255,255,.85);text-align:center;max-width:760px;line-height:1.55;font-weight:500}
+.lb-close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,transform .2s}
+.lb-close:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
+.case-frame{cursor:zoom-in}
+.read-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--case-accent,var(--teal)));z-index:300;transition:width .12s linear;pointer-events:none}
+@media(max-width:1240px){.case-toc{display:none!important}}
 .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.22s}.reveal.d3{transition-delay:.36s}.reveal.d4{transition-delay:.5s}.reveal-img.d1{transition-delay:0s}
 .tilt-card{transform-style:preserve-3d;transition:transform .12s ease,box-shadow .35s}.tilt-card:hover{box-shadow:0 24px 56px rgba(0,30,50,.22)}
 .ham-btn{display:none}.ham-overlay{display:none}
@@ -195,6 +226,87 @@ const QSvg=()=><svg width="32" height="24" viewBox="0 0 48 36" fill="none" style
 function AnimNum({end,suffix="",delay=0}:{end:number,suffix?:string,delay?:number}){const[v,setV]=useState(0);useEffect(()=>{const tm=setTimeout(()=>{const s=performance.now();const t=(n:number)=>{const p=Math.min((n-s)/2000,1);setV(Math.round((1-Math.pow(1-p,4))*end));if(p<1)requestAnimationFrame(t);};requestAnimationFrame(t);},delay);return()=>clearTimeout(tm);},[end,delay]);return <span>{v}{suffix}</span>;}
 function useReveal(threshold=0.15){const r=useRef<HTMLDivElement>(null);useEffect(()=>{const el=r.current;if(!el)return;const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting){el.querySelectorAll('.reveal,.reveal-img').forEach(n=>n.classList.add('in'));obs.disconnect();}},{threshold});obs.observe(el);return()=>obs.disconnect();},[threshold]);return r;}
 
+/* Reading progress bar at the top of long pages */
+function ReadingProgress(){
+  const[p,setP]=useState(0);
+  useEffect(()=>{
+    const onScroll=()=>{const h=document.documentElement;const total=h.scrollHeight-h.clientHeight;setP(total?Math.min(100,Math.max(0,h.scrollTop/total*100)):0);};
+    onScroll();window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);
+    return()=>{window.removeEventListener('scroll',onScroll);window.removeEventListener('resize',onScroll);};
+  },[]);
+  return <div className="read-progress" style={{width:`${p}%`}}/>;
+}
+
+/* Animated metric value: parses "<1s", "72.7%", "3-8+" etc and counts up the first numeric portion */
+function MetricVal({v,delay=0}:{v:string,delay?:number}){
+  const m=v.match(/^(\D*?)(-?\d+(?:[.,]\d+)?)([\s\S]*)$/);
+  const[shown,setShown]=useState(m?m[1]+'0'+m[3]:v);
+  const ref=useRef<HTMLSpanElement>(null);
+  const started=useRef(false);
+  useEffect(()=>{
+    if(!m){setShown(v);return;}
+    const el=ref.current;if(!el)return;
+    const obs=new IntersectionObserver(([entry])=>{
+      if(entry.isIntersecting&&!started.current){
+        started.current=true;
+        const target=parseFloat(m[2].replace(',','.'));
+        const decimals=(m[2].split('.')[1]||m[2].split(',')[1]||'').length;
+        const start=performance.now();
+        const tick=(now:number)=>{
+          const t=Math.min((now-start-delay)/1100,1);
+          if(t<0){requestAnimationFrame(tick);return;}
+          const eased=1-Math.pow(1-t,3);
+          const cur=target*eased;
+          const formatted=decimals>0?cur.toFixed(decimals):Math.round(cur).toString();
+          setShown(m[1]+formatted+m[3]);
+          if(t<1)requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        obs.disconnect();
+      }
+    },{threshold:0.4});
+    obs.observe(el);
+    return()=>obs.disconnect();
+  },[v,delay,m]);
+  return <span ref={ref}>{shown}</span>;
+}
+
+/* Lightbox modal for gallery images */
+function Lightbox({img,onClose}:{img:{src:string,alt:string,caption?:string}|null,onClose:()=>void}){
+  useEffect(()=>{
+    if(!img)return;
+    const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape')onClose();};
+    window.addEventListener('keydown',onKey);
+    const prev=document.body.style.overflow;document.body.style.overflow='hidden';
+    return()=>{window.removeEventListener('keydown',onKey);document.body.style.overflow=prev;};
+  },[img,onClose]);
+  if(!img)return null;
+  return <div className="lb-overlay" role="dialog" aria-modal="true" onClick={onClose}>
+    <button className="lb-close" aria-label="Close" onClick={onClose}>×</button>
+    <div className="lb-stage" onClick={e=>e.stopPropagation()}>
+      <img className="lb-img" src={img.src} alt={img.alt}/>
+      {img.caption&&<p className="lb-cap">{img.caption}</p>}
+    </div>
+  </div>;
+}
+
+/* Active section tracker for the in-page TOC */
+function useActiveSection(ids:string[]){
+  const[active,setActive]=useState(ids[0]||'');
+  useEffect(()=>{
+    if(!ids.length)return;
+    const els=ids.map(id=>document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if(!els.length)return;
+    const obs=new IntersectionObserver(entries=>{
+      const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>(a.target as HTMLElement).offsetTop-(b.target as HTMLElement).offsetTop);
+      if(visible[0])setActive((visible[0].target as HTMLElement).id);
+    },{rootMargin:"-20% 0px -60% 0px",threshold:0});
+    els.forEach(el=>obs.observe(el));
+    return()=>obs.disconnect();
+  },[ids.join(',')]);
+  return active;
+}
+
 /* ── DATA ── */
 const cl=["Nomo Smart Care","Farmwave","mobilityONE","Drift App","Noctrix Health","ONCE","beUnity","jumpIN","Ziik","Spika","Greyp Bikes","Zipato","Crossiety","Elektrobit","GlobalLogic","Trust Token","Google","Gamestar+","Aspire Academy", "DeepAR", ];
 const cl3=[...cl,...cl,...cl];
@@ -223,12 +335,12 @@ const cases=[
   {id:"mobility",name:"MobilityOne",cat:"Mobility",tags:["SaaS","Frontend"],client:"MobilityOne",website:"mobilityone.io",period:"",brief:"A SaaS fleet platform built for corporates and leasing companies. Pulls mileage, fuel, maintenance, assignments, and CO₂ into one source of truth, then hands it straight to ERP.",ch:"Fleet data at most corporates and leasing companies lives in five different places. Mileage sits in spreadsheets, fuel and motorway receipts in email, maintenance in a separate tool, driver assignments on a whiteboard, CO₂ reporting in whatever someone last built in Excel. Nobody has a single view of the fleet, so cost decisions are guesses, audit season is painful, and ESG reports are a scramble. MobilityOne needed a consolidated platform that fleet managers would actually use every day, that finance and sustainability teams could trust, and that handled every vehicle type, not just cars.",ap:"We architected a SaaS web platform that covers the full operational loop: mileage tracking, fuel and motorway expense management, maintenance scheduling, vehicle assignments, and CO₂ reporting per vehicle, organisation unit, vehicle type, and geographic location. The system handles every vehicle type the platform needs to support (cars, vans, trucks, buses, trains, forklifts, heavy machinery) across multiple fuel types. The dashboard is built for daily use, not quarterly reports. It's clean, fast, and keyboard-friendly. Datasets export straight into ERP and finance systems for automated cost allocation and booking, so there's no double-entry at month end. Each function (HR, Procurement, Logistics, Finance, Accounting) gets its own dashboard tailored to what they actually need to see.",re:"Companies using MobilityOne get a single source of truth for their fleet. Operating costs drop because decisions are now based on real numbers; compliance and CO₂ reporting stop being quarterly fire drills. The platform was founded in 2019 in Zagreb by Make IT Easy d.o.o. and now serves corporate and leasing-company deployments across the EU.",q:"",qn:"",qr:"",metrics:[{v:"All vehicle types",l:"cars to heavy machinery"},{v:"Multi-fuel",l:"any powertrain"},{v:"ERP-ready",l:"export datasets"},{v:"CO₂",l:"per car, unit, region"}],features:[{t:"Mileage Tracking",d:"Per-vehicle mileage with import, review, analysis, and export pipelines."},{t:"Fuel & Motorway",d:"Capture all fuel and toll expenses for accurate per-vehicle cost."},{t:"Maintenance Scheduling",d:"Proactive interval reminders to reduce downtime."},{t:"Assignment Management",d:"Track which driver, department, and project a vehicle belongs to."},{t:"CO₂ Reporting",d:"Footprint by vehicle, organisation unit, vehicle type, and geography."},{t:"ERP Export",d:"Datasets ready for direct import into finance and ERP systems for cost allocation and booking."}],stack:[{g:"Frontend",i:["React","TypeScript"]},{g:"Backend",i:["Node.js"]},{g:"Data",i:["PostgreSQL"]},{g:"Infra",i:["AWS"]}],why:[{t:"Why React + TypeScript?",d:"Fleet managers live in this dashboard all day. SPA responsiveness and good keyboard flow matter far more than SEO or first-paint speed. TypeScript earns its keep the moment you start handling money, vehicles, and assignments in the same state."},{t:"Why PostgreSQL, not NoSQL?",d:"Vehicles belong to business units, drivers are assigned to vehicles, events reference drivers and vehicles, invoices reference events. This is relational data, top to bottom. Reaching for NoSQL would have created problems we don't need."},{t:"Why one platform for every vehicle type?",d:"Most fleet tools assume cars. Real corporate fleets are messier — service vans, delivery trucks, factory forklifts, sometimes whole transport divisions. Building once for the full range avoids the per-vehicle-type SaaS sprawl that finance teams end up reconciling at quarter-end."},{t:"Why build export-to-ERP in from day one?",d:"If fleet numbers don't get into finance cleanly, they get re-typed, and re-typed numbers are wrong numbers. We made exporting a first-class feature so month-end closes without drama."}],services:["Web development","SaaS architecture","Quality assurance"],cover:"linear-gradient(135deg,#0a1a2e 0%,#1a3a5c 50%,#2e6ea8 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/mo_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/mo_cover.jpeg")},
   {id:"muvr",name:"Muvr",cat:"Health",tags:["iOS","Swift","Wearables"],client:"Muvr Labs, Inc",website:"muvrlabs.com",period:"May 2020 to April 2022",brief:"An iOS platform that gave orthopedic surgeons continuous insight into how their joint-replacement patients were actually recovering at home. Acquired by Exactech in December 2020 to anchor their Active Intelligence orthopedic platform.",ch:"After a hip or knee replacement, the real work happens at home over weeks of rehab. Surgeons couldn't see any of it, only what the patient said at the 6-week check-up. Step counts from pedometer-style tools didn't help: what matters in orthopedic recovery is the actual range of motion of the joint, not how many times the patient walked to the kitchen. When patients fell behind on exercises or their joint wasn't moving correctly, nobody knew until it was late. Muvr wanted to close that gap: give surgeons the same kind of continuous data they'd have if the patient were still in the clinic, and a way to nudge patients between visits without flooding the practice's phone lines.",ap:"We built a native iOS app in Swift paired to wireless sensors that the patient wears during recovery. The sensors continuously measure joint range of motion, exercise completion, and activity, and stream the data back to the surgeon's team as clean, clinical signal, not step counts. Surgeons see a web dashboard that flags at-risk patients and lets them connect remotely for follow-up. A customisable patient chatbot handles the routine touchpoints (reminders, common questions, between-visit check-ins) without consuming nursing time. SnapKit handled UI constraints and RxSwift handled the live sensor stream. The app had to feel solid enough for orthopedic practices to actually deploy, and fast enough not to stutter under the data rate.",re:"Muvr became a dependable clinical tool for orthopedic practices: surgeons monitored recovery remotely, patients got proactive reminders and guidance, and unnecessary follow-up visits fell. In December 2020, Exactech acquired Muvr to bring the platform into their Active Intelligence orthopedic suite, with plans to extend the technology to shoulder and ankle replacement surgery next.",q:"",qn:"",qr:"",metrics:[{v:"Acquired Dec 2020",l:"by Exactech"},{v:"Hip & knee",l:"recovery monitoring"},{v:"Wearable + chatbot",l:"continuous engagement"},{v:"Active Intelligence",l:"part of Exactech's platform"}],features:[{t:"Wearable Integration",d:"Continuous, real-time range-of-motion data from wireless sensors during recovery."},{t:"Surgeon Dashboard",d:"Web view that flags at-risk patients and supports remote follow-up."},{t:"Patient Chatbot",d:"Customisable text conversations for reminders and common questions, between visits."},{t:"Remote Monitoring",d:"Track exercise compliance and joint progress without requiring in-person visits."},{t:"Big-Data Insights",d:"Aggregated outcomes across the patient cohort to refine clinical pathways."},{t:"Clinical-Grade iOS",d:"Built and tested to the standards required for orthopedic practice deployment."}],stack:[{g:"Mobile",i:["Swift","iOS"]},{g:"UI",i:["SnapKit"]},{g:"Reactive",i:["RxSwift"]},{g:"Wearables",i:["Wireless motion sensors"]},{g:"Engagement",i:["Patient chatbot"]}],why:[{t:"Why native Swift?",d:"Sensor data arrives continuously and the UI has to stay smooth while it's rendered. Native iOS under Swift gives us the tightest control over the main thread, which is where responsive charts happen, or don't happen."},{t:"Why RxSwift?",d:"Live sensor streams map very cleanly onto reactive programming. Compose the signal, filter it, aggregate it, subscribe views to it. Doing this with plain callbacks would have turned the codebase into a pile of state-management tangles."},{t:"Why SnapKit, not Storyboards?",d:"Clinical apps get used on every iPhone screen size in clinics. SnapKit-in-code constraints were faster to iterate on than Storyboards and easier to unit-test."},{t:"Why a chatbot alongside the wearable?",d:"Sensor data tells surgeons what's happening with the joint. The chatbot solves the other half of recovery: keeping the patient on track between visits without burning nursing time on routine reminders. The two together cover the gap that one alone can't."}],services:["Mobile development","Quality assurance"],press:[{l:"2019 App Innovation Award",u:"https://investors.progress.com/news-releases/news-release-details/progress-announces-winners-2019-app-innovation-awards"}],cover:"linear-gradient(135deg,#0a1a2e 0%,#0d3d5c 50%,#1a7a8a 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/muvr_home.jpg"),coverImg:(process.env.PUBLIC_URL+"/images/muvr_cover.jpeg"),coverImgMobile:(process.env.PUBLIC_URL+"/images/muvr_home.jpg")},
 ];
-const caseShowcase:{[k:string]:{src:string,alt:string,caption?:string}[]}={
+const caseShowcase:{[k:string]:{src:string,alt:string,caption?:string,fit?:"cover"|"contain"}[]}={
   nomo:[
-    {src:process.env.PUBLIC_URL+"/images/nomo_1.png",alt:"Nomo Smart Care app — caregiver dashboard",caption:"One app for the whole Care Circle: live status, alerts, and a shared timeline of the day."},
-    {src:process.env.PUBLIC_URL+"/images/nomo_2.jpg",alt:"Nomo Hub and satellite sensors installed in the home",caption:"A small hub, outlet satellites, and a few tags cover the whole home invisibly."},
-    {src:process.env.PUBLIC_URL+"/images/nomo_3.jpg",alt:"Nomo Smart Care fall detection alert",caption:"Both impact falls and slow / sliding falls are caught and routed to caregivers in under a second."},
-    {src:process.env.PUBLIC_URL+"/images/nomo_4.webp",alt:"Nomo Smart Care routine and sleep insights",caption:"The system learns each home's routine, so unusual events stand out and false alarms stay rare."},
+    {src:process.env.PUBLIC_URL+"/images/nomo_1.png",alt:"Nomo Smart Care app — caregiver dashboard",caption:"One app for the whole Care Circle: live status, alerts, and a shared timeline of the day.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/nomo_2.jpg",alt:"Nomo Hub and satellite sensors installed in the home",caption:"A small hub, outlet satellites, and a few tags cover the whole home invisibly.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/nomo_3.jpg",alt:"Nomo Smart Care fall detection alert",caption:"Both impact falls and slow / sliding falls are caught and routed to caregivers in under a second.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/nomo_4.webp",alt:"Nomo Smart Care routine and sleep insights",caption:"The system learns each home's routine, so unusual events stand out and false alarms stay rare.",fit:"cover"},
   ],
   farmwave:[
     {src:process.env.PUBLIC_URL+"/images/farmwave_award.png",alt:"AI Harvest Vision Solution of the Year 2025, awarded to Farmwave",caption:"AI Harvest Vision Solution of the Year 2025."},
@@ -236,7 +348,8 @@ const caseShowcase:{[k:string]:{src:string,alt:string,caption?:string}[]}={
     {src:process.env.PUBLIC_URL+"/images/farmwave_2.jpg",alt:"Farmwave Harvest Vision in the field during harvest",caption:"In-field harvest with the system running live in the cab, every three seconds, on every camera."},
   ],
   beunity:[
-    {src:process.env.PUBLIC_URL+"/images/beunity_header.png",alt:"beUnity communication platform for member organisations",caption:"One platform for member communication, events, and community."},
+    {src:process.env.PUBLIC_URL+"/images/beunity_1.png",alt:"beUnity app, central member platform",caption:"Forums, events, surveys, file sharing, and groups all in one place. The app every member actually opens."},
+    {src:process.env.PUBLIC_URL+"/images/beunity_showcase.png",alt:"beUnity in use across phone and web",caption:"One platform across browser, smartphone, and tablet. No separate logins, no install friction."},
   ],
   crossiety:[
     {src:process.env.PUBLIC_URL+"/images/crossiety_header.png",alt:"Crossiety, the resident app for your community",caption:"A digital village square for towns, cities, and regions."},
@@ -878,21 +991,46 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
 }
 
 function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const fil=filt==="All"?cases:cases.filter(c=>c.cat===filt);const ac=sel?cases.find(c=>c.id===sel):null;
-  if(ac)return <div style={{paddingTop:60}}>
+  const acIdx=ac?cases.findIndex(c=>c.id===ac.id):-1;
+  const[lbImg,setLbImg]=useState<{src:string,alt:string,caption?:string}|null>(null);
+  const[parallaxY,setParallaxY]=useState(0);
+  const metricsRef=useRef<HTMLDivElement>(null);
+  // Hero parallax: cover image moves slower than scroll
+  useEffect(()=>{
+    if(!ac)return;
+    const onScroll=()=>{const y=window.scrollY;if(y<800)setParallaxY(y*0.25);};
+    onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+    return()=>window.removeEventListener('scroll',onScroll);
+  },[ac]);
+  // Stagger reveal for metric cells
+  useEffect(()=>{
+    if(!ac)return;
+    const el=metricsRef.current;if(!el)return;
+    const obs=new IntersectionObserver(([entry])=>{
+      if(entry.isIntersecting){
+        Array.from(el.querySelectorAll('.metric-cell')).forEach((n,i)=>{(n as HTMLElement).style.transitionDelay=`${i*80}ms`;n.classList.add('in');});
+        obs.disconnect();
+      }
+    },{threshold:0.2});
+    obs.observe(el);
+    return()=>obs.disconnect();
+  },[ac]);
+  if(ac)return <div style={{paddingTop:60,...({"--case-accent":(ac.cover.match(/#[0-9a-fA-F]{6}/g)?.slice(-1)[0]||"#4ECDC4")} as CSSProperties)}}>
+    <ReadingProgress/>
     {/* Cover */}
-    <div className="case-cover" style={{background:ac.cover,position:"relative",overflow:"hidden",minHeight:120,maxHeight:700}}>
+    <div className="case-cover" style={{background:ac.cover,position:"relative",overflow:"hidden",minHeight:120,maxHeight:700,isolation:"isolate"}}>
       {(ac as any).headerImg
         ? <picture>
             {(ac as any).coverImgMobile&&<source media="(max-width: 900px)" srcSet={(ac as any).coverImgMobile}/>}
-            <img className="case-cover-img" alt={`${ac.name}, ${ac.cat} case study`} fetchPriority="high" decoding="async" width={2400} height={1260} src={(ac as any).coverImg||(ac as any).headerImg} style={{width:"100%",height:"auto",maxHeight:700,objectFit:"cover",objectPosition:"center",display:"block"}}/>
+            <img className="case-cover-img" alt={`${ac.name}, ${ac.cat} case study`} fetchPriority="high" decoding="async" width={2400} height={1260} src={(ac as any).coverImg||(ac as any).headerImg} style={{width:"100%",height:"auto",maxHeight:700,objectFit:"cover",objectPosition:"center",display:"block",transform:`translate3d(0,${parallaxY}px,0)`,willChange:"transform"}}/>
           </picture>
         : <div style={{position:"absolute",inset:0,backgroundImage:"linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)",backgroundSize:"48px 48px",opacity:.4}}/>
       }
-      <div className="case-cover-grad" style={{position:"absolute",bottom:0,left:0,right:0,height:160,background:"linear-gradient(transparent,rgba(0,0,0,.45))"}}/>
-      <W className="case-cover-title" style={{position:"absolute",bottom:0,left:0,right:0,paddingBottom:52,zIndex:2}}>
-        <span style={{display:"block",fontSize:11,color:"rgba(255,255,255,.55)",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2}}>{ac.cat}</span>
+      <div className="case-cover-grad" style={{position:"absolute",bottom:0,left:0,right:0,height:220,background:"linear-gradient(rgba(0,0,0,0) 0%,rgba(0,0,0,0) 78%,rgba(0,0,0,.55) 100%)",zIndex:1}}/>
+      <W className="case-cover-title" style={{position:"absolute",bottom:0,left:0,right:0,paddingBottom:52,zIndex:2,textShadow:"0 1px 2px rgba(0,0,0,.25), 0 4px 16px rgba(0,0,0,.35)"}}>
+        <span style={{display:"block",fontSize:11,color:"rgba(255,255,255,.55)",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2}}>{ac.cat} <span style={{opacity:.5,marginLeft:8}}>· Case {String(acIdx+1).padStart(2,"0")} / {String(cases.length).padStart(2,"0")}</span></span>
         {(ac as any).period&&<p style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:600,color:"rgba(255,255,255,.92)",marginTop:8,letterSpacing:.2,display:"flex",alignItems:"center",gap:8}}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{opacity:.85}}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{opacity:.85,filter:"drop-shadow(0 1px 2px rgba(0,0,0,.3))"}}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           {(ac as any).period}
         </p>}
         <h1 className="case-cover-h1" style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,4vw,44px)",fontWeight:800,color:"#fff",marginTop:8,lineHeight:1.05}}>{ac.name}</h1>
@@ -900,14 +1038,14 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
     </div>
     <section style={{padding:"0 0 80px"}}><W>
       <div style={{maxWidth:720,margin:"0 auto"}}>
-        <div style={{transform:"translateY(-28px)",background:"#fff",borderRadius:16,padding:"32px 36px",boxShadow:"0 4px 24px rgba(0,30,50,.06)",border:"1px solid var(--brd)"}}>
+        <div id="brief" style={{transform:"translateY(-44px)",marginBottom:-16,background:"#fff",borderRadius:16,padding:"32px 36px",boxShadow:"0 4px 24px rgba(0,30,50,.06)",border:"1px solid var(--brd)"}}>
 <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.7,marginBottom:16}}>{ac.brief}</p>
           <div style={{display:"flex",flexWrap:"wrap",gap:5}}>{ac.tags.map(t=><span key={t} className="ft">{t}</span>)}</div>
         </div>
         {/* Metrics strip */}
-        {(ac as any).metrics?.length>0&&<div className="case-metrics" style={{display:"flex",flexWrap:"wrap",gap:0,marginTop:-4,marginBottom:4,borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",borderRadius:12,alignItems:"stretch"}}>
-          {(ac as any).metrics.map((m:any,i:number,a:any[])=><div key={i} style={{flex:"1 1 140px",minWidth:120,padding:"18px 16px",borderRight:i<a.length-1?"1px solid var(--brd)":"none",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3}}>
-            <div style={{fontFamily:"var(--jk)",fontSize:"clamp(16px,1.9vw,22px)",fontWeight:800,color:"var(--blue)",lineHeight:1.15,letterSpacing:-.2,minHeight:"2.3em",display:"flex",alignItems:"flex-end",justifyContent:"center"}}>{m.v}</div>
+        {(ac as any).metrics?.length>0&&<div ref={metricsRef} className="case-metrics" style={{display:"flex",flexWrap:"wrap",gap:0,marginTop:-4,marginBottom:4,borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",borderRadius:12,alignItems:"stretch"}}>
+          {(ac as any).metrics.map((m:any,i:number,a:any[])=><div key={i} className="metric-cell" style={{flex:"1 1 140px",minWidth:120,padding:"18px 16px",borderRight:i<a.length-1?"1px solid var(--brd)":"none",textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3}}>
+            <div style={{fontFamily:"var(--jk)",fontSize:"clamp(16px,1.9vw,22px)",fontWeight:800,color:"var(--blue)",lineHeight:1.15,letterSpacing:-.2,minHeight:"2.3em",display:"flex",alignItems:"flex-end",justifyContent:"center"}}><MetricVal v={m.v} delay={i*80}/></div>
             <div style={{fontSize:11,color:"var(--txt3)",fontWeight:500,letterSpacing:.2,lineHeight:1.35,minHeight:"2.7em",display:"flex",alignItems:"flex-start",justifyContent:"center"}}>{m.l}</div>
           </div>)}
         </div>}
@@ -917,12 +1055,12 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
           {((ac as any).press||[]).map((p:{l:string,u:string},i:number)=><div key={`press-${i}`} style={{display:"flex",flexDirection:"column"}}><p style={lblStyle}>Recognition</p><a href={p.u} target="_blank" rel="noopener noreferrer" style={valLinkStyle} onMouseEnter={e=>{e.currentTarget.style.gap="8px";e.currentTarget.style.opacity=".75";}} onMouseLeave={e=>{e.currentTarget.style.gap="5px";e.currentTarget.style.opacity="1";}}>{p.l} <Arr s={10} c="var(--blue)"/></a></div>)}
         </div>;})()}
         {/* Challenge / Approach / Outcome */}
-        {[{l:"The Challenge",t:ac.ch},{l:"Our Approach",t:ac.ap},{l:"The Outcome",t:ac.re}].map((s,i)=><div key={i} style={{display:"grid",gridTemplateColumns:"160px 1fr",gap:32,padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
-          <div><span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{String(i+1).padStart(2,"0")}</span><h3 style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:800,marginTop:4,color:"var(--txt)"}}>{s.l}</h3></div>
-          <p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.8}}>{s.t}</p>
+        {[{id:"challenge",l:"The Challenge",t:ac.ch},{id:"approach",l:"Our Approach",t:ac.ap},{id:"outcome",l:"The Outcome",t:ac.re}].map((s,i)=><div id={s.id} key={i} className="case-section" style={{display:"grid",gridTemplateColumns:"160px 1fr",gap:32,padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
+          <div><span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.55}}>{String(i+1).padStart(2,"0")} / {s.l.split(" ").pop()?.toUpperCase()}</span><h3 style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:800,marginTop:6,color:"var(--txt)"}}>{s.l}</h3></div>
+          <div className="case-section-body"><p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.8}}>{s.t}</p></div>
         </div>)}
         {/* Key features */}
-        {(ac as any).features?.length>0&&<div style={{padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
+        {(ac as any).features?.length>0&&<div id="features" style={{padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
           <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:20}}>Key Features</p>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
             {(ac as any).features.map((f:any,i:number)=><div key={i} className="card" style={{padding:"18px 20px"}}>
@@ -932,40 +1070,50 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
           </div>
         </div>}
         {/* Why this stack */}
-        {(ac as any).why?.length>0&&<div style={{padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
+        {(ac as any).why?.length>0&&<div id="why" style={{padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
           <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:6}}>Why this stack</p>
           <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.6,marginBottom:22,fontStyle:"italic"}}>The thinking behind the technical decisions.</p>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}} className="why-grid">
-            {(ac as any).why.map((w:any,i:number)=><div key={i} className="card" style={{padding:"20px 22px"}}>
+            {(ac as any).why.map((w:any,i:number)=><div key={i} className="card why-card" style={{padding:"20px 22px"}}>
               <h4 style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)",marginBottom:8,display:"flex",alignItems:"flex-start",gap:8,lineHeight:1.35}}>
-                <span style={{color:"var(--blue)",fontWeight:800,flexShrink:0}}>→</span><span>{w.t}</span>
+                <span style={{color:"var(--blue)",fontWeight:800,flexShrink:0,display:"inline-block"}}>→</span><span>{w.t}</span>
               </h4>
               <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.7}}>{w.d}</p>
             </div>)}
           </div>
         </div>}
         {/* Tech + Services */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
+        <div id="tech" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:32,padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
           {(()=>{const stack=(ac as any).stack as {g:string,i:string[]}[]|undefined;const flat=(ac as any).tech as string[]|undefined;if(stack?.length)return <div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:14}}>Technologies</p><div style={{display:"flex",flexDirection:"column",gap:13}}>{stack.map((s,i)=><div key={i}><p style={{fontSize:10,fontWeight:700,color:"var(--txt4)",textTransform:"uppercase",letterSpacing:1.4,marginBottom:5,opacity:.85}}>{s.g}</p><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{s.i.map(x=><span key={x} className="ft">{x}</span>)}</div></div>)}</div></div>;if(flat?.length)return <div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:12}}>Technologies</p><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{flat.map(t=><span key={t} className="ft">{t}</span>)}</div></div>;return null;})()}
           {(ac as any).services?.length>0&&<div><p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:12}}>Services</p>{(ac as any).services.map((s:string,i:number)=><div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><div style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.3}}/><span style={{fontSize:13,color:"var(--txt2)"}}>{s}</span></div>)}</div>}
         </div>
-        {/* Quote */}
-        {ac.q&&<div style={{marginTop:8,border:"1px solid var(--brd)",borderRadius:16,padding:36,background:"var(--bg2)"}}><QSvg/><p style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:500,lineHeight:1.6,color:"var(--txt)",fontStyle:"italic",marginBottom:20}}>{ac.q}</p><p style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)"}}>{ac.qn}</p><p style={{fontSize:12,color:"var(--txt3)",marginTop:2}}>{ac.qr}</p></div>}
+        {/* Pull quote */}
+        {ac.q&&<div id="quote" style={{margin:"24px 0 8px",padding:"56px 24px",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"linear-gradient(180deg,var(--bg2) 0%,transparent 100%)",position:"relative",textAlign:"center"}}>
+          <span aria-hidden="true" style={{position:"absolute",top:14,left:"50%",transform:"translateX(-50%)",fontFamily:"Georgia,serif",fontSize:96,lineHeight:1,color:"var(--blue)",opacity:.12,fontWeight:700}}>“</span>
+          <blockquote style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.6vw,26px)",fontWeight:600,lineHeight:1.4,color:"var(--txt)",fontStyle:"italic",margin:"0 auto",maxWidth:680,position:"relative",zIndex:1}}>{ac.q}</blockquote>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginTop:24}}>
+            <div style={{width:32,height:1,background:"var(--blue)",opacity:.3}}/>
+            <p style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)",margin:0}}>{ac.qn}</p>
+            <span style={{fontSize:12,color:"var(--txt3)"}}>·</span>
+            <p style={{fontSize:12,color:"var(--txt3)",margin:0}}>{ac.qr}</p>
+          </div>
+        </div>}
       </div>
       {/* In action: product imagery */}
-      {(()=>{const imgs=caseShowcase[ac.id];if(!imgs||!imgs.length)return null;const cols=imgs.length===1?"1fr":(imgs.length===2||imgs.length===4)?"1fr 1fr":"1fr 1fr 1fr";return <div style={{marginTop:56,paddingTop:40,borderTop:"1px solid var(--brd)"}}>
+      {(()=>{const imgs=caseShowcase[ac.id];if(!imgs||!imgs.length)return null;const cols=imgs.length===1?"1fr":(imgs.length===2||imgs.length===4)?"1fr 1fr":"1fr 1fr 1fr";const maxW=imgs.length===1?460:imgs.length===2?760:1100;return <div id="in-action" style={{marginTop:56,paddingTop:40,borderTop:"1px solid var(--brd)"}}>
         <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:8,textAlign:"center"}}>In action</p>
         <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.4vw,28px)",fontWeight:800,color:"var(--txt)",lineHeight:1.15,marginBottom:28,textAlign:"center"}}>What {ac.name} looks like.</h3>
-        <div className="case-gallery" style={{display:"grid",gridTemplateColumns:cols,gap:18}}>
-          {imgs.map((im,i)=><figure key={i} className="case-frame" style={{margin:0,borderRadius:16,overflow:"hidden",background:"#fff",border:"1px solid var(--brd)",boxShadow:"0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)",display:"flex",flexDirection:"column",transition:"transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 4px 8px rgba(0,30,50,.06), 0 22px 48px rgba(0,30,50,.13)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)";}}>
-            <div style={{background:"var(--bg2)",borderBottom:im.caption?"1px solid var(--brd)":"none",overflow:"hidden"}}>
-              <img src={im.src} alt={im.alt} loading="lazy" decoding="async" width={1200} height={800} style={{display:"block",width:"100%",height:"auto"}}/>
+        <div className="case-gallery" style={{display:"grid",gridTemplateColumns:cols,gap:18,maxWidth:maxW,margin:"0 auto"}}>
+          {imgs.map((im,i)=><figure key={i} className="case-frame" tabIndex={0} role="button" aria-label={`Open ${im.alt}`} onClick={()=>setLbImg(im)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setLbImg(im);}}} style={{margin:0,borderRadius:16,overflow:"hidden",background:"#fff",border:"1px solid var(--brd)",boxShadow:"0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)",display:"flex",flexDirection:"column",transition:"transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 4px 8px rgba(0,30,50,.06), 0 22px 48px rgba(0,30,50,.13)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)";}}>
+            <div style={{background:"#fff",borderBottom:im.caption?"1px solid var(--brd)":"none",overflow:"hidden",aspectRatio:"3/2",position:"relative",padding:(im as any).fit==="cover"?0:14}}>
+              <img src={im.src} alt={im.alt} loading="lazy" decoding="async" width={1200} height={800} style={{display:"block",width:"100%",height:"100%",objectFit:(im as any).fit==="cover"?"cover":"contain",objectPosition:"center"}}/>
             </div>
-            {im.caption&&<figcaption style={{padding:"16px 20px 18px",fontSize:13,color:"var(--txt2)",lineHeight:1.6,background:"#fff",flex:1,fontWeight:500}}>{im.caption}</figcaption>}
+            {im.caption&&<figcaption style={{padding:"18px 22px 22px",fontSize:13,color:"var(--txt2)",lineHeight:1.6,background:"#fff",fontWeight:500,minHeight:96,display:"flex",alignItems:"flex-start"}}>{im.caption}</figcaption>}
           </figure>)}
         </div>
       </div>;})()}
     </W></section>
+    <Lightbox img={lbImg} onClose={()=>setLbImg(null)}/>
     {/* Related projects */}
     {(()=>{const picks=cases.filter(c=>c.id!==ac.id&&c.cat===ac.cat).slice(0,2);if(!picks.length)return null;return <section style={{padding:"64px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
       <SL ch="More work"/>

@@ -1,3 +1,8 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /services
+Disallow: /services/
+
+# Sitemap
+Sitemap: https://lumo-lab.com/sitemap.xml

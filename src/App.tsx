@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, ReactNode, CSSProperties } from "react";
+import emailjs from "@emailjs/browser";
 
 const css = `
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1349,6 +1350,8 @@ function Privacy(){
 function Contact({type="project"}:{type?:"project"|"job"}){
   const isJob=type==="job";
   const[sent,setSent]=useState(false);
+  const[loading,setLoading]=useState(false);
+  const[error,setError]=useState<string|null>(null);
   const[file,setFile]=useState<File|null>(null);
   const[dragOver,setDragOver]=useState(false);
   const[form,setForm]=useState({name:"",email:"",company:"",budget:"",message:"",role:"",portfolio:""});
@@ -1358,7 +1361,42 @@ function Contact({type="project"}:{type?:"project"|"job"}){
   const field=(label:string,key:string,t="text",placeholder="")=>(
     <div><label style={labelStyle}>{label}</label><input type={t} value={(form as any)[key]} onChange={set(key)} placeholder={placeholder} style={inputStyle} onFocus={e=>{e.target.style.borderColor="var(--blue)"}} onBlur={e=>{e.target.style.borderColor="var(--brd)"}}/></div>
   );
-  const submit=(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();setSent(true);};
+  const submit=async(e:React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try{
+      const serviceId=process.env.REACT_APP_EMAILJS_SERVICE_ID!;
+      const publicKey=process.env.REACT_APP_EMAILJS_PUBLIC_KEY!;
+      if(isJob){
+        const tempForm=document.createElement("form");
+        const addHidden=(name:string,value:string)=>{const i=document.createElement("input");i.type="hidden";i.name=name;i.value=value;tempForm.appendChild(i);};
+        addHidden("from_name",form.name);
+        addHidden("from_email",form.email);
+        addHidden("role",form.role);
+        addHidden("portfolio",form.portfolio);
+        addHidden("message",form.message);
+        if(file){
+          const fi=document.createElement("input");fi.type="file";fi.name="cv_file";
+          const dt=new DataTransfer();dt.items.add(file);fi.files=dt.files;
+          tempForm.appendChild(fi);
+        }
+        await emailjs.sendForm(serviceId,process.env.REACT_APP_EMAILJS_JOB_TEMPLATE_ID!,tempForm,publicKey);
+      }else{
+        await emailjs.send(serviceId,process.env.REACT_APP_EMAILJS_CONTACT_TEMPLATE_ID!,{
+          from_name:form.name,
+          from_email:form.email,
+          company:form.company,
+          message:form.message,
+        },publicKey);
+      }
+      setSent(true);
+    }catch(err){
+      setError("Something went wrong. Please try again or email us directly.");
+    }finally{
+      setLoading(false);
+    }
+  };
   return <div style={{paddingTop:76}}>
     <section style={{padding:"72px 0 80px",background:"var(--bg)"}}>
       <W>
@@ -1413,7 +1451,8 @@ function Contact({type="project"}:{type?:"project"|"job"}){
                 </div>
               </div>
             </>}
-            <button type="submit" className="cta-m" style={{alignSelf:"flex-start",marginTop:4}}>Send message <Arr s={14} c="#fff"/></button>
+            {error&&<p style={{fontSize:13,color:"#c0392b",background:"rgba(192,57,43,.07)",border:"1px solid rgba(192,57,43,.2)",borderRadius:8,padding:"10px 14px"}}>{error}</p>}
+            <button type="submit" disabled={loading} className="cta-m" style={{alignSelf:"flex-start",marginTop:4,opacity:loading?0.7:1,cursor:loading?"not-allowed":"pointer"}}>{loading?"Sending…":"Send message"} {!loading&&<Arr s={14} c="#fff"/>}</button>
           </form>}
         </div>
       </W>

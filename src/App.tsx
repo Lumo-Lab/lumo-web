@@ -118,7 +118,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo h1{font-size:clamp(40px,9vw,64px)!important;line-height:.95!important}
   .lumo h2{font-size:clamp(24px,5vw,36px)!important;line-height:1.1!important}
   .lumo section{padding-top:56px!important;padding-bottom:56px!important}
-  .lumo .hero-s{min-height:auto!important;padding-top:100px!important;padding-bottom:48px!important}
+  .lumo .hero-s{min-height:100vh!important;min-height:100dvh!important;padding-top:100px!important;padding-bottom:48px!important;justify-content:center!important}
   .lumo .nav-links{display:none!important}
   .ham-btn{display:flex!important}
   .ham-overlay{display:flex!important}
@@ -142,6 +142,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .founder-bar .cta-m{width:100%!important;justify-content:center!important}
   /* Testimonial card */
   .lumo .test-card{padding:28px 20px!important}
+  /* Hide prev/next arrow buttons on mobile so the card takes full width; the dots below still navigate */
+  .lumo .test-nav-btn{display:none!important}
   /* Process timeline hide middle column */
   .lumo .proc-grid{display:flex!important;flex-direction:column!important;gap:24px!important}
   .lumo .proc-grid>div:nth-child(2){display:none!important}
@@ -290,6 +292,27 @@ function Lightbox({img,onClose}:{img:{src:string,alt:string,caption?:string}|nul
   </div>;
 }
 
+/* Render rich text with inline [text](url) links and **bold** markdown */
+function renderRichText(s:string):ReactNode{
+  // Tokenise the string into [text|link|bold] segments using a single regex
+  const re=/(\[[^\]]+\]\([^)]+\))|(\*\*[^*]+\*\*)/g;
+  const parts:ReactNode[]=[];
+  let lastIdx=0;let m:RegExpExecArray|null;let key=0;
+  while((m=re.exec(s))!==null){
+    if(m.index>lastIdx)parts.push(s.slice(lastIdx,m.index));
+    if(m[1]){
+      const link=/\[([^\]]+)\]\(([^)]+)\)/.exec(m[1])!;
+      const isExternal=/^https?:\/\//i.test(link[2]);
+      parts.push(<a key={key++} href={link[2]} {...(isExternal?{target:"_blank",rel:"noopener noreferrer"}:{})} style={{color:"var(--blue)",textDecoration:"underline",textUnderlineOffset:2}}>{link[1]}</a>);
+    }else if(m[2]){
+      parts.push(<strong key={key++} style={{fontWeight:700,color:"var(--txt)"}}>{m[2].slice(2,-2)}</strong>);
+    }
+    lastIdx=re.lastIndex;
+  }
+  if(lastIdx<s.length)parts.push(s.slice(lastIdx));
+  return parts.length?parts:s;
+}
+
 /* Active section tracker for the in-page TOC */
 function useActiveSection(ids:string[]){
   const[active,setActive]=useState(ids[0]||'');
@@ -326,7 +349,7 @@ const tests=[
   {q:"Working with Lumo Lab was a true pleasure. Their team was incredibly collaborative, always open to feedback, and committed to building a strong partnership. Their clear and timely communication kept us informed throughout the entire development process, ensuring a smooth and successful project.",n:"Dalibor Cvek",r:"CEO",co:"Once Sport",linkedin:"https://www.linkedin.com/in/daliborCvek/",website:"",img:process.env.PUBLIC_URL+"/images/dalibor.jpeg",caseId:null as string|null},
 ];
 const cases=[
-  {id:"nomo",name:"NOMO Smart Care",cat:"Health",tags:["IoT","AI/ML","Mobile"],client:"Nomo International, Ltd",website:"nomosmartcare.com",period:"March 2021 to Present",brief:"A whole-home safety platform for families caring for aging parents. A small hub, a few outlet sensors, an app that learns the routine and speaks up when something's off. No cameras, no wearables.",ch:"Millions of older adults live alone, and their adult children live with a low-grade worry about them. A fall, a stroke, a slow drift in daily routine: these things often go unnoticed until they turn serious. The existing options all carry the same compromise. Cameras feel like surveillance, pendants get taken off, wearables sit forgotten on the bedside table. Families were stuck choosing between a parent's safety and a parent's dignity. Nomo set out to build something different: a quiet mesh of sensors that listens for the moments that actually matter instead of watching everything. They needed a full technology partner to deliver it across hardware, mobile, cloud, and on-device AI, at roughly a dollar a day.",ap:"We built the whole stack. A small hub lives in a central room and pairs with low-power satellite sensors that plug into outlets around the home, plus tags for doors, the fridge, and the medicine cabinet. Native iOS (Swift) and Android (Kotlin) apps give every member of the Care Circle instant alerts, two-way voice to the hub, and a shared timeline of the day. A TypeScript back end on AWS, with Firebase for push delivery and MQTT for resilient messaging, keeps devices and caregivers in sync even when cellular networks wobble. The most important piece sits on the hub itself: custom TensorFlow Lite models classify sounds (a fall, a smoke alarm, a cry for help) and motion patterns (prolonged inactivity, a sliding fall, a missed wake-up) locally, and learn each home's normal routine over time so a 4 AM bathroom trip doesn't turn into a 4 AM alert. When something real happens, RapidSOS opens a direct line to 911 in under a second.",re:"Nomo is live on iOS and Android across all 50 US states, with thousands of hubs in real homes. The product runs on a monthly subscription at roughly a dollar a day, with a 60-day risk-free trial. Alert-to-notification latency sits under a second. Routine learning means false alarms stay rare, so caregivers trust the alerts they do get. Families end up with what they actually wanted: peace of mind, without turning a parent's home into a surveillance system.",q:"Our partnership with Lumo has been instrumental in shaping our long-term vision.",qn:"Kevin Ray",qr:"Co-Founder & CEO @ Nomo International",metrics:[{v:"<1s",l:"alert to caregiver"},{v:"AI",l:"learns each home's routine"},{v:"24/7",l:"911 via RapidSOS"},{v:"50 states",l:"US-wide availability"}],features:[{t:"Fall Detection",d:"Catches both impact falls and prolonged inactivity, including the slow / sliding falls that wearables miss."},{t:"Routine Learning",d:"AI learns each household's normal day so unusual events stand out and false alarms stay rare."},{t:"RapidSOS Ready",d:"Direct 911 dispatch in under a second for genuine emergencies."},{t:"Sleep & Activity Insights",d:"Tracks bedroom movement, frequent wake-ups, and bathroom trips, surfacing changes early."},{t:"Two-Way Voice",d:"Caregivers can talk through the hub without an extra device on the parent's side."},{t:"Unlimited Care Circle",d:"Invite every family member who wants to help, at no extra cost per seat."}],stack:[{g:"Mobile",i:["Swift","Kotlin"]},{g:"Backend & infra",i:["TypeScript","Node.js","AWS","Firebase","MQTT"]},{g:"On-device AI",i:["TensorFlow Lite","Audio + motion classifiers"]},{g:"Hardware",i:["Hub","Satellite sensors","Door / fridge tags"]},{g:"Web",i:["React.js","Next.js"]},{g:"Emergency",i:["RapidSOS"]}],why:[{t:"Why on-device AI?",d:"Audio and motion are the most sensitive data in someone's home. Running the classifier on the hub means the data is analysed and discarded locally. Nothing streams to a cloud, nothing is ever recorded. That's a privacy decision first and a latency decision second."},{t:"Why a sensor mesh instead of a wearable or a camera?",d:"Wearables get taken off. Cameras feel like surveillance. A small hub plus a handful of outlet satellites and tags covers the whole home invisibly, runs 24/7, and asks nothing of the parent."},{t:"Why native iOS + Android, not cross-platform?",d:"An alert that lands half a second late is an alert that didn't land. Native gives us the background-process control, push-delivery reliability, and two-way-voice performance that a wrapped framework can't match."},{t:"Why MQTT + Firebase together?",d:"Firebase for push notifications, MQTT for the live duplex channel between hub and app. Cellular drops happen; using both means the next alert still gets through."}],services:["Web development","Mobile development","DevOps","IoT solutions","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL+"/images/nomo_cover.png"),coverImgMobile:(process.env.PUBLIC_URL+"/images/nomo_header_1.png"),cardImgMobile:(process.env.PUBLIC_URL+"/images/nomo_header_1.png")},
+  {id:"nomo",name:"NOMO Smart Care",cat:"Health",tags:["IoT","AI/ML","Mobile"],client:"Nomo International, Ltd",website:"nomosmartcare.com",period:"March 2021 to Present",brief:"A whole-home safety platform for families caring for aging parents. A small hub, a few outlet sensors, an app that learns the routine and speaks up when something's off. No cameras, no wearables.",ch:"Millions of older adults live alone, and their adult children live with a low-grade worry about them. A fall, a stroke, a slow drift in daily routine: these things often go unnoticed until they turn serious. The existing options all carry the same compromise. Cameras feel like surveillance, pendants get taken off, wearables sit forgotten on the bedside table. Families were stuck choosing between a parent's safety and a parent's dignity. Nomo set out to build something different: a quiet mesh of sensors that listens for the moments that actually matter instead of watching everything. They needed a full technology partner to deliver it across hardware, mobile, cloud, and on-device AI, at roughly a dollar a day.",ap:"We built the whole stack. A small hub lives in a central room and pairs with low-power satellite sensors that plug into outlets around the home, plus tags for doors, the fridge, and the medicine cabinet. Native iOS (Swift) and Android (Kotlin) apps give every member of the Care Circle instant alerts, two-way voice to the hub, and a shared timeline of the day. A TypeScript back end on AWS, with Firebase for push delivery and MQTT for resilient messaging, keeps devices and caregivers in sync even when cellular networks wobble. The most important piece sits on the hub itself: custom TensorFlow Lite models classify sounds (a fall, a smoke alarm, a cry for help) and motion patterns (prolonged inactivity, a sliding fall, a missed wake-up) locally, and learn each home's normal routine over time so a 4 AM bathroom trip doesn't turn into a 4 AM alert. When something real happens, RapidSOS opens a direct line to 911 in under a second.",re:"Nomo is live on iOS and Android across all 50 US states, with thousands of hubs in real homes. The product runs on a monthly subscription at roughly a dollar a day, with a 60-day risk-free trial. Alert-to-notification latency sits under a second. Routine learning means false alarms stay rare, so caregivers trust the alerts they do get. Families end up with what they actually wanted: peace of mind, without turning a parent's home into a surveillance system.",q:"Our partnership with Lumo has been instrumental in shaping our long-term vision.",qn:"Kevin Ray",qr:"Co-Founder & CTO @ Nomo International",metrics:[{v:"<1s",l:"alert to caregiver"},{v:"AI",l:"learns each home's routine"},{v:"24/7",l:"911 via RapidSOS"},{v:"50 states",l:"US-wide availability"}],features:[{t:"Fall Detection",d:"Catches both impact falls and prolonged inactivity, including the slow / sliding falls that wearables miss."},{t:"Routine Learning",d:"AI learns each household's normal day so unusual events stand out and false alarms stay rare."},{t:"RapidSOS Ready",d:"Direct 911 dispatch in under a second for genuine emergencies."},{t:"Sleep & Activity Insights",d:"Tracks bedroom movement, frequent wake-ups, and bathroom trips, surfacing changes early."},{t:"Two-Way Voice",d:"Caregivers can talk through the hub without an extra device on the parent's side."},{t:"Unlimited Care Circle",d:"Invite every family member who wants to help, at no extra cost per seat."}],stack:[{g:"Mobile",i:["Swift","Kotlin"]},{g:"Backend & infra",i:["TypeScript","Node.js","AWS","Firebase","MQTT"]},{g:"On-device AI",i:["TensorFlow Lite","Audio + motion classifiers"]},{g:"Hardware",i:["Hub","Satellite sensors","Door / fridge tags"]},{g:"Web",i:["React.js","Next.js"]},{g:"Emergency",i:["RapidSOS"]}],why:[{t:"Why on-device AI?",d:"Audio and motion are the most sensitive data in someone's home. Running the classifier on the hub means the data is analysed and discarded locally. Nothing streams to a cloud, nothing is ever recorded. That's a privacy decision first and a latency decision second."},{t:"Why a sensor mesh instead of a wearable or a camera?",d:"Wearables get taken off. Cameras feel like surveillance. A small hub plus a handful of outlet satellites and tags covers the whole home invisibly, runs 24/7, and asks nothing of the parent."},{t:"Why native iOS + Android, not cross-platform?",d:"An alert that lands half a second late is an alert that didn't land. Native gives us the background-process control, push-delivery reliability, and two-way-voice performance that a wrapped framework can't match."},{t:"Why MQTT + Firebase together?",d:"Firebase for push notifications, MQTT for the live duplex channel between hub and app. Cellular drops happen; using both means the next alert still gets through."}],services:["Web development","Mobile development","DevOps","IoT solutions","AI solutions","Quality assurance"],cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL+"/images/nomo_header_1.png"),coverImg:(process.env.PUBLIC_URL+"/images/nomo_cover.png"),coverImgMobile:(process.env.PUBLIC_URL+"/images/nomo_header_1.png"),cardImgMobile:(process.env.PUBLIC_URL+"/images/nomo_header_1.png")},
   {id:"farmwave",name:"Farmwave",cat:"AgTech",tags:["AgTech","Edge AI","DevOps"],client:"Farmwave, Inc",website:"farmwave.io",period:"May 2024 to Present",brief:"Award-winning vision AI that retrofits onto any combine harvester, watching for lost grain in real time, offline, from inside the cab.",ch:"Every harvest, a surprising share of the crop spills out of the combine before it ever reaches the grain tank. The losses are invisible: a few kernels here, a few there, spread across hundreds of acres. Over a season they add up to thousands of dollars per field. Manual checks (getting out of the cab, pacing, counting kernels on the ground) don't scale when the combine is running. The factory telemetry on most machines tells the operator everything is fine when grain is actually leaking. Farmwave needed an AI that could do this job continuously, from the cab, on any combine new or old, and crucially without internet, because the fields where this matters most have no signal at all.",ap:"We built an end-to-end platform. In the cab, a Flutter app on a rugged tablet gives the operator a consistent interface across different machinery. Up on the combine, three to ten cameras (held in place by industrial magnets) capture an image every three seconds and feed an on-device vision model that pinpoints where grain is escaping: the header, a section of the combine body, or further down the machine. The operator sees losses live and adjusts settings on the fly, no stopping. A Node.js back end on Google Cloud Platform handles the seasonal spikes without paying for idle capacity off-season; a React dashboard lets agronomists and farm managers review sessions and compare fields on the web. The whole system retrofits onto any combine make or model in a few hours.",re:"Farmers recover 3 to 8+ bushels per acre per season by catching losses as they happen, with more than 140 measurements per acre going into each session. The platform runs on more than a dozen crops, from corn and soybeans to peanuts, cotton, and edible beans. Farmwave won AI Harvest Vision Solution of the Year 2025 for the work, and rolled into Brazil the same year through a partnership with VRO. The product proved out in the field, not just in a deck.",q:"Lumo has done more for us in 7 months than internal teams did in 18 months.",qn:"Craig Gannsle",qr:"CEO @ Farmwave Inc",metrics:[{v:"3-8+",l:"bu/acre recovered"},{v:"Every 3s",l:"image capture per camera"},{v:"Any combine",l:"retrofit in hours"},{v:"Award 2025",l:"AI Harvest Vision"}],features:[{t:"Harvest Vision System",d:"Real-time camera sensors on the combine capture and analyse grain loss autonomously."},{t:"Edge AI",d:"The vision model runs directly on the rugged tablet in the cab. No internet required in the field."},{t:"Multi-Camera Setup",d:"3 to 10 cameras mount with industrial magnets, configurable per machine, all the way up to peanut harvesters."},{t:"Loss Source Pinpoint",d:"Identifies whether grain is escaping from the header, the combine body, or a specific section so the operator knows exactly what to adjust."},{t:"Crop Variety",d:"Works across corn, soybeans, wheat, peanuts, cotton, edible beans, canola, barley, oats, lentils, and peas."},{t:"Live Recommendations",d:"The 2025 software update suggests real-time adjustments based on detected losses, especially valuable for less experienced operators."}],stack:[{g:"In-cab tablet",i:["Flutter","Edge AI","Computer Vision"]},{g:"Hardware",i:["3-10 cameras","Industrial magnet mounts","Rugged tablet"]},{g:"Backend & infra",i:["Node.js","Google Cloud Platform"]},{g:"Web dashboard",i:["React.js","SSR"]}],why:[{t:"Why Edge AI on the tablet?",d:"The fields Farmwave serves often have no cellular signal. Cloud inference would mean no inference. The AI has to run on the device, full stop. Everything else in the architecture follows from that one constraint."},{t:"Why a retrofit instead of an OEM integration?",d:"Farmers don't replace combines. They use the one in the shed, often for 15+ years. A retrofit that goes onto any make or model in a few hours reaches the operators who need this most, without waiting on a manufacturer roadmap."},{t:"Why Flutter in the cab?",d:"Farmwave runs across different tablet makers and machinery brands. Flutter lets us ship one codebase that feels consistent on every rig, instead of maintaining separate native forks for each OEM."},{t:"Why Google Cloud, not AWS?",d:"Usage is violently seasonal: a six-week harvest window, then quiet. GCP's scaling and per-second billing suit that shape better than reserved-capacity thinking."}],services:["Discovery","Web development","DevOps","AI solutions","Quality assurance"],press:[{l:"AI Harvest Vision Solution of the Year 2025",u:"https://www.agribusinessrevieweurope.com/farmwave"}],cover:"linear-gradient(135deg,#1a3a1a 0%,#2d6a2d 50%,#4a9e4a 100%)", headerImg:(process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg"),coverImg:(process.env.PUBLIC_URL+"/images/farmwave_cover.png")},
   {id:"beunity",name:"beUnity",cat:"Social",tags:["Mobile","PWA","Hybrid"],client:"beUnity AG",website:"beunity.io",period:"November 2022 to Present",brief:"A central member platform for clubs, churches, associations and parish groups, replacing the scatter of email chains, WhatsApp groups, and noticeboards with one app every member actually opens.",ch:"Member organisations (associations, clubs, parish groups, cooperatives, settlements, churches) had the same problem wherever we looked. Announcements went out by email, event reminders on WhatsApp, polls on Facebook, the marketplace on a noticeboard. Nothing lived in one place. New members couldn't find anything. Long-standing members missed half of what was happening. Organisations needed a single, trusted space where all of this would live, and they needed it to be instantly accessible, without every member having to hunt down an app in the App Store first.",ap:"We built beUnity as a Progressive Web App: users open it in their phone browser, tap 'Add to Home Screen', and from that moment on it looks and feels like any other app. No App Store review, no long install. We wrapped it with Turbo Native so it can still do the native-only bits (push notifications, badges, alerts) without losing the biggest advantage of a PWA: we can ship updates instantly, without every member having to update anything. All data is hosted exclusively on European servers and the platform is fully GDPR-compliant, non-negotiable for the Swiss organisations that founded the product.",re:"Founded in 2020 as a spin-off of Crossiety AG, beUnity now powers 500+ member organisations: clubs, churches, settlements, parish groups, associations. Updates go out the same day we ship them. Members get one app that actually replaces the pile of tools they used to juggle, with forums, events, surveys, file sharing, and groups all in one place.",q:"",qn:"",qr:"",metrics:[{v:"500+",l:"member organisations"},{v:"Instant",l:"install via PWA"},{v:"Same-day",l:"updates ship"},{v:"GDPR",l:"EU-only data residency"}],features:[{t:"Centralised Communication",d:"Forums, posts, comments, and chat in one place. No more fragmented tools."},{t:"Event Management",d:"Built-in calendar with personal-calendar sync and attendance tracking."},{t:"Surveys & Polls",d:"Quick decisions and member input without leaving the platform."},{t:"File Sharing",d:"Files attached to posts and chats are auto-stored in one searchable place."},{t:"Groups & Forums",d:"Topic-specific spaces so members only see content relevant to them."},{t:"Web, iOS & Android",d:"One platform across browser, smartphone, and tablet. No separate logins."}],stack:[{g:"Frontend",i:["PWA","JavaScript"]},{g:"Native wrapper",i:["Turbo Native","iOS","Android"]},{g:"Hosting",i:["EU-only servers","GDPR-compliant"]},{g:"Messaging",i:["Push Notifications"]}],why:[{t:"Why a PWA, not a native app?",d:"Onboarding a new member is the highest-friction moment in a community product. A PWA skips the App Store entirely. Someone shares a link, the recipient opens it, and they're in. That's a 10-second path instead of a 10-minute one."},{t:"Why Turbo Native on top?",d:"A pure PWA can't do push notifications on iOS with full reliability, and doesn't get a real home-screen icon on every OS. Wrapping it with Turbo Native gives us the native features where they matter and keeps the deploy-instantly advantage of the PWA everywhere else."},{t:"Why EU-only data residency?",d:"Many of the organisations on beUnity are based in Switzerland and the broader EU, where members trust the platform with personal data on the assumption it doesn't cross a border it shouldn't. Storing exclusively on European servers makes that promise architectural, not aspirational."}],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#1a0a0a 0%,#5c1a1a 50%,#a83a2e 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/beunity_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/beunity_cover.jpeg"),coverImgMobile:(process.env.PUBLIC_URL+"/images/beunity_header_2.png")},
   {id:"crossiety",name:"Crossiety",cat:"Social",tags:["Mobile","PWA","Community"],client:"Crossiety AG",website:"crossiety.ch",period:"November 2022 to Present",brief:"A trusted digital village square for towns, villages, and city neighbourhoods. Real neighbours, real names, GIS-based local radius, GDPR by design.",ch:"Local life (the lost cat, the bake sale, the new shop opening, the council meeting) was drifting onto Facebook and WhatsApp, where it either got buried by algorithms or trapped in chat groups half the neighbourhood wasn't in. Nobody wanted a second Facebook for their town. What residents actually wanted was a trusted space tied to the place they lived: real names only, no anonymous drama, and a feed that belongs to the community rather than a global platform optimising for outrage.",ap:"We built Crossiety as a Progressive Web App so residents can open it on any phone browser and use it immediately. No App Store install stands between them and their neighbourhood. Turbo Native gives it the native feel where it counts: push notifications for new local posts, badges, alerts. SMS verification with real first and last names is the quiet backbone, the cheapest, most privacy-respecting way to make sure the person across the feed is actually a neighbour, not a bot or a troll. A GIS-based radius lets each resident pick the towns and neighbourhoods they care about, so the feed feels truly local instead of platform-wide.",re:"Founded in 2015 in Zurich, Crossiety is now used by communities across Switzerland and Germany as their digital village square. Local news, events, classifieds, groups, and chat all live in one place, tied to a verified residency. Updates ship instantly, and the feed feels like the place it actually represents, not the algorithmic noise of a global platform.",q:"",qn:"",qr:"",metrics:[{v:"SMS-verified",l:"real neighbours, real names"},{v:"GIS radius",l:"truly local feed"},{v:"CH & DE",l:"deployed across"},{v:"GDPR",l:"data-minimal by design"}],features:[{t:"Trusted Identity",d:"Real first + last name with SMS verification. Bots and trolls don't make it through."},{t:"Local Radius (GIS)",d:"Residents choose which towns and neighbourhoods they want in their feed."},{t:"Multiple Post Types",d:"News, events, share, survey, organize. One platform replaces five."},{t:"Real-time Comments & Chat",d:"Two-way conversation directly with neighbours, secure and private."},{t:"Event & Resource Sharing",d:"Sync with Google Calendar and Apple Calendar; share across communities."},{t:"Push Notifications",d:"Opt-in alerts keep residents informed about local news, events, and emergencies."}],stack:[{g:"Frontend",i:["PWA","JavaScript"]},{g:"Native wrapper",i:["Turbo Native","iOS","Android"]},{g:"Trust layer",i:["SMS verification","Real-name identity"]},{g:"Geo",i:["GIS","Radius selection"]},{g:"Messaging",i:["Push Notifications"]}],why:[{t:"Why a PWA here too?",d:"Crossiety competes with a three-second Facebook Group. Any friction in getting the first post in front of a resident loses the user. A PWA removes the install. Open the link, you're in the community feed."},{t:"Why SMS verification?",d:"A Swiss mobile number is the cheapest identity check that doesn't demand more personal data than we actually need. It's enough friction to keep bots and trolls out, and no more than that."},{t:"Why a GIS-based radius instead of fixed cities?",d:"A neighbour at the edge of one town reads the same local feed as someone in the next village over. Fixed administrative boundaries don't match how residents actually live. A radius around home does."}],services:["Mobile development","Quality assurance"],cover:"linear-gradient(135deg,#0a2e1a 0%,#1a5c3a 50%,#2ea86e 100%)",  headerImg:(process.env.PUBLIC_URL+"/images/crossiety_showcase.png"),coverImg:(process.env.PUBLIC_URL+"/images/crossiety_cover.jpeg"),coverImgMobile:(process.env.PUBLIC_URL+"/images/crossiety_home.png")},
@@ -352,62 +375,307 @@ const caseShowcase:{[k:string]:{src:string,alt:string,caption?:string,fit?:"cove
     {src:process.env.PUBLIC_URL+"/images/beunity_showcase.png",alt:"beUnity in use across phone and web",caption:"One platform across browser, smartphone, and tablet. No separate logins, no install friction."},
   ],
   crossiety:[
-    {src:process.env.PUBLIC_URL+"/images/crossiety_header.png",alt:"Crossiety, the resident app for your community",caption:"A digital village square for towns, cities, and regions."},
-    {src:process.env.PUBLIC_URL+"/images/crossiety_home.png",alt:"Crossiety mobile home screen with local news and events",caption:"Residents see local news, events, and discussions, all in one place."},
+    {src:process.env.PUBLIC_URL+"/images/crossiety_header.png",alt:"Crossiety in use across phones and web",caption:"A digital village square for towns, cities, and regions, available on any phone, tablet, or browser.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/crossiety_1.png",alt:"Crossiety community feed with local news and events",caption:"Residents see local news, events, classifieds, and discussions all in one place, tied to a verified residency."},
   ],
   drift:[
-    {src:process.env.PUBLIC_URL+"/images/drift_header.jpg",alt:"Drift App, real-time weather and spray planning for farmers",caption:"Wind, temperature, and compliance, purpose-built for the cab."},
+    {src:process.env.PUBLIC_URL+"/images/drift_1.jpg",alt:"Drift App on iPhone showing the Sprayability Index",caption:"The Sprayability Index combines wind, temperature, nozzle, and tank mix into a clear go/no-go score.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/drift_2.jpg",alt:"Drift App field map with adjacent fields and crop traits",caption:"Field-level mapping with automatic adjacent-field detection.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/drift_3.jpg",alt:"Drift App visual drift pattern overlay",caption:"Visual drift-pattern overlay shows how spray would carry under current weather conditions.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/drift_4.jpeg",alt:"Drift App 4-day spray planner forecast",caption:"4-day Spray Planner ranks fields by sprayability so you plan the week, not the moment.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/drift_5.jpeg",alt:"Drift App custom sprayer setup",caption:"Custom sprayer setup: herbicide list, tank mixes, nozzle size, and pump pressure.",fit:"cover"},
+    {src:process.env.PUBLIC_URL+"/images/drift_6.jpg",alt:"Drift App compliance report",caption:"Exportable record of weather, drift pattern, and surrounding traits at the moment of spraying.",fit:"cover"},
   ],
   noctrix:[
-    {src:process.env.PUBLIC_URL+"/images/noctrix_header.jpg",alt:"Noctrix Health NTX100 clinician iOS app",caption:"Clinicians programme and manage neurostimulation therapy remotely via Bluetooth."},
-  ],
-  mobility:[
-    {src:process.env.PUBLIC_URL+"/images/mobility_header.jpg",alt:"MobilityOne fleet management SaaS dashboard",caption:"Mileage, fuel, maintenance, and assignments, in one source of truth."},
+    {src:process.env.PUBLIC_URL+"/images/noctrix_header.jpg",alt:"Noctrix Health NTX100 clinician iOS app",caption:"Clinicians programme and manage neurostimulation therapy remotely via Bluetooth.",fit:"cover"},
   ],
   muvr:[
-    {src:process.env.PUBLIC_URL+"/images/muvr_header.png",alt:"Muvr iOS app for orthopedic post-operative care",caption:"Wearable-driven recovery tracking for orthopedic practices."},
+    {src:process.env.PUBLIC_URL+"/images/muvr_header.png",alt:"Muvr iOS app for orthopedic post-operative care",caption:"Wearable-driven recovery tracking for orthopedic practices.",fit:"cover"},
   ],
 };
 const vals=[{n:"01",t:"Understand First",d:"Every engagement starts with listening."},{n:"02",t:"Strategic Clarity",d:"We turn complexity into clear direction."},{n:"03",t:"Long-term Advisory",d:"Partnerships, not one-off projects."},{n:"04",t:"One Team",d:"We embed alongside your people."},{n:"05",t:"Outcome-driven",d:"Every recommendation tied to results."},{n:"06",t:"Delivery Excellence",d:"Strategy backed by engineering."}];
 const tl=[{y:"2017",t:"Went independent",d:"Traded the agency paycheck for full autonomy. Started building apps under MCODE for clients across health, AgTech, and enterprise. Whatever the problem needed, regardless of platform or stack."},{y:"2021",t:"Long-term partnerships",d:"Early clients like Nomo evolved into multi-year relationships. The work became less about shipping features and more about being a genuine technical partner: embedded, strategic, ongoing."},{y:"2022",t:"Lumo Lab",d:"Solo freelancing had grown into a team with a shared way of working. Formalised it as Lumo Lab, built around one principle: understand the problem properly before writing a single line of code."},{y:"2025",t:"Award-winning work",d:"Farmwave's Harvest Vision was named AI Harvest Vision Solution of the Year. A signal that the approach (honest advice, real delivery) was producing results that stood out."},{y:"2026",t:"The formula works",d:"Multi-year partnerships, award-winning products, clients who keep coming back. It turns out that doing the unglamorous things well (listening, planning, delivering) compounds over time."}];
-type BlogBlock={type:"text",content:string}|{type:"img",src:string,caption?:string};
+type BlogBlock=
+  |{type:"text",content:string}
+  |{type:"img",src:string,caption?:string}
+  |{type:"heading",content:string}
+  |{type:"code",lang?:string,content:string}
+  |{type:"quote",content:string}
+  |{type:"list",items:string[]};
 const blogs=[
-  {id:"b1",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"6 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",body:[
-    {type:"text",content:"Nomo International set out to solve a deeply human problem: how do you keep elderly people safe at home without invading their privacy? Traditional elder care solutions relied on wearables or cameras, devices that were often forgotten, rejected, or simply too intrusive. Nomo needed something different."},
-    {type:"text",content:"Nomo employs motion-sensing and AI-driven audio technology for discreet monitoring without intrusive cameras or wearables. The system detects emergencies through fall detection, sound recognition, and direct 911 integration."},
-    {type:"img",src:"https://lumo-lab.com/wp-content/uploads/2024/09/Screenshot-2024-09-13-at-16.03.26.png",caption:"Nomo Smart Care iOS app interface"},
-    {type:"text",content:"The challenge was significant. The system had to be completely non-intrusive, capable of understanding behavioural patterns, instantly responsive to emergencies, and easy enough for elderly users and their families to trust. And it needed a full-stack technology partner who could deliver it end to end: mobile apps, cloud infrastructure, and AI, all working together."},
-    {type:"text",content:"We structured our approach around three core pillars. First, native mobile apps built in Swift and Kotlin to ensure real-time updates and reliable emergency response on both iOS and Android. Second, a scalable cloud infrastructure using AWS, REST APIs, MQTT messaging, and Firebase for secure, real-time device-to-user communication. Third, edge-based audio AI: custom TensorFlow Lite models that process critical sounds locally on the device, preserving privacy and delivering sub-second response times."},
-    {type:"text",content:"The AI component was particularly important. Rather than streaming audio to the cloud, we trained models to classify sounds (falls, alarms, distress) directly on the device. This meant no audio ever left the home, addressing one of the primary concerns families had about in-home monitoring technology."},
-    {type:"text",content:"The results speak for themselves. We delivered full production deployment across iOS and Android, real-time monitoring across thousands of devices, sub-1-second alert latency, and native 911 integration for emergency response. The platform gave caregivers genuine confidence, not because it was watching, but because it was listening intelligently."},
-    {type:"text",content:"The tech stack included Swift and Kotlin for mobile, Node.js and TypeScript for the backend, AWS and Firebase for cloud infrastructure, Python and TensorFlow Lite for the AI layer, and React.js and Next.js for the web frontend."},
+  {id:"b1",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"9 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",body:[
+    {type:"heading",content:"Project overview"},
+    {type:"list",items:[
+      "**Client**: [Nomo International, Inc](https://nomosmartcare.com/)",
+      "**Platform**: iOS, Android, backend, web, machine learning",
+      "**Industry**: Healthtech / elder care",
+      "**Services**: Native mobile app development, backend architecture, audio AI and machine learning, IoT integration",
+      "**Engagement**: March 2021 to Present (multi-year partnership)"
+    ]},
+    {type:"text",content:"Nomo Smart Care uses motion-sensing and AI-powered audio technology to discreetly monitor daily routines at home and detect potential emergencies, without intrusive cameras or wearables that get forgotten on the bedside table. Built-in fall detection, intelligent sound recognition, and direct integration with 911 Emergency Services keep caregivers connected and responsive at all times. Whether it's a fall, a smoke alarm, or a cry for help, Nomo makes sure the right people are notified, fast, privately, and reliably."},
+    {type:"img",src:process.env.PUBLIC_URL+"/images/nomo_1.png",caption:"Nomo Smart Care iOS app: live status, alerts, and a shared timeline of the day for the whole Care Circle."},
+    {type:"heading",content:"Why this problem matters"},
+    {type:"text",content:"Roughly one in three adults aged 65 or older falls every year, and falls remain the leading cause of injury and injury-related death in that age group. Most fall-detection products on the market expect the wearer to be physically capable of pressing a button, recovering consciousness fast enough to react, or simply remembering to put the device on each morning. None of those assumptions hold up reliably. The category needs a different posture: a system that is always on, that doesn't require a button press, and that respects the privacy of the person being cared for."},
+    {type:"text",content:"Nomo came to us with a clear product vision and the conviction that this could be done without cameras and without wearables that the user has to remember. They needed a partner that could deliver across the full stack at once: hardware integration, backend, mobile, AI, and emergency-services connectivity, all production-grade from day one."},
+    {type:"heading",content:"The challenge"},
+    {type:"text",content:"Many elder care solutions rely on wearables or cameras, devices that are either forgotten, intrusive, or rejected altogether. Nomo wanted to build a system that was:"},
+    {type:"list",items:[
+      "Completely non-intrusive: no cameras in the home, no recording of audio leaving the home",
+      "Capable of understanding behaviour and audio patterns, not just one-shot triggers",
+      "Instantly responsive to genuine emergencies (sub-second alert latency)",
+      "Resilient enough to keep working when cellular networks wobble or Wi-Fi drops",
+      "Easy to install, use, and trust, even for an 80-year-old user living alone"
+    ]},
+    {type:"text",content:"On top of that they needed the system to be affordable enough for ordinary families: roughly a dollar a day, all in. That budget constraint shaped every architectural decision that followed."},
+    {type:"heading",content:"Our approach"},
+    {type:"text",content:"We partnered with Nomo as a full-cycle development team, delivering a connected experience across hardware, mobile, backend, and AI systems. Our work focused on five pillars:"},
+    {type:"heading",content:"1. Native mobile apps for the Care Circle"},
+    {type:"text",content:"Built with Swift on iOS and Kotlin on Android, the apps give every member of the Care Circle (children, neighbours, professional caregivers, anyone the family invites) instant alerts, two-way voice to the Nomo Hub in the home, and a shared timeline of the day. The Care Circle model means that when an alert fires, every authorised caregiver gets it at the same time. There is no single lifeline who has to be reachable; if one person doesn't respond, another can step in. Care Circles can include unlimited members at no extra cost."},
+    {type:"text",content:"Native iOS and Android were non-negotiable for this product. An alert that lands half a second late is an alert that didn't land, and the background-process control, push-delivery reliability, and two-way-voice performance we needed simply aren't matched by a wrapped or cross-platform framework."},
+    {type:"heading",content:"2. Scalable backend infrastructure"},
+    {type:"text",content:"A TypeScript back end on AWS keeps devices and caregivers in sync. We used Firebase Cloud Messaging for push notification delivery and MQTT as the live duplex channel between hub and app, so the next alert still gets through even if cellular drops momentarily. AWS Cognito handles caregiver identity, REST APIs handle user-facing data flows, and the stack scales horizontally as the install base grows."},
+    {type:"heading",content:"3. On-device audio AI"},
+    {type:"text",content:"This was the most distinctive piece of the architecture. Custom TensorFlow Lite models run directly on the Nomo Hub itself, classifying sounds locally: a fall, a smoke alarm, a cry for help. No audio ever streams to a cloud, and no recordings are stored. Audio is analysed and discarded on-device. Privacy is the first reason we chose this design; latency is the second. By the time a cloud round-trip would have completed, Nomo has already alerted the Care Circle."},
+    {type:"text",content:"To minimise false alarms, the system uses AI to learn the household's normal pattern over time. A 4 AM bathroom trip in a home where that happens nightly is unremarkable; the same trip in a home where it doesn't is worth a quiet check-in. Caregivers trust the alerts they get because the system has earned that trust by not crying wolf."},
+    {type:"img",src:process.env.PUBLIC_URL+"/images/nomo_2.jpg",caption:"The kit: a hub for two-way voice, satellite sensors that plug into outlets, and tags for door, fridge, and medicine cabinet."},
+    {type:"heading",content:"4. Hardware ecosystem"},
+    {type:"text",content:"The system is a small mesh: a central hub, a pair of plug-in satellite sensors that cover high-traffic areas, and tags that combine motion detection with an emergency button and wearable fall detection. Tags are calibrated to the sudden downward motion of a fall, so even if the wearer is disoriented or unable to press the button themselves, the alert still goes out. Everything pairs over BLE to the hub, which handles the rest."},
+    {type:"heading",content:"5. Emergency response with RapidSOS"},
+    {type:"text",content:"When a real emergency is detected, the hub opens a direct line to 911 through RapidSOS in under a second. RapidSOS securely transmits incident context, including fall type, location, and any health information the family has supplied, directly to the responding 911 dispatcher. That cuts the typical confusion of an emergency call and gets responders to the right place with the right information faster."},
+    {type:"heading",content:"The result"},
+    {type:"text",content:"Nomo Smart Care is now actively helping thousands of families monitor and protect their loved ones, privately and respectfully."},
+    {type:"list",items:[
+      "Full production rollout across iOS and Android, available across all 50 US states",
+      "Thousands of hubs deployed and monitored in real time",
+      "Sub-1-second alert latency from event to caregiver notification",
+      "Emergency response capabilities integrated natively through RapidSOS",
+      "Affordable monthly subscription (around a dollar a day) with a 60-day risk-free trial",
+      "Caregivers reporting higher confidence and peace of mind, and noticeably fewer false alarms"
+    ]},
+    {type:"heading",content:"What the client said"},
+    {type:"quote",content:"Our partnership with Lumo has been instrumental in shaping our long-term vision. They've consistently delivered innovative solutions that align with our strategic goals. The team's deep understanding of our business, coupled with their technical expertise, has been invaluable. We're excited to continue our journey with Lumo Lab as we embark on new challenges and opportunities."},
+    {type:"text",content:"— **Kevin Ray**, Co-Founder & CEO, Nomo International"},
+    {type:"heading",content:"Tech stack"},
+    {type:"list",items:[
+      "**Mobile**: Swift, Kotlin",
+      "**Backend**: Node.js, TypeScript, REST APIs, MQTT",
+      "**Cloud**: AWS, Firebase, Google APIs, AWS Cognito",
+      "**AI / ML**: Python, TensorFlow Lite (on-device)",
+      "**Frontend**: React.js, Next.js",
+      "**Hardware**: Hub, satellite sensors, wearable tags, ESP32",
+      "**Emergency**: RapidSOS",
+      "**Other**: Lottie animations, BLE, Wi-Fi"
+    ]},
+    {type:"heading",content:"What we took away"},
+    {type:"text",content:"Three lessons stand out from the work, and they generalise beyond elder care."},
+    {type:"list",items:[
+      "**On-device AI is a privacy decision first, a latency decision second.** Once you commit to processing on the hardware in someone's home, the rest of the architecture follows. It is much harder to retrofit privacy than to design for it from day one.",
+      "**Routine learning is the difference between a useful product and a noisy one.** Every alert that turns out to be nothing trains the caregiver to mistrust the next one. The system has to earn trust by understanding context, not by being more sensitive.",
+      "**Ship hardware, mobile, AI, and an emergency stack as one product.** Nomo couldn't outsource any one of these layers to a separate team without losing the integrated experience. A full-stack partner who can hold all of it in their head is what made the timeline real."
+    ]},
+    {type:"text",content:"Looking to build something ambitious, human-centered, and technically rock-solid? [Let's make it happen.](https://lumo-lab.com/contact)"},
   ] as BlogBlock[]},
-  {id:"b2",title:"Deep Learning for Audio Classification",cat:"Engineering",date:"March 11, 2025",read:"8 min",author:"Matija Sever",cover:"linear-gradient(135deg,#1a0533 0%,#3b0764 50%,#6d28d9 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_2.jpg"),excerpt:"How convolutional neural networks learn to hear, and why spectrograms are the secret ingredient.",body:[
-    {type:"text",content:"Audio classification (assigning sound clips to predefined categories) is quietly transforming industries from security systems and automotive safety to healthcare diagnostics. At the core of modern audio classification systems are convolutional neural networks, originally designed for images but remarkably effective at understanding sound."},
-    {type:"text",content:"The key insight is that raw audio needs to be transformed before a neural network can learn from it. We convert waveforms into spectrograms using the Short Time Fourier Transform, which visually maps frequency intensities across time. Even better are mel spectrograms, which map frequencies to the Mel scale aligned with human auditory perception. These representations emphasise the features that matter most to classification, and they give CNNs something they understand: an image."},
-    {type:"text",content:"A standard CNN for audio classification processes these spectrogram images through convolutional layers with learnable filters that slide across the input and produce feature maps. Batch normalisation stabilises training, pooling layers reduce spatial dimensions while preserving prominent features, and dropout prevents overfitting. After flattening the final feature maps, fully connected layers integrate what was learned and softmax produces a probability distribution across classes."},
-    {type:"text",content:"What makes CNNs particularly powerful here is hierarchical feature learning. Early layers capture simple patterns (edges, short-duration tones) while deeper layers learn complex abstractions like the characteristic signature of a smoke alarm or the acoustic profile of a fall event. No manual feature engineering required."},
-    {type:"text",content:"Training requires attention to data augmentation. Time stretching, pitch shifting, and adding background noise all help models generalise to real-world recording conditions. We evaluate using cross entropy loss and track accuracy, precision, recall, and F1 score throughout training."},
-    {type:"text",content:"The field continues to advance rapidly. As these systems mature, edge deployment (running classification directly on the device rather than in the cloud) is becoming increasingly viable, enabling privacy-preserving audio AI at scale."},
+  {id:"b2",title:"Deep Learning for Audio Classification",cat:"Engineering",date:"March 11, 2025",read:"8 min",author:"Matija Sever",cover:"linear-gradient(135deg,#1a0533 0%,#3b0764 50%,#6d28d9 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_3.jpg"),excerpt:"How convolutional neural networks learn to hear, and why spectrograms are the secret ingredient.",body:[
+    {type:"heading",content:"Introduction"},
+    {type:"text",content:"Audio classification, the process of assigning sound clips to predefined categories, is quietly reshaping a lot of modern technology. From smart security systems that detect alarm sounds in real time to automotive safety interfaces and healthcare diagnostics, robust audio-classification systems give real competitive advantage. By converting raw audio into visual representations (spectrograms and mel spectrograms) and applying deep learning, you can automatically extract intricate, hierarchical features from audio signals. This post walks through the foundational ideas, CNN architectures, audio-processing methods, and data-augmentation techniques that power modern audio-classification systems."},
+    {type:"heading",content:"Foundations of deep learning in audio"},
+    {type:"text",content:"Deep learning uses multilayer neural networks to learn abstract representations directly from data. In audio processing, raw waveforms are usually converted into a visual representation such as a spectrogram or mel spectrogram. A typical model has three layer types:"},
+    {type:"list",items:[
+      "**Input layer**: processes raw or preprocessed data (for example, spectrogram images).",
+      "**Hidden layers**: weighted linear combinations followed by nonlinear activations (such as ReLU) extract progressively abstract features.",
+      "**Output layer**: a softmax activation for multiclass classification, producing a probability distribution over target categories."
+    ]},
+    {type:"heading",content:"Audio processing techniques"},
+    {type:"text",content:"Before analysis, raw audio signals have to be transformed into formats a network can learn from:"},
+    {type:"list",items:[
+      "**Spectrograms**: generated using the Short Time Fourier Transform (STFT), spectrograms visually map frequency intensity over time.",
+      "**Mel spectrograms**: by mapping the frequency axis to the Mel scale (which aligns with human auditory perception), these representations emphasise the features that matter most to perception."
+    ]},
+    {type:"img",src:process.env.PUBLIC_URL+"/images/nomo_2.jpg",caption:"In Nomo, the classifier runs on the Hub itself, so audio is analysed and discarded locally. Nothing streams to a cloud, nothing is ever recorded."},
+    {type:"heading",content:"Convolutional neural networks (CNNs)"},
+    {type:"text",content:"Convolutional neural networks are a deep-learning architecture specialised for grid-like data such as images or spectrograms. Originally developed for image classification, they have proven exceptionally effective at automatically learning both low-level and high-level features from data."},
+    {type:"heading",content:"Advantages of CNNs"},
+    {type:"list",items:[
+      "**Automatic feature extraction**: CNNs learn local time-frequency patterns directly, eliminating the need for manual feature engineering.",
+      "**Parameter efficiency**: weight sharing means CNNs need far fewer parameters than fully-connected networks.",
+      "**Hierarchical learning**: early layers capture simple features (edges, local frequency patterns), while deeper layers learn increasingly complex abstractions."
+    ]},
+    {type:"heading",content:"CNN architecture"},
+    {type:"text",content:"A robust audio-classification CNN typically includes:"},
+    {type:"list",items:[
+      "**Convolutional layers**: learnable filters (3×3, 5×5) slide over the input (e.g., a spectrogram) to produce feature maps via dot products with local receptive fields.",
+      "**Activation functions**: nonlinearities, commonly ReLU, applied to the convolution output.",
+      "**Batch normalization**: normalises activations to stabilise and accelerate training.",
+      "**Pooling layers**: reduce spatial dimensions (max pooling, for example) while keeping prominent features.",
+      "**Regularisation**: dropout randomly deactivates a fraction of neurons during training; L2 regularisation (weight decay) penalises large weights so the network learns simpler, more generalisable patterns.",
+      "**Fully connected layers**: after flattening the feature maps, these layers integrate features and output class probabilities through softmax."
+    ]},
+    {type:"heading",content:"Applying CNNs to audio classification"},
+    {type:"text",content:"To apply CNNs to audio, raw signals are first converted into two-dimensional representations:"},
+    {type:"list",items:[
+      "**Transformation**: an STFT generates a spectrogram from raw audio. The spectrogram can be passed through a mel filter bank to create a mel spectrogram. Mel spectrograms are usually preferred because they more closely match human auditory perception, emphasising frequency bands that matter most to how we hear.",
+      "**Input preparation**: these visual representations are fed to the CNN, which then automatically extracts meaningful features from the audio."
+    ]},
+    {type:"text",content:"A typical CNN-based audio classification pipeline looks like this:"},
+    {type:"list",items:[
+      "**Preprocessing**: convert raw audio into spectrogram or mel-spectrogram images.",
+      "**Feature extraction**: pass the spectrogram through several convolutional layers that distil the most relevant features.",
+      "**Flattening**: collapse the final feature maps into a one-dimensional vector.",
+      "**Classification**: fully connected layers and a softmax output produce a probability distribution over each audio class."
+    ]},
+    {type:"heading",content:"Data augmentation and training strategies"},
+    {type:"text",content:"For robust audio classification in real-world conditions, it pays to think about three things:"},
+    {type:"list",items:[
+      "**Data augmentation**: time stretching adjusts the speed of the audio while keeping its pitch; pitch shifting changes the pitch to simulate variations in speaker tone or instrument timbre; adding noise introduces background sound to mimic real recording environments.",
+      "**Architecture evaluation**: experiment with different CNN architectures to find the right balance of efficiency and accuracy.",
+      "**Training**: cross-entropy loss for multiclass classification; optimisers such as Adam or stochastic gradient descent; metrics like accuracy, precision, recall, and F1 score to guide improvements."
+    ]},
+    {type:"heading",content:"Final thoughts"},
+    {type:"text",content:"Combining deep learning with audio processing lets CNNs learn complex patterns directly from spectrogram images. The approach has produced state-of-the-art performance on audio classification, and as research keeps moving, these systems will continue to advance the field of audio analysis."},
   ] as BlogBlock[]},
   {id:"b3",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic, PhD",cover:"linear-gradient(135deg,#062a1a 0%,#065f46 50%,#059669 100%)",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers: why it's harder than it sounds, and how we made it work.",body:[
-    {type:"text",content:"Running deep learning models on microcontrollers feels like a contradiction. These devices are built for efficiency, not computation: minimal processing power, constrained memory, no operating system to speak of. And yet, for a growing class of privacy-first applications, edge AI is exactly what's needed."},
-    {type:"text",content:"We encountered this challenge directly while building the audio classification system for Nomo Smart Care. The platform monitors in-home environments using sensors rather than cameras, prioritising user privacy above all else. Processing audio locally on the device (identifying fire alarms, falls, and other critical events without ever transmitting recordings externally) required running a trained neural network on an ESP32-PICO microcontroller with a 240MHz CPU and 2MB of PSRAM."},
-    {type:"text",content:"The approach starts with model training. We used a convolutional neural network architecture with four convolutional layers, max pooling, and dense output layers. After training, the model undergoes full-integer quantisation, converting 32-bit floating-point weights to 8-bit unsigned integers. This single step reduces model size dramatically while preserving most of the accuracy, bringing a 260K parameter model down to roughly 260KB."},
-    {type:"text",content:"Inference runs using LiteRT for Microcontrollers, formerly TensorFlow Lite. The quantised model is embedded as a C array, the necessary operations are registered (FullyConnected, Conv2D, MaxPool2D, Softmax, and Quantize), and a 100KB tensor arena handles runtime memory. The inference pipeline quantises input data before feeding it to the model and dequantises the outputs to retrieve probability distributions."},
-    {type:"text",content:"The implementation uses standard C++17, which runs on many embedded platforms, making LiteRT for Microcontrollers highly portable. The framework supports a wide range of neural network operations, meaning the constraint isn't capability but rather careful model design and quantisation strategy."},
-    {type:"text",content:"The lesson we took away: edge AI on microcontrollers is absolutely viable, but it requires thinking about the deployment environment from the very beginning of the model design process. Architecture choices, quantisation, and memory budgeting all need to be considered together, not as an afterthought."},
-  ] as BlogBlock[]},
-  {id:"b4",title:"Building the Share Location Feature for Nomo Smart Care",cat:"Engineering",date:"April 3, 2026",read:"7 min",author:"Stefan Petrovic",authorImg:(process.env.PUBLIC_URL + "/images/default_user.png"),cover:"linear-gradient(135deg,#002840 0%,#004C73 50%,#0a7ea4 100%)",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header_1.png"),excerpt:"How we built a motion-aware, battery-efficient location sharing system that tells caregivers where their loved ones are without draining the device.",body:[
-    {type:"text",content:"When you're caring for an aging parent or grandparent, one worry never quite goes away: Where are they right now? Are they safe? Caregivers needed a way to stay informed when their loved one steps out, whether to the pharmacy, a doctor's appointment, or just a walk in the park. That's why we implemented Share Location."},
-    {type:"text",content:"Share Location uses the care recipient's smartphone to securely share their position with authorized caregivers. No additional hardware is required, no complicated setup. Just enable the feature, grant location permission, and the app takes care of the rest. Caregivers see a clean, intuitive screen with two key pieces of information: a map showing the most recent known location with freshness context, and a daily timeline of locations detected throughout the day, complete with place names, addresses, and timestamps."},
-    {type:"text",content:"The core challenge: caregivers need to know where their care recipients are, especially when they leave home. But continuous GPS tracking is a battery killer, and caregivers don't need a location ping every second when someone is sitting on the couch. We needed a system that is smart about when and how often it reports location."},
-    {type:"text",content:"At the heart of our location engine is MyLocationManager, a singleton that wraps CLLocationManager with a layer of intelligence. Instead of polling GPS at a fixed interval, we adapt based on what the user is doing. We detect four motion states: Stationary, Walking, In Vehicle, and Medical ID Scanned. When the device detects the user is stationary, we drastically reduce GPS usage. When they're walking or in a vehicle, we tighten tracking. We use CMMotionActivityManager from CoreMotion to detect these states automatically, combined with accelerometer data to distinguish genuine movement from sensor noise."},
-    {type:"text",content:"One of the most important moments for a caregiver is when their loved one leaves home. We implemented concentric geofences using three monitored regions around the home address: a 10m radius tightly around the home, a 50m radius for the nearby area, and a 200m radius covering the neighborhood boundary. Geofence enter/exit events trigger background updates and home/away state transitions. This uses iOS's built-in region monitoring, which is battery-efficient because iOS can resolve region transitions without continuous high-accuracy GPS polling. We also built jump detection: if the first location report after a home exit is suspiciously far away, we handle it gracefully rather than reporting a false teleportation."},
-    {type:"text",content:"iOS is famously restrictive about background execution. We use a combination of strategies: Significant Location Changes (iOS wakes the app for large movements of ~500m, even if the app was terminated), Background Location Updates for active tracking sessions, and Region Monitoring for passive geofence triggers that don't require the app to be running. The system validates every location update before accepting it. We treat low-accuracy readings cautiously, often requesting a fresh fix and comparing candidates before deciding what to send, filtering out stale or duplicate coordinates."},
-    {type:"text",content:"Raw latitude/longitude isn't useful to a worried caregiver. They want to see 'Mom is at the pharmacy', not coordinates. We combine Apple reverse geocoding (CLGeocoder) with Google Places lookups to enrich coordinates with meaningful place context. We also classify locations into different types, which drive the icons and colors shown in the UI, making the location history scannable at a glance."},
-    {type:"text",content:"A unique aspect of Nomo is support for Medical ID scan events. When a care recipient's Medical ID bracelet is scanned, the system captures the scanner's location and immediately reports it. These events appear in the location history with a distinct icon and are treated with the highest priority."},
-    {type:"text",content:"What we learned. Battery life is a feature: users will disable location sharing entirely if it drains their battery, and motion-aware throttling made the feature viable for all-day use. Accuracy validation matters: GPS readings in urban environments can be wildly inaccurate, and filtering by horizontal accuracy prevented confusing UI artifacts. Geofencing is underrated: iOS region monitoring is nearly free in terms of battery, and the 'left home' trigger is the single most valuable alert for caregivers. And context beats coordinates: investing in reverse geocoding and place classification transformed the feature from technically functional to genuinely useful."},
+    {type:"text",content:"Running deep learning models on microcontrollers is not exactly a run-of-the-mill task due to the resource limitations of these devices. Microcontrollers are typically designed for low-power, low-cost embedded systems with minimal processing power and memory. Machine-learning algorithms, especially deep-learning models, often require significant computational resources and memory."},
+    {type:"text",content:"One of our clients is [Nomo Smart Care](https://nomosmartcare.com/):"},
+    {type:"quote",content:"The Nomo system is for caregivers who want to make sure a loved one is OK. The Nomo system uses sensors, not cameras, to monitor in-home motion. Data from sensors is sent to the Nomo mobile app and allows you, or a circle of trusted caregivers, to check in on your loved one from anywhere, any time."},
+    {type:"text",content:"Besides various other sensors, Nomo can use microphones to paint a picture of what is going on in the home of a care recipient. For example, if a fire alarm is going off, this is something a caregiver should know about. Since Nomo cares deeply about privacy, no audio recordings are allowed to leave a user's home, so audio classification has to be performed on edge devices. The target system is based on the [ESP32-PICO](https://www.espressif.com/sites/default/files/documentation/esp32-pico_series_datasheet_en.pdf), which means we are working within these constraints:"},
+    {type:"list",items:[
+      "240MHz 32-bit CPU",
+      "2MB [PSRAM](https://en.wikipedia.org/wiki/Static_random-access_memory) available to Nomo"
+    ]},
+    {type:"text",content:"Luckily, [LiteRT for Microcontrollers](https://ai.google.dev/edge/litert/microcontrollers/overview) (formerly known as TensorFlow Lite for Microcontrollers) has been ported to the ESP32 architecture, which lets us run basic machine-learning models on low-resource devices."},
+    {type:"img",src:process.env.PUBLIC_URL+"/images/nomo_header_1.png",caption:"In a real home: the Nomo Hub plus a few outlet satellites, all running on-device audio AI for whole-home coverage."},
+    {type:"text",content:"The article below illustrates a typical workflow for getting AI models running on microcontrollers. We demonstrate it by training and deploying a trivial model that recognises handwritten digits from the [MNIST dataset](https://en.wikipedia.org/wiki/MNIST_database). The process is identical for the [CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network) models we use for audio classification."},
+    {type:"heading",content:"Model training"},
+    {type:"text",content:"We use [Keras](https://keras.io/) to train our [TensorFlow](https://www.tensorflow.org/) models. MNIST images are grayscale, 28 pixels wide and 28 pixels tall, so the input layer shape is (28, 28, 1). There are 10 digits, so the network has 10 outputs. We use a simple CNN in this example:"},
+    {type:"code",lang:"python",content:`import numpy as np
+import tensorflow as tf
+
+def get_model():
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.Input(shape=(28, 28, 1), name="input"),
+        tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
+        tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation="relu"),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        tf.keras.layers.Conv2D(128, kernel_size=(3, 3), activation="relu"),
+        tf.keras.layers.Conv2D(128, kernel_size=(3, 3), activation="relu"),
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Dense(10, activation="softmax", name="output"),
+    ])
+    model.compile(optimizer="adam",
+                  loss="sparse_categorical_crossentropy",
+                  metrics=["sparse_categorical_accuracy"])
+    return model`},
+    {type:"text",content:"This model has roughly 260K parameters. After training we will reduce its size further using [post-training quantization](https://ai.google.dev/edge/litert/models/post_training_quantization). The following code prepares the MNIST dataset and trains the model:"},
+    {type:"code",lang:"python",content:`(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# Convert pixel color values from integer [0, 255] to float [0.0, 1.0].
+x_train = x_train.astype(np.float32) / 255.0
+x_test  = x_test.astype(np.float32)  / 255.0
+
+# Keras dataset has inputs of shape (28, 28) so a grayscale dimension is
+# added resulting in shape (28, 28, 1).
+x_train = np.expand_dims(x_train, axis=-1)
+x_test  = np.expand_dims(x_test, axis=-1)
+
+model = get_model()
+model.fit(x_train, y_train, validation_split=0.2, epochs=10)`},
+    {type:"text",content:"Finally, to make the model suitable for running on low-power edge devices, the model needs to be quantized and [converted to LiteRT format](https://ai.google.dev/edge/litert/models/convert). This example uses [full-integer quantization](https://ai.google.dev/edge/litert/models/post_training_integer_quant), which converts 32-bit floating-point numbers to the nearest unsigned 8-bit integers."},
+    {type:"code",lang:"python",content:`def convert_to_tflite_and_quantize(model, representative_dataset_generator):
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    converter.optimizations          = [tf.lite.Optimize.DEFAULT]
+    converter.representative_dataset = representative_dataset_generator
+    converter.inference_input_type   = tf.int8
+    converter.inference_output_type  = tf.int8
+    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+    return converter.convert()
+
+def create_representative_dataset_generator(x_train):
+    def representative_dataset_generator():
+        for x in x_train:
+            yield {'input': np.expand_dims(x, axis=0) }
+    return representative_dataset_generator
+
+representative_dataset_generator = create_representative_dataset_generator(x_train)
+tflite_model = convert_to_tflite_and_quantize(model, representative_dataset_generator)
+with open('model.tflite', "wb") as f:
+    f.write(tflite_model)`},
+    {type:"text",content:"Running these three Python listings produces a model.tflite file that can be loaded by C++ code and used to recognise digits. The quantized model is roughly 260KB."},
+    {type:"heading",content:"Performing inference in C++"},
+    {type:"text",content:"[This tutorial](https://ai.google.dev/edge/litert/microcontrollers/get_started#run_inference) describes performing inference in C++ in great detail. In the tutorial, the model is converted to an unsigned char array by running:"},
+    {type:"code",lang:"bash",content:`xxd -i model.tflite > model_data.c`},
+    {type:"text",content:"This produces a C file with the unsigned char array that is compiled with the rest of the project sources, embedding the model data into the binary. Alternatively, the model.tflite file can be loaded as a binary file at runtime. The full code is similar to the [tflite-micro hello world example](https://github.com/tensorflow/tflite-micro/blob/main/tensorflow/lite/micro/examples/hello_world/hello_world_test.cc), so there is no need to repeat all of it. The important difference for our MNIST model is that the tflite::MicroMutableOpResolver object needs the following operations:"},
+    {type:"code",lang:"cpp",content:`using MnistExampleOperationResolver = tflite::MicroMutableOpResolver<6>;
+
+TfLiteStatus register_operations(MnistExampleOperationResolver& resolver) {
+    TF_LITE_ENSURE_STATUS(resolver.AddFullyConnected());
+    TF_LITE_ENSURE_STATUS(resolver.AddConv2D());
+    TF_LITE_ENSURE_STATUS(resolver.AddMaxPool2D());
+    TF_LITE_ENSURE_STATUS(resolver.AddSoftmax());
+    TF_LITE_ENSURE_STATUS(resolver.AddMean());
+    TF_LITE_ENSURE_STATUS(resolver.AddQuantize());
+    return kTfLiteOk;
+}`},
+    {type:"text",content:"The tensor arena should also be larger, so we set it to 100KB. Finally, the quantization parameters need to be extracted from the model so that input images can be quantized before going into the model and the model output can be de-quantized."},
+    {type:"code",lang:"cpp",content:`struct QuantizationData final { float scale; int zero_point; };
+
+QuantizationData get_quantization_data(const TfLiteQuantization& quant) {
+    if (quant.type != kTfLiteAffineQuantization) {
+        throw std::runtime_error{"no quantization"};
+    }
+    const auto* const quantization =
+        static_cast<const TfLiteAffineQuantization*>(quant.params);
+    const auto* const scales      = quantization->scale;
+    const auto* const zero_points = quantization->zero_point;
+    if (quantization->quantized_dimension != 0 ||
+        scales->size != 1                      ||
+        zero_points->size != 1) {
+        throw std::runtime_error{"unexpected quantization parameters"};
+    }
+    return QuantizationData{scales->data[0], zero_points->data[0]};
+}`},
+    {type:"text",content:"This function throws if no quantization is present, so only quantized models are supported. It also assumes quantization on the first dimension with a single zero point and a single scale value, which is the case for all TensorFlow models quantized and converted using the Python code above."},
+    {type:"text",content:"The last thing to do is to load an image, quantize it, run inference, and de-quantize the output. We use [Boost GIL](https://www.boost.org/doc/libs/1_86_0/libs/gil/doc/html/index.html) to load an image and feed a constant view over its data into the input tensor."},
+    {type:"code",lang:"cpp",content:`std::array<float, 10> predict(boost::gil::gray8c_view_t image,
+                              tflite::MicroInterpreter& interpreter) {
+    auto* const input = interpreter.typed_input_tensor<std::int8_t>(0);
+    const auto* const output =
+        interpreter.typed_output_tensor<std::int8_t>(0);
+    const auto input_quantization_data =
+        get_quantization_data(interpreter.input(0)->quantization);
+    const auto output_quantization_data =
+        get_quantization_data(interpreter.output(0)->quantization);
+
+    std::transform(image.begin(), image.end(), input,
+        [input_quantization_data](boost::gil::gray8_pixel_t pixel) -> std::int8_t {
+            const auto pixel_as_float      = pixel / 255.0f;
+            const auto [scale, zero_point] = input_quantization_data;
+            return static_cast<std::int8_t>(
+               static_cast<int>(std::round(pixel_as_float / scale))
+               + zero_point
+            );
+        });
+
+    if (interpreter.Invoke() != kTfLiteOk) {
+        throw std::runtime_error{"interpreter invoke failed"};
+    }
+
+    std::array<float, 10> result;
+    std::transform(output, output + 10, result.begin(),
+        [output_quantization_data](std::int8_t value) -> float {
+            const auto [scale, zero_point] = output_quantization_data;
+            return scale * static_cast<float>(value - zero_point);
+        });
+    return result;
+}`},
+    {type:"text",content:"The first std::transform iterates over image pixels, converts each value from [0, 255] to [0.0, 1.0], quantizes it, and feeds it into the model. After invoking the interpreter, the second std::transform reads the model outputs, de-quantizes them, and stores them in the result array. The result array contains the probabilities for each digit, so the recognised digit can be retrieved with std::max_element:"},
+    {type:"code",lang:"cpp",content:`const auto result = predict(image, interpreter);
+std::cout << "Digit: "
+          << std::distance(result.cbegin(),
+                           std::max_element(result.cbegin(),
+                                            result.cend()));`},
+    {type:"heading",content:"Conclusion"},
+    {type:"text",content:"While still a bit unorthodox, doing AI on microcontrollers is feasible. Standard [C++17](https://en.cppreference.com/w/cpp/17) runs on many embedded platforms, which makes LiteRT for Microcontrollers highly portable. With support for many common neural-network operations, a wide variety of AI tasks can be solved on edge devices, reducing communication and processing costs and enhancing user privacy."},
   ] as BlogBlock[]},
 ].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime());
 const blogCats=["All","Case Study","Engineering"];
@@ -452,7 +720,7 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
           <span className="logo-txt" style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:600,color:"var(--blue)",letterSpacing:-.3}}>lumo lab</span>
         </button>
         <div className="nav-links" style={{display:"flex",alignItems:"center",gap:2}}>
-          {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"}].map(({l,p})=>
+          {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"}].map(({l,p})=>
             <button key={l} onClick={()=>nav(p)} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
           )}
           <button onClick={()=>nav("contact")} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
@@ -473,7 +741,7 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
         {/* Nav links */}
         <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",paddingBottom:24,padding:"0 clamp(24px,6vw,64px)"}}>
           <div style={{display:"flex",flexDirection:"column"}}>
-            {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"},{l:"Careers",p:"careers"}].map(({l,p},i)=>(
+            {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Careers",p:"careers"}].map(({l,p},i)=>(
               <button key={l} onClick={()=>nav(p)} style={{background:"none",border:"none",borderBottom:"1px solid rgba(0,30,50,.06)",cursor:"pointer",fontFamily:"var(--jk)",fontSize:32,fontWeight:700,color:page===p?"var(--blue)":"var(--txt)",padding:"18px 0",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"color .2s",opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transitionDelay:`${.05+i*.05}s`}}>
                 {l}
                 {page===p?<span style={{width:8,height:8,borderRadius:"50%",background:"var(--blue)",flexShrink:0}}/>:<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="var(--txt4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
@@ -1100,12 +1368,12 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
         </div>}
       </div>
       {/* In action: product imagery */}
-      {(()=>{const imgs=caseShowcase[ac.id];if(!imgs||!imgs.length)return null;const cols=imgs.length===1?"1fr":(imgs.length===2||imgs.length===4)?"1fr 1fr":"1fr 1fr 1fr";const maxW=imgs.length===1?460:imgs.length===2?760:1100;return <div id="in-action" style={{marginTop:56,paddingTop:40,borderTop:"1px solid var(--brd)"}}>
+      {(()=>{const imgs=caseShowcase[ac.id];if(!imgs||!imgs.length)return null;const cols=imgs.length===1?"1fr":(imgs.length===2||imgs.length===4)?"1fr 1fr":"1fr 1fr 1fr";const maxW=imgs.length===1?1100:imgs.length===2?760:1100;const aspect=imgs.length===1?"16/6":"3/2";return <div id="in-action" style={{marginTop:56,paddingTop:40,borderTop:"1px solid var(--brd)"}}>
         <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:8,textAlign:"center"}}>In action</p>
         <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.4vw,28px)",fontWeight:800,color:"var(--txt)",lineHeight:1.15,marginBottom:28,textAlign:"center"}}>What {ac.name} looks like.</h3>
         <div className="case-gallery" style={{display:"grid",gridTemplateColumns:cols,gap:18,maxWidth:maxW,margin:"0 auto"}}>
           {imgs.map((im,i)=><figure key={i} className="case-frame" tabIndex={0} role="button" aria-label={`Open ${im.alt}`} onClick={()=>setLbImg(im)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setLbImg(im);}}} style={{margin:0,borderRadius:16,overflow:"hidden",background:"#fff",border:"1px solid var(--brd)",boxShadow:"0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)",display:"flex",flexDirection:"column",transition:"transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 4px 8px rgba(0,30,50,.06), 0 22px 48px rgba(0,30,50,.13)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 1px 2px rgba(0,30,50,.04), 0 12px 32px rgba(0,30,50,.06)";}}>
-            <div style={{background:"#fff",borderBottom:im.caption?"1px solid var(--brd)":"none",overflow:"hidden",aspectRatio:"3/2",position:"relative",padding:(im as any).fit==="cover"?0:14}}>
+            <div style={{background:"#fff",borderBottom:im.caption?"1px solid var(--brd)":"none",overflow:"hidden",aspectRatio:aspect,position:"relative",padding:(im as any).fit==="cover"?0:14}}>
               <img src={im.src} alt={im.alt} loading="lazy" decoding="async" width={1200} height={800} style={{display:"block",width:"100%",height:"100%",objectFit:(im as any).fit==="cover"?"cover":"contain",objectPosition:"center"}}/>
             </div>
             {im.caption&&<figcaption style={{padding:"18px 22px 22px",fontSize:13,color:"var(--txt2)",lineHeight:1.6,background:"#fff",fontWeight:500,minHeight:96,display:"flex",alignItems:"flex-start"}}>{im.caption}</figcaption>}
@@ -1177,13 +1445,17 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
             </div>
           </div>
           <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.75,fontStyle:"italic",marginBottom:28}}>{ac.excerpt}</p>
-          {ac.body.map((block:BlogBlock,i:number)=>block.type==="img"
-            ? <figure key={i} style={{margin:"24px 0"}}>
-                <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
-                {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
-              </figure>
-            : <p key={i} style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:18}}>{block.content}</p>
-          )}
+          {ac.body.map((block:BlogBlock,i:number)=>{
+            if(block.type==="img")return <figure key={i} style={{margin:"24px 0"}}>
+              <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
+              {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
+            </figure>;
+            if(block.type==="heading")return <h2 key={i} style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.4vw,26px)",fontWeight:800,color:"var(--txt)",lineHeight:1.2,marginTop:36,marginBottom:14}}>{block.content}</h2>;
+            if(block.type==="code")return <pre key={i} style={{margin:"18px 0",padding:"18px 20px",background:"#0f1c24",color:"#e6edf3",borderRadius:10,fontSize:12.5,lineHeight:1.6,overflowX:"auto",fontFamily:"ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace",border:"1px solid rgba(255,255,255,.06)"}}><code>{block.content}</code></pre>;
+            if(block.type==="quote")return <blockquote key={i} style={{margin:"22px 0",padding:"6px 0 6px 22px",borderLeft:"3px solid var(--blue)",fontSize:15,fontStyle:"italic",color:"var(--txt3)",lineHeight:1.8}}>{renderRichText(block.content)}</blockquote>;
+            if(block.type==="list")return <ul key={i} style={{paddingLeft:24,marginBottom:18,fontSize:15,color:"var(--txt2)",lineHeight:1.9}}>{block.items.map((it,j)=><li key={j} style={{marginBottom:6}}>{renderRichText(it)}</li>)}</ul>;
+            return <p key={i} style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:18}}>{renderRichText(block.content)}</p>;
+          })}
         </div>
       </div>
     </W></section>
@@ -1828,7 +2100,7 @@ export default function App(){
               <div>
                 <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Navigate</p>
                 <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                  {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+                  {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
                 </div>
               </div>
               <div>

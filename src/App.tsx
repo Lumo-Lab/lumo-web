@@ -3,10 +3,67 @@ import emailjs from "@emailjs/browser";
 
 const css = `
 *{margin:0;padding:0;box-sizing:border-box}
-::selection{background:rgba(0,76,115,.15);color:#004C73}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04)}
-.dark{--bg:#0D1117;--bg2:#161B22;--txt:#E6EDF3;--txt2:#8B949E;--txt3:#6E7681;--txt4:#484F58;--brd:rgba(255,255,255,.08);--bl:rgba(78,205,196,.06);--nav-bg:rgba(13,17,23,.88);--nav-border:rgba(255,255,255,.06)}
+::selection{background:rgba(99,102,241,.18);color:#1A1F2E}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11","kern"}
+:root{
+  /* One sans family for everything — Geist */
+  --jk:'Geist',ui-sans-serif,system-ui,sans-serif;
+  --in:'Geist',ui-sans-serif,system-ui,sans-serif;
+  --display:'Geist',ui-sans-serif,system-ui,sans-serif;
+  --serif:'Geist',ui-sans-serif,system-ui,sans-serif;        /* alias to keep older refs valid */
+  --mono:'Geist',ui-sans-serif,system-ui,sans-serif;          /* alias to keep older refs valid */
+  /* Strict brand palette — White, Black, Blue (per Lumo Lab brand guide). No accents. */
+  --blue:#004C73;
+  --blue-2:#0a6b96;
+  --blue-ink:#003147;
+  --blue-deep:#000000;
+  --teal:#004C73;            /* alias — fold any old teal usage into brand blue */
+  /* Surfaces — pure white primary, very subtle gray for alternates */
+  --bg:#FFFFFF;
+  --bg2:#F7F7F7;
+  --bg3:#FFFFFF;
+  --tint:#FAFAFA;
+  --paper:#FFFFFF;
+  --txt:#000000;
+  --txt2:#1A1A1A;
+  --txt3:#5A5A5A;
+  --txt4:#999999;
+  --ink:#000000;
+  --ink-2:#1A1A1A;
+  --ink-3:#5A5A5A;
+  --ink-4:#999999;
+  --brd:rgba(0,0,0,.10);
+  --brd-2:rgba(0,0,0,.05);
+  --brd-strong:rgba(0,0,0,.16);
+  --rule:rgba(0,0,0,.10);
+  --rule-2:rgba(0,0,0,.05);
+  --bl:rgba(0,76,115,.06);
+  --nav-bg:rgba(255,255,255,.84);
+  --nav-border:rgba(0,0,0,.06);
+  /* Shadows — multi-layer */
+  --sh-1:0 1px 2px rgba(0,0,0,.04);
+  --sh-2:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.05);
+  --sh-3:0 1px 3px rgba(0,0,0,.05),0 12px 28px rgba(0,0,0,.07);
+  --sh-4:0 2px 6px rgba(0,0,0,.07),0 24px 48px rgba(0,0,0,.10);
+  --sh-glow-blue:0 8px 32px rgba(0,76,115,.22),0 1px 2px rgba(0,0,0,.06);
+  --sh-glow-lime:0 8px 32px rgba(0,76,115,.22),0 1px 2px rgba(0,0,0,.06);   /* aliased to blue */
+  /* Motion — Emil-strength easings */
+  --ease-out:cubic-bezier(0.23,1,0.32,1);
+  --ease-in-out:cubic-bezier(0.77,0,0.175,1);
+  --ease-elegant:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --dur-press:100ms;
+  --dur-hover:200ms;
+  --dur-tap:160ms;
+  --dur-enter:600ms;
+  --dur-tl:800ms;
+  --dur-slide:700ms;
+  /* Lime alias — folded back to blue so any leftover refs stay on-brand */
+  --lime:#004C73;
+  --lime-2:#0a6b96;
+  --lime-soft:rgba(0,76,115,.10);
+}
+.dark{--bg:#000000;--bg2:#0A0A0A;--bg3:#121212;--paper:#0A0A0A;--tint:#0A0A0A;--txt:#FFFFFF;--txt2:#E5E5E5;--txt3:#A0A0A0;--txt4:#666666;--ink:#FFFFFF;--ink-2:#E5E5E5;--ink-3:#A0A0A0;--ink-4:#666666;--brd:rgba(255,255,255,.10);--brd-2:rgba(255,255,255,.05);--brd-strong:rgba(255,255,255,.18);--rule:rgba(255,255,255,.10);--rule-2:rgba(255,255,255,.05);--bl:rgba(0,76,115,.10);--nav-bg:rgba(0,0,0,.85);--nav-border:rgba(255,255,255,.06);--sh-1:0 1px 2px rgba(0,0,0,.3);--sh-2:0 1px 2px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.25);--sh-3:0 1px 3px rgba(0,0,0,.35),0 12px 28px rgba(0,0,0,.3);--sh-4:0 2px 6px rgba(0,0,0,.4),0 24px 48px rgba(0,0,0,.4)}
 .dark .card{background:var(--bg2)}
 .dark .sd{background:var(--bg2)}
 .dark .fb{background:var(--bg2);color:var(--txt3)}
@@ -32,48 +89,155 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .dark .prose-section{background:var(--bg)!important}
 /* Inline #fff backgrounds on content cards */
 .dark .content-card-white{background:var(--bg2)!important}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-@keyframes wordIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-.word{display:inline-block;opacity:0;animation:wordIn .6s cubic-bezier(.16,1,.3,1) forwards}
-@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
-@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
-@keyframes gridPulse{0%,100%{opacity:0}40%,60%{opacity:.45}}
-@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-3%,-5%)}20%{transform:translate(3%,3%)}30%{transform:translate(-5%,1%)}40%{transform:translate(2%,-4%)}50%{transform:translate(-1%,5%)}60%{transform:translate(4%,-2%)}70%{transform:translate(-4%,3%)}80%{transform:translate(1%,-3%)}90%{transform:translate(-2%,4%)}}
-.hero-grain{position:absolute;inset:-50%;width:200%;height:200%;opacity:.055;animation:grain .35s steps(1) infinite;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:2}
-.grid-bg{background-image:linear-gradient(rgba(0,30,50,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,30,50,.03) 1px,transparent 1px);background-size:56px 56px}
+/* ── KEYFRAMES ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes wordIn{from{opacity:0;transform:translateY(22px);filter:blur(6px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
 @keyframes pageIn{from{opacity:0}to{opacity:1}}
-.fi{animation:fadeUp .8s cubic-bezier(.22,1,.36,1) both}
+@keyframes hairlineDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes underlineDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes cursorBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes arcSweep{0%,100%{transform:translate(0,0) rotate(-12deg)}50%{transform:translate(2%,-1%) rotate(-12deg)}}
+@keyframes numReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes shineSweep{0%{transform:translateX(-110%) skewX(-18deg)}100%{transform:translateX(220%) skewX(-18deg)}}
+.word{display:inline-block;opacity:0;animation:wordIn var(--dur-enter) var(--ease-out) forwards;animation-delay:calc(var(--i,0) * 80ms + 100ms);will-change:transform,opacity}
+.fi{animation:fadeUp .8s var(--ease-elegant) both}
 .page-enter{animation:pageIn .4s ease both}
-.d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}.d4{animation-delay:.55s}.d5{animation-delay:.7s}
-.mq-t{display:flex;gap:56px;animation:marquee 40s linear infinite;width:max-content}
-.cta-m{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;padding:14px 28px;border-radius:50px;font-family:var(--jk);font-size:14px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all .3s}
-.cta-m:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,76,115,.2)}
-.cta-g{display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--txt2);padding:14px 28px;border-radius:50px;font-family:var(--jk);font-size:14px;font-weight:600;text-decoration:none;border:1px solid var(--brd);cursor:pointer;transition:all .3s}
-.cta-g:hover{border-color:var(--blue);color:var(--blue)}
-.card{border:1px solid var(--brd);border-radius:16px;padding:28px 24px;background:#fff;transition:all .35s;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity .3s}
-.card:hover{border-color:rgba(0,76,115,.12);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,30,50,.05)}
-.card:hover::before{opacity:1}
-.er{padding:22px 0;border-bottom:1px solid rgba(0,30,50,.05);transition:padding-left .3s}
-.er:hover{padding-left:12px}
-.er:hover h4{color:var(--blue)}
-.er:hover .ea{opacity:1;transform:translateX(4px)}
-.eng-row{transition:padding-left .3s}
-.eng-row:hover{padding-left:12px}
-.eng-row:hover h4{color:var(--blue)}
-.eng-row:hover .ea{opacity:1;transform:translateX(4px)}
-.ea{opacity:0;transition:all .3s;color:var(--blue)}
-.ft{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;border:1px solid rgba(0,76,115,.12);color:var(--blue);font-family:var(--jk);background:var(--bl)}
-.fb{background:#fff;border:1px solid var(--brd);color:var(--txt3);padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--jk)}
-.fb.active{border-color:var(--blue);color:#fff;background:var(--blue)}
-.sd{border:1px solid var(--brd);border-radius:16px;padding:36px 32px;background:#fff;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
-.sd:hover{border-color:rgba(0,76,115,.1)}
-.ul{position:relative;text-decoration:none;color:var(--txt)}.ul::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--blue);transition:width .3s}.ul:hover::after{width:100%}
+.d1{animation-delay:.1s}.d2{animation-delay:.22s}.d3{animation-delay:.34s}.d4{animation-delay:.46s}.d5{animation-delay:.6s}
+.drift{animation:drift 2.6s var(--ease-in-out) infinite}
+/* Terminal cursor — blinks at the end of the H1 after words land */
+/* Terminal cursor — hidden by default since the design no longer uses it */
+.term-cursor{display:none}
+/* Brand-blue accent underline — draws under the signature word */
+.h1-mark{position:relative;display:inline-block;color:var(--blue)}
+.h1-mark::after{content:'';position:absolute;left:0;right:0;bottom:.04em;height:.08em;background:var(--blue);transform:scaleX(0);transform-origin:left center;animation:underlineDraw .9s var(--ease-out) 1s forwards;border-radius:2px}
+/* Grain — SVG turbulence at low opacity for tactile texture */
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:240px 240px;z-index:1}
+.grain-light{opacity:.045}
+/* Hero signature arc — single sweeping shape, low opacity, slow drift */
+.hero-arc{position:absolute;pointer-events:none;z-index:0;animation:arcSweep 14s ease-in-out infinite;will-change:transform}
+/* Big phase number reveal */
+.num-reveal{animation:numReveal .9s var(--ease-out) both}
+/* Custom hero cursor area */
+.hero-cursor-area{cursor:none}
+.hero-cursor{position:fixed;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,rgba(0,76,115,.32) 0%,rgba(0,76,115,.10) 40%,transparent 70%);pointer-events:none;z-index:300;mix-blend-mode:multiply;transform:translate(-50%,-50%);transition:opacity .25s ease;will-change:transform}
+.hero-cursor.hidden{opacity:0}
+/* ── BUTTONS ── modern, press feedback, hover gated ── */
+.cta-m{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--bg);padding:14px 24px;border-radius:50px;font-family:var(--in);font-size:14px;font-weight:500;letter-spacing:-.005em;text-decoration:none;border:none;cursor:pointer;transition:background var(--dur-hover) ease-out,color var(--dur-hover) ease-out,box-shadow var(--dur-hover) var(--ease-out),transform var(--dur-tap) var(--ease-out);will-change:transform;position:relative;overflow:hidden}
+.cta-m::before{content:'';position:absolute;top:0;left:0;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-110%) skewX(-18deg);transition:transform .8s var(--ease-out);pointer-events:none}
+.cta-m:active{transform:scale(.97);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){
+  .cta-m:hover{background:var(--blue);color:#fff;transform:translateY(-1px);box-shadow:var(--sh-glow-blue)}
+  .cta-m:hover::before{transform:translateX(220%) skewX(-18deg)}
+}
+.cta-g{display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--ink);padding:13px 24px;border-radius:50px;font-family:var(--in);font-size:14px;font-weight:500;letter-spacing:-.005em;text-decoration:none;border:1px solid var(--brd-strong);cursor:pointer;transition:border-color var(--dur-hover) ease-out,color var(--dur-hover) ease-out,background var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out)}
+.cta-g:active{transform:scale(.97);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){
+  .cta-g:hover{border-color:var(--ink);background:var(--paper)}
+}
+/* Lime CTA — for the closing conversion moment */
+.cta-lime{display:inline-flex;align-items:center;gap:10px;background:var(--lime);color:var(--blue-deep);padding:14px 26px;border-radius:50px;font-family:var(--in);font-size:14px;font-weight:600;letter-spacing:-.005em;text-decoration:none;border:none;cursor:pointer;transition:background var(--dur-hover) ease-out,box-shadow var(--dur-hover) var(--ease-out),transform var(--dur-tap) var(--ease-out);will-change:transform;position:relative;overflow:hidden}
+.cta-lime:active{transform:scale(.97);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){
+  .cta-lime:hover{background:var(--lime-2);transform:translateY(-1px);box-shadow:var(--sh-glow-lime)}
+}
+/* Mono editorial link */
+.lk-mono{display:inline-flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:0;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink);letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:gap var(--dur-hover) var(--ease-out),color var(--dur-hover) ease-out}
+.lk-mono::after{content:'';display:inline-block;width:14px;height:1px;background:currentColor;transition:width var(--dur-hover) var(--ease-out)}
+.lk-mono:active{transform:scale(.96);transition:transform var(--dur-press) var(--ease-out)}
+@media(hover:hover) and (pointer:fine){.lk-mono:hover{color:var(--blue)}.lk-mono:hover::after{width:24px}}
+/* Cards — used by other pages, kept neutral */
+.card{border:1px solid var(--brd);border-radius:14px;padding:28px 26px;background:var(--paper);transition:transform var(--dur-hover) var(--ease-out),box-shadow var(--dur-hover) ease-out,border-color var(--dur-hover) ease-out;position:relative;overflow:hidden;box-shadow:var(--sh-1)}
+@media(hover:hover) and (pointer:fine){
+  .card:hover{transform:translateY(-3px);border-color:var(--brd-strong);box-shadow:var(--sh-3)}
+}
+.er{padding:22px 0;border-bottom:1px solid var(--brd-2);transition:padding-left var(--dur-hover) var(--ease-out)}
+@media(hover:hover) and (pointer:fine){.er:hover{padding-left:12px}.er:hover h4{color:var(--blue)}.er:hover .ea{opacity:1;transform:translateX(4px)}}
+.eng-row{transition:padding-left var(--dur-hover) var(--ease-out)}
+@media(hover:hover) and (pointer:fine){.eng-row:hover{padding-left:12px}.eng-row:hover h4{color:var(--blue)}.eng-row:hover .ea{opacity:1;transform:translateX(4px)}}
+.ea{opacity:0;transition:opacity var(--dur-hover) ease-out,transform var(--dur-hover) var(--ease-out);color:var(--blue)}
+.ft{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid var(--brd);color:var(--txt2);font-family:var(--mono);background:#fff;letter-spacing:.02em}
+/* Filter pills — modern soft */
+.fb{background:#fff;border:1px solid var(--brd);color:var(--txt3);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--in);transition:border-color var(--dur-hover) ease-out,color var(--dur-hover) ease-out,background var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out),box-shadow var(--dur-hover) ease-out;box-shadow:var(--sh-1)}
+.fb:active{transform:scale(.97);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){.fb:hover{border-color:var(--brd-strong);color:var(--txt)}}
+.fb.active{border-color:var(--txt);color:#fff;background:var(--txt);font-weight:500}
+.sd{border:1px solid var(--brd);border-radius:16px;padding:36px 32px;background:#fff;transition:border-color var(--dur-hover) ease-out,box-shadow var(--dur-hover) ease-out,transform var(--dur-hover) var(--ease-out);cursor:pointer;position:relative;overflow:hidden;box-shadow:var(--sh-1)}
+@media(hover:hover) and (pointer:fine){.sd:hover{border-color:var(--brd-strong);box-shadow:var(--sh-2)}}
+.ul{position:relative;text-decoration:none;color:var(--txt)}.ul::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--blue);transition:width var(--dur-hover) var(--ease-out)}
+@media(hover:hover) and (pointer:fine){.ul:hover::after{width:100%}}
+/* ── FEATURED WORK TILE ── pure CSS hover, dark image card ── */
+.feat-tile{position:relative;overflow:hidden;cursor:pointer;background:#03101A;border-radius:20px;isolation:isolate;transition:transform var(--dur-hover) var(--ease-out),box-shadow var(--dur-hover) ease-out;box-shadow:var(--sh-2);will-change:transform}
+.feat-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease-out);will-change:transform}
+.feat-tile .feat-grad{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(3,16,26,.2) 0%,rgba(3,16,26,0) 30%,rgba(3,16,26,.4) 70%,rgba(3,16,26,.95) 100%);transition:opacity .5s ease-out}
+.feat-tile .feat-info{position:absolute;bottom:0;left:0;right:0;z-index:2;transform:translateY(8px);transition:transform var(--dur-enter) var(--ease-out)}
+@media(hover:hover) and (pointer:fine){
+  .feat-tile:hover{transform:translateY(-4px);box-shadow:var(--sh-4)}
+  .feat-tile:hover img{transform:scale(1.06)}
+  .feat-tile:hover .feat-info{transform:translateY(0)}
+}
+.feat-tile:active{transform:scale(.99);transition-duration:var(--dur-press)}
+/* ── TESTIMONIAL SLIDER ── slide w/ blur to mask the crossfade ── */
+.test-track{display:flex;transition:transform var(--dur-slide) var(--ease-elegant),filter .35s ease;will-change:transform,filter}
+.test-track.sliding{filter:blur(2px)}
+.test-nav-btn{flex-shrink:0;width:48px;height:48px;border-radius:50%;border:1px solid var(--brd);background:#fff;color:var(--txt3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color var(--dur-hover) ease-out,color var(--dur-hover) ease-out,background var(--dur-hover) ease-out,box-shadow var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out);box-shadow:var(--sh-1)}
+.test-nav-btn:active{transform:scale(.93);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){.test-nav-btn:hover{border-color:var(--txt);color:var(--txt);box-shadow:var(--sh-2)}}
+/* ── NAV ── */
+.nav-link{transition:color var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out)}
+.nav-link:active{transform:scale(.97);transition-duration:var(--dur-press)}
+.icon-btn{transition:border-color var(--dur-hover) ease-out,color var(--dur-hover) ease-out,background var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out)}
+.icon-btn:active{transform:scale(.92);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){.icon-btn:hover{border-color:var(--txt);color:var(--txt)}}
+/* Stagger reveal */
+.stagger-row{opacity:0;transform:translateY(14px);transition:opacity .55s var(--ease-out),transform .55s var(--ease-out)}
+.stagger-row.in{opacity:1;transform:translateY(0)}
+/* Reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease-elegant),transform .8s var(--ease-elegant)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-img{opacity:0;transform:scale(.97);transition:opacity .9s var(--ease-elegant),transform .9s var(--ease-elegant)}
+.reveal-img.in{opacity:1;transform:scale(1)}
+/* ── EDITORIAL SERVICE ROWS ── numbered, sticky image stage swaps on hover ── */
+.svc-row{display:grid;grid-template-columns:80px 1fr auto;gap:32px;align-items:baseline;padding:clamp(28px,4.5vh,44px) 0;border-top:1px solid var(--rule);cursor:pointer;transition:padding-left var(--dur-hover) var(--ease-out),background var(--dur-hover) ease-out;position:relative}
+.svc-row:last-child{border-bottom:1px solid var(--rule)}
+.svc-row .svc-arr{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--brd);color:var(--ink-3);transition:transform var(--dur-hover) var(--ease-out),color var(--dur-hover) ease-out,background var(--dur-hover) ease-out,border-color var(--dur-hover) ease-out}
+.svc-row h3{transition:color var(--dur-hover) ease-out}
+.svc-row .svc-num{transition:color var(--dur-hover) ease-out}
+@media(hover:hover) and (pointer:fine){
+  .svc-row:hover{padding-left:14px}
+  .svc-row:hover h3{color:var(--blue)}
+  .svc-row:hover .svc-num{color:var(--blue)}
+  .svc-row:hover .svc-arr{transform:translateX(8px);color:var(--bg);background:var(--ink);border-color:var(--ink)}
+}
+/* Sticky image stage that paired with service rows; image swaps via .active class */
+.svc-stage{position:sticky;top:120px;aspect-ratio:4/3;border-radius:24px;overflow:hidden;background:var(--bg2);box-shadow:var(--sh-3)}
+.svc-stage-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .55s var(--ease-elegant);will-change:opacity}
+.svc-stage-img.active{opacity:1}
+.svc-stage-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,32,0) 50%,rgba(10,22,32,.65) 100%);z-index:2;pointer-events:none}
+.svc-stage-cap{position:absolute;bottom:24px;left:24px;right:24px;z-index:3;color:#FFFFFF;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.svc-stage-cap .pill{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:4px 10px;border-radius:50px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.svc-stage-cap .name{font-family:var(--in);font-size:14px;font-weight:500;color:rgba(250,247,240,.82)}
+/* ── TESTIMONIAL HERO + chip pagination (replaces old test-track slider) ── */
+.test-hero-card{background:var(--paper);border-radius:24px;border:1px solid var(--brd);box-shadow:var(--sh-3);padding:clamp(40px,6vh,72px) clamp(32px,5vw,72px);position:relative;overflow:hidden;transition:filter .4s ease,opacity .4s ease;will-change:filter,opacity}
+.test-hero-card.sliding{filter:blur(2px);opacity:.85}
+.test-hero-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--lime)}
+.test-chip{padding:18px 22px;background:var(--paper);border:1px solid var(--brd);border-radius:14px;cursor:pointer;text-align:left;transition:border-color var(--dur-hover) ease-out,box-shadow var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out);font-family:var(--in);box-shadow:var(--sh-1);position:relative}
+.test-chip:active{transform:scale(.99);transition-duration:var(--dur-press)}
+@media(hover:hover) and (pointer:fine){.test-chip:hover{border-color:var(--brd-strong);box-shadow:var(--sh-2)}}
+.test-chip.active{border-color:var(--ink);box-shadow:var(--sh-2)}
+.test-chip.active::after{content:'';position:absolute;left:18px;right:18px;bottom:-1px;height:2px;background:var(--lime)}
+/* Mono editorial link override (Geist + uppercase mono caps preserved) */
+.lk-mono{font-family:var(--mono);font-size:11px;color:var(--ink);letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+@media(hover:hover) and (pointer:fine){.lk-mono:hover{color:var(--blue)}}
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .word,.reveal,.reveal-img,.metric-cell,.stagger-row,.h1-mark::after{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}
+  .term-cursor,.drift,.hero-arc,.grain{animation:none!important}
+}
 .case-hero{transition:box-shadow .35s}.case-hero:hover{box-shadow:0 20px 60px rgba(0,30,50,.18)}.case-hero .ci{transition:transform .6s cubic-bezier(.22,1,.36,1)}.case-hero:hover .ci{transform:scale(1.04)}
 .case-card{border-radius:6px;overflow:hidden;position:relative;cursor:pointer;transition:box-shadow .35s,transform .35s}.case-card:hover{box-shadow:0 16px 48px rgba(0,30,50,.15);transform:translateY(-3px)}.case-card .ci{transition:transform .6s cubic-bezier(.22,1,.36,1)}.case-card:hover .ci{transform:scale(1.06)}
-.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}.reveal.in{opacity:1;transform:translateY(0)}
-.reveal-img{opacity:0;transform:scale(.97);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}.reveal-img.in{opacity:1;transform:scale(1)}
 /* Case detail polish */
 .why-card{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s,border-color .35s}
 .why-card:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,30,50,.05),0 18px 40px rgba(0,30,50,.10);border-color:rgba(0,76,115,.18)}
@@ -116,9 +280,12 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo div[style*="display: grid"],.lumo div[style*="display:grid"]{display:flex!important;flex-direction:column!important;gap:24px!important}
   .lumo div[style*="grid-column"]{grid-column:auto!important}
   .lumo div[style*="position: sticky"],.lumo div[style*="position:sticky"]{position:static!important}
-  .lumo h1{font-size:clamp(40px,9vw,64px)!important;line-height:.95!important}
-  .lumo h2{font-size:clamp(24px,5vw,36px)!important;line-height:1.1!important}
-  .lumo section{padding-top:56px!important;padding-bottom:56px!important}
+  .lumo h1{font-size:clamp(44px,11vw,80px)!important;line-height:1!important;letter-spacing:-.04em!important}
+  .lumo h2{font-size:clamp(32px,8vw,56px)!important;line-height:1!important;letter-spacing:-.03em!important}
+  .lumo section{padding-top:64px!important;padding-bottom:64px!important}
+  /* Bento grid stacks on mobile */
+  .lumo div.bento-grid{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}
+  .lumo div.work-bento{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:repeat(4,260px)!important;gap:12px!important}
   .lumo .hero-s{min-height:100vh!important;min-height:100dvh!important;padding-top:100px!important;padding-bottom:48px!important;justify-content:center!important}
   .lumo .nav-links{display:none!important}
   .ham-btn{display:flex!important}
@@ -228,6 +395,25 @@ const QSvg=()=><svg width="32" height="24" viewBox="0 0 48 36" fill="none" style
 
 function AnimNum({end,suffix="",delay=0}:{end:number,suffix?:string,delay?:number}){const[v,setV]=useState(0);useEffect(()=>{const tm=setTimeout(()=>{const s=performance.now();const t=(n:number)=>{const p=Math.min((n-s)/2000,1);setV(Math.round((1-Math.pow(1-p,4))*end));if(p<1)requestAnimationFrame(t);};requestAnimationFrame(t);},delay);return()=>clearTimeout(tm);},[end,delay]);return <span>{v}{suffix}</span>;}
 function useReveal(threshold=0.15){const r=useRef<HTMLDivElement>(null);useEffect(()=>{const el=r.current;if(!el)return;const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting){el.querySelectorAll('.reveal,.reveal-img').forEach(n=>n.classList.add('in'));obs.disconnect();}},{threshold});obs.observe(el);return()=>obs.disconnect();},[threshold]);return r;}
+/* Stagger reveal — children with .stagger-row enter sequentially */
+function useStagger(threshold=0.18,delay=70){
+  const r=useRef<HTMLDivElement>(null);
+  useEffect(()=>{
+    const el=r.current;if(!el)return;
+    const obs=new IntersectionObserver(([entry])=>{
+      if(entry.isIntersecting){
+        Array.from(el.querySelectorAll('.stagger-row')).forEach((n,i)=>{
+          (n as HTMLElement).style.transitionDelay=`${i*delay}ms`;
+          n.classList.add('in');
+        });
+        obs.disconnect();
+      }
+    },{threshold});
+    obs.observe(el);
+    return()=>obs.disconnect();
+  },[threshold,delay]);
+  return r;
+}
 
 /* Reading progress bar at the top of long pages */
 function ReadingProgress(){
@@ -781,164 +967,306 @@ function Back({go,to,label}:{go:(to:string)=>void,to:string,label:string}){retur
 
 /* ── HOME ── */
 function Home({go}:{go:(p:string,id?:string)=>void}){
-  const[at,setAt]=useState(0);const[ap,setAp]=useState(0);const tlR=useRef<HTMLElement>(null);
-  useEffect(()=>{const i=setInterval(()=>setAt(p=>(p+1)%tests.length),5000);return()=>clearInterval(i);},[]);
+  const[at,setAt]=useState(0);
+  const[ap,setAp]=useState(0);
+  const[apReveal,setApReveal]=useState(0); // for clip-reveal animation
+  const tlR=useRef<HTMLElement>(null);
+  const heroRef=useRef<HTMLElement>(null);
+  const featStagger=useStagger(0.18,90);
+  const[svcActive,setSvcActive]=useState(0);
+  const[atSliding,setAtSliding]=useState(false);
+  // Testimonial autoplay
+  useEffect(()=>{const i=setInterval(()=>setAt(p=>(p+1)%tests.length),7000);return()=>clearInterval(i);},[]);
+  useEffect(()=>{setAtSliding(true);const t=setTimeout(()=>setAtSliding(false),500);return()=>clearTimeout(t);},[at]);
+  // Process scroll-driven phase
   useEffect(()=>{const h=()=>{if(!tlR.current)return;const r=tlR.current.getBoundingClientRect();const p=Math.max(0,Math.min(1,(-r.top+200)/(r.height-300)));setAp(Math.min(3,Math.floor(p*4)));};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);},[]);
+  // Re-trigger clip-reveal when phase changes
+  useEffect(()=>{setApReveal(v=>v+1);},[ap]);
+  // (Custom hero cursor removed — strict brand simplicity)
+  // Service stage images — each service maps to a case image
+  const svcImages=[
+    {src:process.env.PUBLIC_URL+"/images/nomo_header_1.png",alt:"NOMO Smart Care platform — strategy across hardware, mobile, cloud, and AI",caseName:"NOMO Smart Care"},
+    {src:process.env.PUBLIC_URL+"/images/drift_showcase.png",alt:"Drift App — research-driven product design",caseName:"Drift App"},
+    {src:process.env.PUBLIC_URL+"/images/muvr_home.jpg",alt:"Muvr — strategy-led delivery on iOS",caseName:"Muvr"},
+    {src:process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg",alt:"Farmwave — IoT and edge AI in the field",caseName:"Farmwave"},
+    {src:process.env.PUBLIC_URL+"/images/farmwave_home.png",alt:"Farmwave — AI vision recovering grain on every harvest",caseName:"Farmwave"},
+  ];
 
   return <div>
-    {/* HERO */}
-    <section className="hero-s" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"linear-gradient(155deg,#002840,#004C73 40%,#003B5C 70%,#004C73)"}}>
-      {/* Video background */}
-      <video autoPlay muted loop playsInline preload="auto" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.35}}>
-        <source src={process.env.PUBLIC_URL + "/videos/hero.mp4"} type="video/mp4"/>
-      </video>
-      {/* Grid overlay, pulses in and out */}
-      <div style={{position:"absolute",inset:0,zIndex:1,backgroundImage:"linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px)",backgroundSize:"72px 72px",animation:"gridPulse 8s ease-in-out infinite"}}/>
-      {/* Gradient overlay for readability */}
-      <div style={{position:"absolute",inset:0,zIndex:1,background:"linear-gradient(to bottom,rgba(0,30,50,.3) 0%,rgba(0,30,50,.6) 100%)"}}/>
-      <div style={{position:"absolute",top:"-15%",left:"-10%",width:500,height:500,borderRadius:"50%",background:"radial-gradient(circle,rgba(78,205,196,.1),transparent 70%)",zIndex:1}}/>
-      <div className="hero-grain"/>
-      <W style={{position:"relative",zIndex:3,paddingTop:100,paddingBottom:60,color:"#fff"}}>
-        <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8vw,108px)",fontWeight:800,lineHeight:.9,letterSpacing:"-0.04em",marginBottom:28,maxWidth:900}}>
-          {["We","advise,","guide,","and"].map((w,i)=><span key={w}>{i>0?" ":""}<span className="word" style={{animationDelay:`${0.1+i*0.08}s`}}>{w}</span></span>)}
-          {" "}
-          <span className="word" style={{animationDelay:"0.44s",background:"linear-gradient(135deg,#4ECDC4,#7DB9E8,#A8D0E6)",backgroundSize:"200% 200%",animation:`gradShift 6s ease infinite, wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text",opacity:0,display:"inline-block"}}>deliver.</span>
+    {/* ── HERO ── White canvas + signature blue arc ── */}
+    <section ref={heroRef} style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"var(--bg)",color:"var(--ink)"}}>
+      {/* Signature arc — single sweeping blue curve, low-opacity, drifts slowly. References "lumo" = light. */}
+      <svg aria-hidden="true" className="hero-arc" style={{top:"-8%",right:"-12%",width:"min(120vw,1600px)",height:"auto",opacity:.7}} viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#004C73" stopOpacity="0"/>
+            <stop offset="50%" stopColor="#004C73" stopOpacity=".06"/>
+            <stop offset="100%" stopColor="#004C73" stopOpacity=".10"/>
+          </linearGradient>
+          <linearGradient id="arcStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#004C73" stopOpacity=".22"/>
+            <stop offset="100%" stopColor="#004C73" stopOpacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M -100 750 Q 400 -100 1300 80" stroke="url(#arcStroke)" strokeWidth="1.5" fill="none"/>
+        <path d="M -100 750 Q 400 -100 1300 80 L 1300 800 L -100 800 Z" fill="url(#arcGrad)"/>
+      </svg>
+      <W style={{position:"relative",zIndex:3,paddingTop:140,paddingBottom:96,width:"100%"}}>
+        {/* Massive H1 — Geist 700, Instrument Serif italic + lime underline + blinking terminal cursor on "deliver." */}
+        <h1 style={{fontFamily:"var(--display)",fontSize:"clamp(60px,10.4vw,168px)",fontWeight:600,lineHeight:.94,letterSpacing:"-0.045em",color:"var(--ink)",margin:0,marginBottom:36,maxWidth:1300}}>
+          <span className="word" style={{"--i":0,display:"inline-block"} as CSSProperties}>We</span>{" "}
+          <span className="word" style={{"--i":1,display:"inline-block",fontWeight:500} as CSSProperties}>advise,</span>{" "}
+          <span className="word" style={{"--i":2,display:"inline-block",fontWeight:500} as CSSProperties}>guide,</span>{" "}
+          <span className="word" style={{"--i":3,display:"inline-block",color:"var(--ink-3)",fontWeight:400} as CSSProperties}>and</span>{" "}
+          <span className="word" style={{"--i":5,display:"inline-block"} as CSSProperties}><span className="h1-mark">deliver.</span></span>
         </h1>
-        <p className="fi d3" style={{fontSize:17,color:"rgba(255,255,255,.5)",lineHeight:1.7,maxWidth:480,marginBottom:32}}>lumo lab takes the guesswork out of technology. We give you honest advice and the expert support you need. We’re with you from the very first step.</p>
-        <div className="fi d4" style={{display:"flex",gap:14,flexWrap:"wrap"}}>
-          <button onClick={()=>go("cases")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"14px 28px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,border:"none",cursor:"pointer"}}>See our work <Arr s={14} c="var(--blue)"/></button>
-          <button onClick={()=>go("about")} className="cta-g" style={{color:"rgba(255,255,255,.7)",borderColor:"rgba(255,255,255,.15)"}}>Learn more</button>
+        {/* One-line subtitle — restraint */}
+        <p className="fi d3" style={{fontFamily:"var(--in)",fontSize:"clamp(17px,1.5vw,21px)",color:"var(--ink-2)",lineHeight:1.5,maxWidth:640,marginBottom:44,fontWeight:400}}>A technology consultancy for startups and enterprises — honest advice, expert delivery, from the very first step.</p>
+        {/* Two CTAs — modern and direct */}
+        <div className="fi d4" style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+          <button onClick={()=>go("cases")} className="cta-m">See our work <Arr s={14} c="currentColor"/></button>
+          <button onClick={()=>go("about")} className="cta-g">Learn more</button>
         </div>
-        <div className="fi d5 hero-stats" style={{display:"flex",marginTop:56,borderTop:"1px solid rgba(255,255,255,.07)",paddingTop:24}}>
-          {[{n:10,s:"+yr",l:"Track record"},{n:15,s:"+",l:"Global clients"},{n:4,s:"",l:"Verticals"}].map((s,i)=>(
-            <div key={i} style={{flex:1,borderRight:i<2?"1px solid rgba(255,255,255,.05)":"none",paddingRight:i<2?16:0,paddingLeft:i>0?16:0}}>
-              <div style={{fontFamily:"var(--jk)",fontSize:40,fontWeight:800,letterSpacing:-2,lineHeight:1}}><AnimNum end={s.n} suffix={s.s} delay={600+i*150}/></div>
-              <p style={{fontSize:10,color:"rgba(255,255,255,.25)",marginTop:6,fontWeight:600,textTransform:"uppercase",letterSpacing:2,fontFamily:"var(--jk)"}}>{s.l}</p>
+      </W>
+    </section>
+    {/* ── CLIENTS + STATS strip ── replaces the marquee. Static numbered grid of names + stats inline. ── */}
+    <section style={{padding:"clamp(56px,8vh,80px) 0",background:"var(--paper)",borderTop:"1px solid var(--rule)",borderBottom:"1px solid var(--rule)"}}>
+      <W>
+        <div style={{display:"grid",gridTemplateColumns:"1.1fr 2fr",gap:48,alignItems:"start"}} className="clients-row">
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:18}}>
+              <span style={{width:24,height:1,background:"var(--blue)"}}/>
+              <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--blue)",letterSpacing:".22em",textTransform:"uppercase"}}>Trusted since 2017</span>
             </div>
-          ))}
-        </div>
-      </W>
-    </section>
-    {/* MARQUEE */}
-    <div style={{borderBottom:"1px solid var(--brd)",padding:"14px 0",overflow:"hidden"}}><div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.2}}/></span>)}</div></div>
-    {/* AWARD STRIP */}
-    <section onClick={()=>go("cases","farmwave")} className="award-strip" style={{padding:"16px 0",background:"linear-gradient(135deg,rgba(0,76,115,.04),rgba(78,205,196,.05))",borderBottom:"1px solid var(--brd)",cursor:"pointer",transition:"background .25s"}} onMouseEnter={e=>e.currentTarget.style.background="linear-gradient(135deg,rgba(0,76,115,.08),rgba(78,205,196,.09))"} onMouseLeave={e=>e.currentTarget.style.background="linear-gradient(135deg,rgba(0,76,115,.04),rgba(78,205,196,.05))"}>
-      <W>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:14,flexWrap:"wrap"}}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
-          <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2.5,textTransform:"uppercase",opacity:.7}}>Recognised</span>
-          <span style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/>
-          <span style={{fontSize:14,color:"var(--txt)",fontWeight:600,fontFamily:"var(--jk)"}}>AI Harvest Vision Solution of the Year 2025</span>
-          <span style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/>
-          <span style={{fontSize:13,color:"var(--txt3)",display:"inline-flex",alignItems:"center",gap:6}}>Farmwave case study <Arr s={12} c="var(--blue)"/></span>
-        </div>
-      </W>
-    </section>
-    {/* SERVICES */}
-    <section className="grid-bg" style={{padding:"100px 0"}}><W>
-      <SL ch="Services"/>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,marginBottom:48}}>
-        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)"}}>How we help you <span style={{color:"var(--blue)"}}>move forward.</span></h2>
-        <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,paddingTop:4}}>From initial assessment to long-term advisory, always focused on clarity, quality, and measurable outcomes.</p>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
-        {svcs.map((s,i)=><div key={i} className="card" style={{gridColumn:s.span?"span 2":"span 1",cursor:"pointer"}} onClick={()=>go("services")}>
-          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{s.n}</span>
-          <h3 style={{fontFamily:"var(--jk)",fontSize:s.span?18:16,fontWeight:700,margin:"10px 0 6px",color:"var(--txt)"}}>{s.t}</h3>
-          <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6}}>{s.hl}</p>
-        </div>)}
-      </div>
-    </W></section>
-    {/* FEATURED WORK */}
-    <section style={{padding:"80px 0",borderTop:"1px solid var(--brd)"}}><W>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:32}}>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <div style={{width:28,height:2,background:"var(--blue)"}}/>
-          <span style={{fontSize:11,color:"var(--txt4)",fontWeight:700,textTransform:"uppercase",letterSpacing:3,fontFamily:"var(--jk)"}}>Proven deliverables</span>
-        </div>
-        <button onClick={()=>go("cases")} style={{display:"inline-flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:600,color:"var(--txt3)",fontFamily:"var(--jk)",padding:0,transition:"color .2s"}} onMouseEnter={e=>e.currentTarget.style.color="var(--blue)"} onMouseLeave={e=>e.currentTarget.style.color="var(--txt3)"}>View all <Arr s={13} c="currentColor"/></button>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
-        {[cases[0],cases[1],cases[3],cases[7]].map(c=><div key={c.id} onClick={()=>go("cases",c.id)} style={{borderRadius:12,overflow:"hidden",cursor:"pointer",position:"relative",height:200,background:c.cover}} onMouseEnter={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1.05)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(0)");}} onMouseLeave={e=>{(e.currentTarget.querySelector("img") as HTMLImageElement|null)?.style&&((e.currentTarget.querySelector("img") as HTMLImageElement).style.transform="scale(1)");(e.currentTarget.querySelector(".proj-info") as HTMLElement|null)&&((e.currentTarget.querySelector(".proj-info") as HTMLElement).style.transform="translateY(4px)");}}>
-          {(c as any).headerImg&&<img alt={`${c.name}, ${c.cat} case study`} loading="lazy" decoding="async" width={640} height={400} src={c.id==="nomo"?(process.env.PUBLIC_URL+"/images/nomo_header.png"):c.id==="farmwave"?(process.env.PUBLIC_URL+"/images/farmwave_home.png"):c.id==="crossiety"?(process.env.PUBLIC_URL+"/images/crossiety_home.png"):c.id==="muvr"?(process.env.PUBLIC_URL+"/images/muvr_home.jpg"):(c as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .5s",position:"absolute",inset:0}}/>}
-          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"}}/>
-          <div className="proj-info" style={{position:"absolute",bottom:0,left:0,right:0,padding:"16px",transform:"translateY(4px)",transition:"transform .3s"}}>
-            <span style={{fontSize:10,color:"#fff",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2,display:"inline-block",marginBottom:6,background:"rgba(0,76,115,.7)",padding:"3px 10px",borderRadius:20}}>{c.cat}</span>
-            <h3 style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:800,color:"#fff",lineHeight:1.2,margin:0}}>{c.name}</h3>
-          </div>
-        </div>)}
-      </div>
-    </W></section>
-    {/* PROCESS */}
-    <section ref={tlR} style={{padding:"100px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",minHeight:"90vh"}}>
-      <W>
-        <SL ch="Process"/>
-        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,color:"var(--txt)",marginBottom:56}}>From assessment to <span style={{color:"var(--blue)"}}>impact.</span></h2>
-        <div className="proc-grid" style={{display:"grid",gridTemplateColumns:"140px 2px 1fr",gap:"0 36px"}}>
-          <div style={{position:"sticky",top:100}}>{proc.map((p,i)=><div key={i} style={{padding:"12px 0",borderBottom:i<3?"1px solid var(--brd)":"none",cursor:"pointer",fontFamily:"var(--jk)"}} onClick={()=>setAp(i)}>
-            <span style={{fontSize:11,fontWeight:700,color:ap===i?"var(--blue)":"var(--txt4)",letterSpacing:2,opacity:ap===i?1:.4,display:"block",marginBottom:2}}>{p.n}</span>
-            <span style={{fontSize:13,fontWeight:ap===i?700:500,color:ap===i?"var(--txt)":"var(--txt4)"}}>{p.ph}</span>
-          </div>)}</div>
-          <div style={{background:"var(--brd)",borderRadius:2,position:"relative",minHeight:300}}>
-            <div style={{position:"absolute",top:0,left:0,width:"100%",background:"linear-gradient(var(--blue),var(--teal))",borderRadius:2,transition:"height .5s",height:`${((ap+1)/4)*100}%`}}/>
-            {proc.map((_,i)=><div key={i} style={{position:"absolute",top:`${(i/3)*100}%`,left:"50%",transform:"translate(-50%,-50%)",width:10,height:10,borderRadius:"50%",border:`2px solid ${i<=ap?"var(--blue)":"var(--brd)"}`,background:i<=ap?"var(--blue)":"#fff",transition:"all .4s",zIndex:2}}/>)}
-          </div>
-          <div>{proc.map((p,i)=><div key={i} style={{padding:"16px 0 36px",borderBottom:i<3?"1px solid var(--brd)":"none",opacity:ap>=i?1:.15,transition:"all .5s"}}>
-            <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{p.n}</span>
-            <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:800,margin:"6px 0 8px",color:"var(--txt)"}}>{p.ph}</h3>
-            <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,maxWidth:420}}>{p.d}</p>
-          </div>)}</div>
-        </div>
-      </W>
-    </section>
-    {/* TESTIMONIALS */}
-    <section style={{padding:"100px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",position:"relative",overflow:"hidden"}}>
-      <div className="grid-bg" style={{position:"absolute",inset:0}}/>
-      <W style={{position:"relative",zIndex:1}}>
-        <div style={{textAlign:"center",marginBottom:56}}>
-          <SL ch="Trust"/>
-          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,color:"var(--txt)",lineHeight:1.05}}>Voices of our <span style={{color:"var(--blue)"}}>partners.</span></h2>
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:24}}>
-          {/* Prev */}
-          <button className="test-nav-btn" onClick={()=>setAt(p=>(p-1+tests.length)%tests.length)} style={{flexShrink:0,width:44,height:44,borderRadius:"50%",border:"1px solid var(--brd)",background:"#fff",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,30,50,.06)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";}}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </button>
-          {/* Card */}
-          <div style={{flex:1,overflow:"hidden"}}>
-            <div style={{display:"flex",transform:`translateX(calc(-${at*100}% - ${at*0}px))`,transition:"transform .6s cubic-bezier(.16,1,.3,1)"}}>
-              {tests.map((t,i)=><div key={i} style={{minWidth:"100%",padding:"0 8px"}}>
-                <div className="test-card" style={{background:"#fff",borderRadius:16,padding:"36px 44px",border:"1px solid var(--brd)",boxShadow:"0 4px 24px rgba(0,30,50,.04)",textAlign:"center"}}>
-                  <svg width="28" height="22" viewBox="0 0 48 36" fill="none" style={{marginBottom:16,opacity:.1}}><path d="M0 36V20C0 8.95 8.95 0 20 0h2v8h-2c-6.63 0-12 5.37-12 12v2h12v14H0zm28 0V20c0-11.05 8.95-20 20-20v8c-6.63 0-12 5.37-12 12v2h12v14H28z" fill="#004C73"/></svg>
-                  <p style={{fontFamily:"var(--jk)",fontSize:"clamp(14px,1.4vw,17px)",fontWeight:500,lineHeight:1.75,color:"var(--txt)",fontStyle:"italic",maxWidth:600,margin:"0 auto 24px"}}>{t.q}</p>
-                  <div style={{width:32,height:1,background:"var(--brd)",margin:"0 auto 18px"}}/>
-                  <div style={{display:"flex",alignItems:"center",gap:14,justifyContent:"center"}}>
-                    <img src={(t as any).img||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={t.n} loading="lazy" decoding="async" width={64} height={64} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:64,height:64,borderRadius:"50%",objectFit:"cover",objectPosition:"top",flexShrink:0,border:"2px solid var(--brd)"}}/>
-                    <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
-                    {t.linkedin
-                      ? <a href={t.linkedin} target="_blank" rel="noopener noreferrer" style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)",textDecoration:"none",transition:"color .2s"}} onMouseEnter={e=>e.currentTarget.style.color="var(--blue)"} onMouseLeave={e=>e.currentTarget.style.color="var(--txt)"}>{t.n}</a>
-                      : <span style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--txt)"}}>{t.n}</span>
-                    }
-                    <span style={{fontSize:13,color:"var(--txt4)"}}>{t.r} ·{" "}
-                      {t.website
-                        ? <a href={t.website} target="_blank" rel="noopener noreferrer" style={{color:"var(--blue)",fontWeight:600,textDecoration:"none",transition:"opacity .2s"}} onMouseEnter={e=>e.currentTarget.style.opacity=".6"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>{t.co}</a>
-                        : <span style={{color:"var(--blue)",fontWeight:600}}>{t.co}</span>
-                      }
-                    </span>
-                    </div>
-                  </div>
-                  {t.caseId&&(()=>{const isCase=t.caseId==="nomo";const onClick=isCase?()=>go("blog","b1"):()=>go("cases",t.caseId!);const label=isCase?"View case study":"Check the project";return <button onClick={onClick} style={{marginTop:16,display:"inline-flex",alignItems:"center",gap:5,background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:500,color:"var(--blue)",padding:0,transition:"gap .2s,opacity .2s"}} onMouseEnter={e=>{e.currentTarget.style.gap="8px";e.currentTarget.style.opacity=".75";}} onMouseLeave={e=>{e.currentTarget.style.gap="5px";e.currentTarget.style.opacity="1";}}>{label} <Arr s={10} c="var(--blue)"/></button>;})()}
+            <p style={{fontFamily:"var(--display)",fontSize:"clamp(22px,2.4vw,30px)",fontWeight:500,color:"var(--ink)",lineHeight:1.2,letterSpacing:"-.02em",margin:0,marginBottom:24,maxWidth:360}}>20+ partners across <span style={{color:"var(--blue)"}}>health, agtech, mobility & social.</span></p>
+            <div style={{display:"flex",gap:24}}>
+              {[{n:10,s:"+",l:"Years"},{n:15,s:"+",l:"Clients"},{n:4,s:"",l:"Verticals"}].map((s,i)=>(
+                <div key={i}>
+                  <div style={{fontFamily:"var(--display)",fontSize:32,fontWeight:600,letterSpacing:"-.03em",lineHeight:1,color:"var(--ink)",fontFeatureSettings:'"tnum"'}}><AnimNum end={s.n} suffix={s.s} delay={400+i*120}/></div>
+                  <p style={{fontFamily:"var(--mono)",fontSize:10,color:"var(--ink-3)",marginTop:6,fontWeight:500,textTransform:"uppercase",letterSpacing:".22em"}}>{s.l}</p>
                 </div>
-              </div>)}
+              ))}
             </div>
           </div>
-          {/* Next */}
-          <button className="test-nav-btn" onClick={()=>setAt(p=>(p+1)%tests.length)} style={{flexShrink:0,width:44,height:44,borderRadius:"50%",border:"1px solid var(--brd)",background:"#fff",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,30,50,.06)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt3)";}}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </button>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"14px 24px"}}>
+            {cl.map((c,i)=>(
+              <span key={i} style={{fontFamily:"var(--in)",fontSize:14,color:"var(--ink-2)",fontWeight:500,letterSpacing:"-.005em",paddingTop:10,borderTop:"1px solid var(--rule-2)"}}>{c}</span>
+            ))}
+          </div>
         </div>
-        <div style={{display:"flex",gap:8,justifyContent:"center",marginTop:28}}>
-          {tests.map((_,i)=><button key={i} onClick={()=>setAt(i)} style={{width:at===i?28:8,height:8,borderRadius:4,border:"none",cursor:"pointer",background:at===i?"var(--blue)":"var(--brd)",transition:"all .4s"}}/>)}
+      </W>
+    </section>
+    {/* ── AWARD ── proper banner card with substantial padding, subtle gradient, trophy + serif italic award name + CTA ── */}
+    <section style={{padding:"clamp(40px,6vh,72px) 0",background:"var(--bg)"}}>
+      <W>
+        <div onClick={()=>go("cases","farmwave")} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go("cases","farmwave");}}} style={{position:"relative",overflow:"hidden",borderRadius:24,padding:"clamp(28px,5vh,48px) clamp(28px,5vw,56px)",background:"linear-gradient(125deg,var(--paper) 0%,var(--bg2) 70%,rgba(0,76,115,.06) 100%)",border:"1px solid var(--brd)",boxShadow:"var(--sh-2)",cursor:"pointer",transition:"transform var(--dur-hover) var(--ease-out),box-shadow var(--dur-hover) ease-out"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="var(--sh-3)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="var(--sh-2)";}}>
+          <div style={{display:"grid",gridTemplateColumns:"auto 1fr auto",gap:"clamp(20px,4vw,48px)",alignItems:"center",position:"relative",zIndex:2}}>
+            {/* Trophy ornament — solid brand blue */}
+            <div style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:64,height:64,borderRadius:18,background:"var(--blue)",color:"#FFFFFF",boxShadow:"0 8px 24px rgba(0,76,115,.22)"}}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
+            </div>
+            {/* Body */}
+            <div>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                <span style={{fontFamily:"var(--in)",fontSize:11,fontWeight:600,color:"var(--blue)",letterSpacing:".18em",textTransform:"uppercase"}}>2025 · Award</span>
+                <span style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)"}}/>
+                <span style={{fontFamily:"var(--in)",fontSize:11,fontWeight:500,color:"var(--ink-3)",letterSpacing:".18em",textTransform:"uppercase"}}>Farmwave case</span>
+              </div>
+              <h3 style={{fontFamily:"var(--display)",fontSize:"clamp(22px,2.6vw,32px)",fontWeight:600,color:"var(--ink)",lineHeight:1.2,letterSpacing:"-.02em",margin:0}}>AI Harvest Vision Solution <span style={{color:"var(--blue)"}}>of the Year</span></h3>
+            </div>
+            <span className="lk-mono">Read case</span>
+          </div>
+        </div>
+      </W>
+    </section>
+    {/* ── SERVICES ── vertical numbered rows + sticky image stage that swaps on hover ── */}
+    <section style={{padding:"clamp(96px,14vh,160px) 0",background:"var(--bg)",position:"relative"}}>
+      <W>
+        {/* Section masthead */}
+        <div style={{display:"grid",gridTemplateColumns:"1.1fr 1fr",gap:48,marginBottom:"clamp(56px,8vh,96px)",alignItems:"end"}} className="sec-head">
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+              <span style={{width:24,height:1,background:"var(--blue)"}}/>
+              <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--blue)",letterSpacing:".22em",textTransform:"uppercase"}}>Services · 02</span>
+            </div>
+            <h2 style={{fontFamily:"var(--display)",fontSize:"clamp(40px,6vw,96px)",fontWeight:600,lineHeight:.96,letterSpacing:"-.04em",color:"var(--ink)",margin:0}}>How we help you <span style={{color:"var(--blue)"}}>move forward.</span></h2>
+          </div>
+          <div style={{paddingBottom:8}}>
+            <p style={{fontFamily:"var(--in)",fontSize:17,color:"var(--ink-2)",lineHeight:1.65,maxWidth:440,fontWeight:400}}>From initial assessment to long-term advisory, always focused on clarity, quality, and measurable outcomes.</p>
+            <button onClick={()=>go("services")} className="lk-mono" style={{marginTop:24}}>All services</button>
+          </div>
+        </div>
+        {/* Two-column: rows on left, sticky image stage on right */}
+        <div style={{display:"grid",gridTemplateColumns:"1.1fr .9fr",gap:"clamp(40px,5vw,80px)",alignItems:"start"}} className="svc-layout">
+          <div>
+            {svcs.map((s,i)=><div key={i} onMouseEnter={()=>setSvcActive(i)} onClick={()=>go("services")} className="svc-row">
+              <span className="svc-num" style={{fontFamily:"var(--mono)",fontSize:12,fontWeight:500,color:svcActive===i?"var(--blue)":"var(--ink-3)",letterSpacing:".18em",fontFeatureSettings:'"tnum"',paddingTop:8}}>{s.n}</span>
+              <div>
+                <h3 style={{fontFamily:"var(--display)",fontSize:"clamp(24px,3.2vw,42px)",fontWeight:500,lineHeight:1.05,letterSpacing:"-.025em",color:svcActive===i?"var(--blue)":"var(--ink)",margin:0,marginBottom:8}}>{s.t}</h3>
+                <p style={{fontFamily:"var(--in)",fontSize:15,color:"var(--ink-2)",lineHeight:1.6,fontWeight:400,margin:0,maxWidth:480}}>{s.hl}</p>
+              </div>
+              <span className="svc-arr"><Arr s={13} c="currentColor"/></span>
+            </div>)}
+          </div>
+          {/* Sticky image stage — swaps based on svcActive */}
+          <div className="svc-stage svc-stage-wrap">
+            {svcImages.map((im,i)=><img key={i} src={im.src} alt={im.alt} loading="lazy" decoding="async" className={`svc-stage-img${svcActive===i?" active":""}`}/>)}
+            <div className="svc-stage-grad"/>
+            <div className="svc-stage-cap">
+              <span className="pill">From a Lumo case</span>
+              <span className="name">{svcImages[svcActive]?.caseName}</span>
+            </div>
+          </div>
+        </div>
+      </W>
+    </section>
+    {/* ── FEATURED WORK ── clean dark image bento. No colored chips, no category pills — image and name carry the work. ── */}
+    <section style={{padding:"clamp(96px,14vh,160px) 0",background:"var(--bg2)",borderTop:"1px solid var(--rule)",position:"relative"}}>
+      <W>
+        <div style={{display:"grid",gridTemplateColumns:"1.1fr 1fr",gap:48,marginBottom:"clamp(56px,8vh,96px)",alignItems:"end"}} className="sec-head">
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+              <span style={{width:24,height:1,background:"var(--blue)"}}/>
+              <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--blue)",letterSpacing:".22em",textTransform:"uppercase"}}>Selected work · 03</span>
+            </div>
+            <h2 style={{fontFamily:"var(--display)",fontSize:"clamp(40px,6vw,96px)",fontWeight:600,lineHeight:.96,letterSpacing:"-.04em",color:"var(--ink)",margin:0}}>Proven <span style={{color:"var(--blue)"}}>deliverables.</span></h2>
+          </div>
+          <div style={{paddingBottom:8}}>
+            <p style={{fontFamily:"var(--in)",fontSize:17,color:"var(--ink-2)",lineHeight:1.65,maxWidth:440,fontWeight:400}}>Eight cases across mobile, IoT, and AI. Each one built around a sharp problem statement and shipped to real users.</p>
+            <button onClick={()=>go("cases")} className="lk-mono" style={{marginTop:24}}>View archive</button>
+          </div>
+        </div>
+        <div ref={featStagger} className="work-bento" style={{display:"grid",gridTemplateColumns:"3fr 2fr",gridTemplateRows:"clamp(300px,42vh,460px) clamp(240px,32vh,360px)",gap:16}}>
+          {[cases[0],cases[1],cases[3],cases[7]].map((c,i)=>{
+            const heroSrc = c.id==="nomo"?(process.env.PUBLIC_URL+"/images/nomo_header.png"):c.id==="farmwave"?(process.env.PUBLIC_URL+"/images/farmwave_home.png"):c.id==="crossiety"?(process.env.PUBLIC_URL+"/images/crossiety_home.png"):c.id==="muvr"?(process.env.PUBLIC_URL+"/images/muvr_home.jpg"):(c as any).headerImg;
+            return <div key={c.id} className="feat-tile stagger-row" onClick={()=>go("cases",c.id)}>
+              {(c as any).headerImg&&<img alt={`${c.name}, ${c.cat} case study`} loading="lazy" decoding="async" width={1280} height={800} src={heroSrc}/>}
+              <div className="feat-grad"/>
+              {/* Mono index, top-left only — no category pill */}
+              <span style={{position:"absolute",top:22,left:24,zIndex:2,fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"rgba(244,241,234,.75)",letterSpacing:".22em",fontFeatureSettings:'"tnum"',textTransform:"uppercase"}}>0{i+1} · {c.cat}</span>
+              <div className="feat-info" style={{padding:"clamp(24px,4vh,40px)"}}>
+                <h3 style={{fontFamily:"var(--display)",fontSize:i<2?"clamp(32px,3.6vw,52px)":"clamp(24px,2.6vw,36px)",fontWeight:500,letterSpacing:"-.025em",lineHeight:1,color:"#FFFFFF",margin:0,marginBottom:14}}>{c.name}</h3>
+                <span style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--in)",fontSize:12,color:"#FFFFFF",fontWeight:500,letterSpacing:".14em",textTransform:"uppercase"}}>Read case <Arr s={12} c="#FFFFFF"/></span>
+              </div>
+            </div>;
+          })}
+        </div>
+      </W>
+    </section>
+    {/* ── PROCESS ── sticky timeline. Active phase number reveals huge with clip-path animation. ── */}
+    <section ref={tlR} style={{padding:"clamp(96px,14vh,160px) 0",background:"var(--bg)",borderTop:"1px solid var(--rule)",position:"relative",minHeight:"90vh"}}>
+      <W>
+        <div style={{display:"grid",gridTemplateColumns:"1.1fr 1fr",gap:48,marginBottom:"clamp(56px,8vh,96px)",alignItems:"end"}} className="sec-head">
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+              <span style={{width:24,height:1,background:"var(--blue)"}}/>
+              <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--blue)",letterSpacing:".22em",textTransform:"uppercase"}}>Process · 04</span>
+            </div>
+            <h2 style={{fontFamily:"var(--display)",fontSize:"clamp(40px,6vw,96px)",fontWeight:600,lineHeight:.96,letterSpacing:"-.04em",color:"var(--ink)",margin:0}}>From assessment to <span style={{color:"var(--blue)"}}>impact.</span></h2>
+          </div>
+          <div style={{paddingBottom:8}}>
+            <p style={{fontFamily:"var(--in)",fontSize:17,color:"var(--ink-2)",lineHeight:1.65,maxWidth:440,fontWeight:400}}>A four-stage rhythm we apply to every engagement, built to keep judgment, momentum, and quality aligned.</p>
+          </div>
+        </div>
+        <div className="proc-grid" style={{display:"grid",gridTemplateColumns:"160px 2px 1fr",gap:"0 48px"}}>
+          {/* Sticky phase nav */}
+          <div style={{position:"sticky",top:120}}>{proc.map((p,i)=><div key={i} style={{padding:"14px 0",borderBottom:i<3?"1px solid var(--rule)":"none",cursor:"pointer",transition:"all var(--dur-hover) ease-out"}} onClick={()=>setAp(i)}>
+            <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:ap===i?"var(--blue)":"var(--ink-3)",letterSpacing:".18em",opacity:ap===i?1:.6,display:"block",marginBottom:6,fontFeatureSettings:'"tnum"'}}>{p.n}</span>
+            <span style={{fontFamily:"var(--in)",fontSize:15,fontWeight:ap===i?600:500,color:ap===i?"var(--ink)":"var(--ink-3)",letterSpacing:"-.005em"}}>{p.ph}</span>
+          </div>)}</div>
+          {/* Pipe with ink fill + crisp dots */}
+          <div style={{background:"var(--rule)",position:"relative",minHeight:480}}>
+            <div style={{position:"absolute",top:0,left:0,width:"100%",background:"var(--ink)",transition:"height var(--dur-tl) var(--ease-in-out)",height:`${((ap+1)/4)*100}%`,willChange:"height"}}/>
+            {proc.map((_,i)=><div key={i} style={{position:"absolute",top:`${(i/3)*100}%`,left:"50%",transform:"translate(-50%,-50%)",width:i<=ap?16:11,height:i<=ap?16:11,borderRadius:"50%",border:`2px solid ${i<=ap?"var(--ink)":"var(--brd-strong)"}`,background:i<=ap?"var(--lime)":"var(--bg)",transition:"width .5s var(--ease-spring), height .5s var(--ease-spring), border-color .5s ease-out, background-color .5s ease-out, box-shadow .5s ease-out",zIndex:2,boxShadow:i<=ap?"0 0 0 5px rgba(217,244,81,.18),0 0 16px rgba(217,244,81,.4)":"0 1px 2px rgba(10,22,32,.08)"}}/>)}
+          </div>
+          {/* Right column — giant active phase number with clip-reveal + content stack */}
+          <div>
+            {/* Big number ornament — reveals when phase changes */}
+            <div style={{position:"relative",height:"clamp(140px,18vh,200px)",overflow:"hidden",marginBottom:24,borderBottom:"1px solid var(--rule)"}}>
+              <div key={`num-${apReveal}`} className="num-reveal" style={{fontFamily:"var(--display)",fontSize:"clamp(140px,18vw,260px)",fontWeight:600,letterSpacing:"-.05em",lineHeight:.85,color:"var(--ink)",fontFeatureSettings:'"tnum"',position:"absolute",bottom:-8,left:-12}}>{proc[ap].n.split("/")[0]}</div>
+              <span style={{position:"absolute",bottom:18,right:0,fontFamily:"var(--mono)",fontSize:10,fontWeight:500,color:"var(--ink-3)",letterSpacing:".22em",textTransform:"uppercase"}}>Phase {String(ap+1)} of 04</span>
+            </div>
+            {/* All phases below, dimmed when not active */}
+            {proc.map((p,i)=><div key={i} style={{padding:"18px 0 44px",borderBottom:i<3?"1px solid var(--rule)":"none",opacity:ap>=i?1:.16,transition:"opacity .6s var(--ease-out)"}}>
+              <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--blue)",letterSpacing:".18em",fontFeatureSettings:'"tnum"'}}>{p.n}</span>
+              <h3 style={{fontFamily:"var(--display)",fontSize:"clamp(28px,3.2vw,44px)",fontWeight:500,letterSpacing:"-.025em",margin:"8px 0 14px",color:"var(--ink)",lineHeight:1.02}}>{p.ph}</h3>
+              <p style={{fontFamily:"var(--in)",fontSize:16,color:"var(--ink-2)",lineHeight:1.6,maxWidth:520,fontWeight:400}}>{p.d}</p>
+            </div>)}
+          </div>
+        </div>
+      </W>
+    </section>
+    {/* ── TESTIMONIALS ── one hero quote (massive serif italic, photo-led) + chip pagination row of the others ── */}
+    <section style={{padding:"clamp(96px,14vh,160px) 0",background:"var(--bg2)",borderTop:"1px solid var(--rule)",position:"relative",overflow:"hidden"}}>
+      <W>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:"clamp(40px,6vh,72px)"}}>
+          <span style={{width:24,height:1,background:"var(--blue)"}}/>
+          <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--blue)",letterSpacing:".22em",textTransform:"uppercase"}}>Voices · 05</span>
+        </div>
+        {/* Hero quote card */}
+        <div className={`test-hero-card${atSliding?" sliding":""}`}>
+          <div style={{display:"grid",gridTemplateColumns:"auto 1fr",gap:"clamp(24px,4vw,56px)",alignItems:"start"}} className="test-hero-grid">
+            {/* Author column — big photo, name, role, LinkedIn */}
+            <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:18,minWidth:200}}>
+              <img src={(tests[at] as any).img||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={tests[at].n} loading="lazy" decoding="async" width={120} height={120} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:120,height:120,borderRadius:24,objectFit:"cover",objectPosition:"top",border:"3px solid var(--paper)",boxShadow:"var(--sh-3)"}}/>
+              <div>
+                {tests[at].linkedin
+                  ? <a href={tests[at].linkedin} target="_blank" rel="noopener noreferrer" style={{fontFamily:"var(--display)",fontSize:18,fontWeight:600,color:"var(--ink)",textDecoration:"none",letterSpacing:"-.015em",display:"block",marginBottom:4,transition:"color var(--dur-hover) ease-out"}} onMouseEnter={e=>e.currentTarget.style.color="var(--blue)"} onMouseLeave={e=>e.currentTarget.style.color="var(--ink)"}>{tests[at].n}</a>
+                  : <span style={{fontFamily:"var(--display)",fontSize:18,fontWeight:600,color:"var(--ink)",letterSpacing:"-.015em",display:"block",marginBottom:4}}>{tests[at].n}</span>
+                }
+                <p style={{fontFamily:"var(--in)",fontSize:13,color:"var(--ink-3)",margin:0,lineHeight:1.4}}>{tests[at].r}<br/>
+                  {tests[at].website
+                    ? <a href={tests[at].website} target="_blank" rel="noopener noreferrer" style={{color:"var(--blue)",fontWeight:500,textDecoration:"none"}}>{tests[at].co}</a>
+                    : <span style={{color:"var(--blue)",fontWeight:500}}>{tests[at].co}</span>
+                  }
+                </p>
+              </div>
+              {tests[at].caseId&&(()=>{const t=tests[at];const isCase=t.caseId==="nomo";const onClick=isCase?()=>go("blog","b1"):()=>go("cases",t.caseId!);const label=isCase?"View case study":"Check the project";return <button onClick={onClick} className="lk-mono">{label}</button>;})()}
+            </div>
+            {/* Quote column */}
+            <div>
+              <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:500,color:"var(--ink-3)",letterSpacing:".22em",textTransform:"uppercase",fontFeatureSettings:'"tnum"',display:"block",marginBottom:20}}>{`0${at+1}`} / {`0${tests.length}`}</span>
+              <p style={{fontFamily:"var(--display)",fontSize:"clamp(22px,2.6vw,34px)",fontWeight:400,lineHeight:1.4,letterSpacing:"-.015em",color:"var(--ink)",margin:0,maxWidth:780}}>“{tests[at].q}”</p>
+            </div>
+          </div>
+        </div>
+        {/* Chip pagination — click to switch the hero quote */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:12,marginTop:32}} className="test-chips">
+          {tests.map((t,i)=><button key={i} aria-label={`Show testimonial from ${t.n}`} onClick={()=>setAt(i)} className={`test-chip${at===i?" active":""}`}>
+            <p style={{fontFamily:"var(--in)",fontSize:13,color:"var(--ink-2)",lineHeight:1.45,margin:0,marginBottom:10,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>“{t.q}”</p>
+            <span style={{display:"flex",alignItems:"center",gap:8}}>
+              <img src={(t as any).img||(process.env.PUBLIC_URL + "/images/default_user.png")} alt="" loading="lazy" width={24} height={24} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:24,height:24,borderRadius:"50%",objectFit:"cover",objectPosition:"top"}}/>
+              <span style={{fontFamily:"var(--in)",fontSize:12,fontWeight:500,color:"var(--ink)",letterSpacing:"-.005em"}}>{t.n}</span>
+              <span style={{fontFamily:"var(--in)",fontSize:11,color:"var(--ink-3)"}}>· {t.co}</span>
+            </span>
+          </button>)}
+        </div>
+      </W>
+    </section>
+    {/* ── CLOSING CTA ── editorial conversion moment, brand blue dominant ── */}
+    <section style={{padding:"clamp(96px,16vh,180px) 0",background:"var(--blue)",color:"#FFFFFF",position:"relative",overflow:"hidden"}}>
+      {/* Subtle deeper-blue arc backing the CTA */}
+      <svg aria-hidden="true" style={{position:"absolute",bottom:"-30%",right:"-15%",width:"min(110vw,1400px)",height:"auto",zIndex:0,opacity:.6}} viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="ctaArc" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0"/>
+            <stop offset="60%" stopColor="#FFFFFF" stopOpacity=".06"/>
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity=".14"/>
+          </linearGradient>
+        </defs>
+        <path d="M -100 800 Q 400 -200 1300 50 L 1300 800 Z" fill="url(#ctaArc)"/>
+      </svg>
+      <W style={{position:"relative",zIndex:2,textAlign:"center"}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:10,marginBottom:32}}>
+          <span style={{width:24,height:1,background:"rgba(255,255,255,.5)"}}/>
+          <span style={{fontFamily:"var(--in)",fontSize:11,fontWeight:600,color:"#FFFFFF",letterSpacing:".22em",textTransform:"uppercase"}}>Begin</span>
+          <span style={{width:24,height:1,background:"rgba(255,255,255,.5)"}}/>
+        </div>
+        <h2 style={{fontFamily:"var(--display)",fontSize:"clamp(48px,8vw,140px)",fontWeight:600,lineHeight:.96,letterSpacing:"-.045em",color:"#FFFFFF",margin:"0 auto 28px",maxWidth:1100}}>Tell us about the problem.</h2>
+        <p style={{fontFamily:"var(--in)",fontSize:18,color:"rgba(255,255,255,.82)",lineHeight:1.55,maxWidth:560,margin:"0 auto 44px",fontWeight:400}}>We'll be honest about whether and how we can help. No deck, no pitch — just a conversation about your challenge.</p>
+        <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
+          <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#FFFFFF",color:"var(--blue)",padding:"14px 26px",borderRadius:50,fontFamily:"var(--in)",fontSize:14,fontWeight:600,border:"none",cursor:"pointer",transition:"background var(--dur-hover) ease-out,box-shadow var(--dur-hover) var(--ease-out),transform var(--dur-tap) var(--ease-out)",boxShadow:"0 1px 3px rgba(0,0,0,.12),0 8px 24px rgba(0,0,0,.16)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 2px 6px rgba(0,0,0,.15),0 14px 36px rgba(0,0,0,.22)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 1px 3px rgba(0,0,0,.12),0 8px 24px rgba(0,0,0,.16)";}} onMouseDown={e=>{e.currentTarget.style.transform="scale(.97)";}} onMouseUp={e=>{e.currentTarget.style.transform="";}}>Start a conversation <Arr s={14} c="var(--blue)"/></button>
+          <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"transparent",color:"#FFFFFF",padding:"13px 24px",borderRadius:50,fontFamily:"var(--in)",fontSize:14,fontWeight:500,border:"1px solid rgba(255,255,255,.32)",cursor:"pointer",transition:"border-color var(--dur-hover) ease-out,background var(--dur-hover) ease-out,transform var(--dur-tap) var(--ease-out)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.6)";e.currentTarget.style.background="rgba(255,255,255,.08)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.32)";e.currentTarget.style.background="transparent";}}>How we work</button>
         </div>
       </W>
     </section>

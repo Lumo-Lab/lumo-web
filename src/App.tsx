@@ -192,13 +192,14 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .case-metrics>div>div:first-child{font-size:18px!important;min-height:auto!important}
   .lumo .case-metrics>div>div:last-child{font-size:10.5px!important;min-height:auto!important}
   /* Hero — centered layout on phones: chips, headline, subtitle, CTAs all line up centrally */
-  .lumo .hero-s>div>div{text-align:center!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}
-  .lumo .hero-s h1,.lumo .hero-s p{text-align:center!important;margin-left:auto!important;margin-right:auto!important}
+  .lumo .hero-s .hero-content{text-align:center!important}
+  .lumo .hero-s .hero-content h1{text-align:center!important;max-width:100%!important}
+  .lumo .hero-s .hero-content p{text-align:center!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}
   /* Hero credibility row — tighten on phones, allow wrap, smaller chips, center the chips on the row */
-  .lumo .hero-creds{margin-bottom:24px!important;gap:8px!important;justify-content:center!important}
-  .lumo .hero-creds>a,.lumo .hero-creds>button{height:30px!important;padding:0 12px!important;font-size:11px!important}
+  .lumo .hero-s .hero-creds{margin-bottom:24px!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important}
+  .lumo .hero-s .hero-creds>a,.lumo .hero-s .hero-creds>button{height:30px!important;padding:0 12px!important;font-size:11px!important}
   /* Hero CTAs — primary becomes full-width, secondary becomes a centered link below */
-  .lumo .hero-s .fi.d4{flex-direction:column!important;align-items:center!important;gap:14px!important}
+  .lumo .hero-s .fi.d4{flex-direction:column!important;align-items:center!important;gap:14px!important;justify-content:center!important}
   .lumo .hero-s .fi.d4>button:first-child{width:100%!important;justify-content:center!important;padding:15px 24px!important}
   .lumo .hero-s .fi.d4>button:last-child{align-self:center!important;padding:0!important}
   /* Trust strip — stack the award (top) above the marquee (bottom) so neither overflows; override global section padding so the strip stays compact */
@@ -862,7 +863,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       <div className="hero-grain"/>
       <W style={{position:"relative",zIndex:3,paddingTop:140,paddingBottom:100,color:"#fff",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"calc(100vh - 60px)"}}>
         {/* Quiet hero — H1 + one sentence + one CTA. Single column. Massive breathing room. Nothing else. */}
-        <div style={{maxWidth:1080}}>
+        <div className="hero-content" style={{maxWidth:1080}}>
           {/* Credibility tags — Clutch rating + AI Harvest Vision Award. Sit above the H1 as quiet anchors. */}
           <div className="fi d1 hero-creds" style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:32}}>
             <a href="https://clutch.co/profile/lumo-lab" target="_blank" rel="noopener noreferrer" aria-label="See Lumo Lab reviews on Clutch" style={{display:"inline-flex",alignItems:"center",gap:8,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.22)",borderRadius:50,textDecoration:"none",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",transition:"background .2s, border-color .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.14)";e.currentTarget.style.borderColor="rgba(255,255,255,.35)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.22)";}}>

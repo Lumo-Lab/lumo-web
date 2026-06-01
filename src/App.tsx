@@ -191,13 +191,16 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .case-metrics>div:nth-last-child(-n+2){border-bottom:none!important}
   .lumo .case-metrics>div>div:first-child{font-size:18px!important;min-height:auto!important}
   .lumo .case-metrics>div>div:last-child{font-size:10.5px!important;min-height:auto!important}
-  /* Hero credibility row — tighten on phones, allow wrap, smaller chips */
-  .lumo .hero-creds{margin-bottom:24px!important;gap:8px!important}
+  /* Hero — centered layout on phones: chips, headline, subtitle, CTAs all line up centrally */
+  .lumo .hero-s>div>div{text-align:center!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}
+  .lumo .hero-s h1,.lumo .hero-s p{text-align:center!important;margin-left:auto!important;margin-right:auto!important}
+  /* Hero credibility row — tighten on phones, allow wrap, smaller chips, center the chips on the row */
+  .lumo .hero-creds{margin-bottom:24px!important;gap:8px!important;justify-content:center!important}
   .lumo .hero-creds>a,.lumo .hero-creds>button{height:30px!important;padding:0 12px!important;font-size:11px!important}
-  /* Hero CTAs — primary becomes full-width, secondary becomes a clear link below */
-  .lumo .hero-s .fi.d4{flex-direction:column!important;align-items:stretch!important;gap:14px!important}
+  /* Hero CTAs — primary becomes full-width, secondary becomes a centered link below */
+  .lumo .hero-s .fi.d4{flex-direction:column!important;align-items:center!important;gap:14px!important}
   .lumo .hero-s .fi.d4>button:first-child{width:100%!important;justify-content:center!important;padding:15px 24px!important}
-  .lumo .hero-s .fi.d4>button:last-child{align-self:flex-start!important;padding:0!important}
+  .lumo .hero-s .fi.d4>button:last-child{align-self:center!important;padding:0!important}
   /* Trust strip — stack the award (top) above the marquee (bottom) so neither overflows; override global section padding so the strip stays compact */
   .lumo section.trust-strip{padding-top:0!important;padding-bottom:0!important}
   .lumo .trust-strip-row{flex-direction:column!important;padding:0!important}

@@ -6,7 +6,8 @@ const css = `
 ::selection{background:rgba(0,76,115,.15);color:#004C73}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 :root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04)}
-.dark{--bg:#0D1117;--bg2:#161B22;--txt:#E6EDF3;--txt2:#8B949E;--txt3:#6E7681;--txt4:#484F58;--brd:rgba(255,255,255,.08);--bl:rgba(78,205,196,.06);--nav-bg:rgba(13,17,23,.88);--nav-border:rgba(255,255,255,.06)}
+.dark{--bg:#0D1117;--bg2:#161B22;--txt:#E6EDF3;--txt2:#B1BAC4;--txt3:#8B949E;--txt4:#6E7681;--brd:rgba(255,255,255,.10);--bl:rgba(125,185,232,.10);--nav-bg:rgba(13,17,23,.88);--nav-border:rgba(255,255,255,.06)}
+.dark [style*="color: var(--blue)"],.dark [style*="color:var(--blue)"]{color:#7DB9E8!important}
 .dark .card{background:var(--bg2)}
 .dark .sd{background:var(--bg2)}
 .dark .fb{background:var(--bg2);color:var(--txt3)}
@@ -234,6 +235,12 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   /* Closing CTA — buttons stack and stretch on phones */
   .lumo .closing-cta-row{flex-direction:column!important;gap:10px!important}
   .lumo .closing-cta-row>a,.lumo .closing-cta-row>button{width:100%!important;justify-content:center!important}
+  /* Get started — header collapses to single column, cards stack vertically */
+  .lumo .get-started-head{align-items:flex-start!important}
+  .lumo .get-started-head>div{width:100%!important}
+  .lumo .get-started-head>p{padding-bottom:0!important}
+  .lumo .get-started-grid{grid-template-columns:1fr!important;gap:12px!important}
+  .lumo .get-started-card{min-height:0!important;padding:24px 22px!important}
 }
 @media(max-width:420px){
   /* About: tighter stats numbers on the smallest phones */
@@ -831,6 +838,80 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
 }
 function Back({go,to,label}:{go:(to:string)=>void,to:string,label:string}){return <button onClick={()=>go(to)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",color:"var(--txt3)",fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:32,fontFamily:"var(--jk)",padding:0}}><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>{label}</button>;}
 
+/* ── CASES SLIDER — shared between Home and About. Magazine split, auto-advance, brand-blue stage. ── */
+function CasesSlider({go}:{go:(p:string,id?:string)=>void}){
+  const[cIdx,setCIdx]=useState(0);
+  const[cPaused,setCPaused]=useState(false);
+  // Slider cycles through the 6 most prominent cases; the full archive lives on /work.
+  useEffect(()=>{if(cPaused)return;const i=setInterval(()=>setCIdx(p=>(p+1)%6),6500);return()=>clearInterval(i);},[cPaused]);
+  const outcomes:Record<string,string>={
+    nomo:"Live in all 50 US states · sub-1s emergency alerts",
+    farmwave:"2025 AI Harvest Vision Award · 3–8 bushels per acre recovered",
+    muvr:"Acquired by Exactech, December 2020",
+    noctrix:"Acquired by ResMed for $340M · First FDA-authorised non-drug therapy for RLS",
+    beunity:"500+ member organisations across the EU",
+    mobility:"Corporate & leasing-company fleets across the EU",
+    drift:"Industry-first crop-type and seed-trait sharing tool",
+    crossiety:"Digital village square deployed across Switzerland & Germany",
+  };
+  const heroSrcFor=(c:typeof cases[0])=>{
+    if(c.id==="nomo")return process.env.PUBLIC_URL+"/images/nomo_4.png";
+    if(c.id==="farmwave")return process.env.PUBLIC_URL+"/images/farmwave_home_ai.png";
+    if(c.id==="crossiety")return process.env.PUBLIC_URL+"/images/crossiety_home.png";
+    if(c.id==="muvr")return process.env.PUBLIC_URL+"/images/muvr_ios.png";
+    if(c.id==="noctrix")return process.env.PUBLIC_URL+"/images/nidra_image.jpg";
+    // Prefer the product showcase shot (better aspect ratio for the slider) over the wide banner cover.
+    return (c as any).headerImg||(c as any).coverImg;
+  };
+  const featured=cases.slice(0,6);
+  return <section className="cases-slider" onMouseEnter={()=>setCPaused(true)} onMouseLeave={()=>setCPaused(false)} style={{position:"relative",minHeight:640,background:"var(--blue)",overflow:"hidden",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
+    <W style={{position:"relative",zIndex:2,paddingTop:"clamp(40px,7vh,72px)",paddingBottom:"clamp(64px,9vh,104px)",color:"#fff",display:"flex",flexDirection:"column",gap:"clamp(28px,4vh,44px)"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:24}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"rgba(255,255,255,.6)",letterSpacing:2.4,textTransform:"uppercase"}}>
+          <span style={{width:24,height:1,background:"rgba(255,255,255,.4)"}}/>
+          <span>Selected work</span>
+          <span style={{width:4,height:4,borderRadius:"50%",background:"rgba(255,255,255,.45)"}}/>
+          <span style={{fontFeatureSettings:'"tnum"'}}>{`0${cIdx+1}`} / {`0${featured.length}`}</span>
+        </div>
+        <button onClick={()=>go("cases")} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:13,fontWeight:600,color:"rgba(255,255,255,.85)",letterSpacing:.1,transition:"color .2s, gap .2s"}} onMouseEnter={e=>{e.currentTarget.style.color="#fff";e.currentTarget.style.gap="12px";}} onMouseLeave={e=>{e.currentTarget.style.color="rgba(255,255,255,.85)";e.currentTarget.style.gap="8px";}}>View more <Arr s={13} c="currentColor"/></button>
+      </div>
+      {(()=>{const c=featured[cIdx];return <div key={`slide-${c.id}`} className="case-slide-row" style={{display:"grid",gridTemplateColumns:"1fr 1.15fr",gap:"clamp(28px,5vw,72px)",alignItems:"stretch",height:"clamp(460px,52vh,560px)",animation:"caseSlideIn .55s cubic-bezier(.22,1,.36,1) both"}}>
+        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",minHeight:0,overflow:"hidden"}}>
+          <span style={{alignSelf:"flex-start",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"#fff",letterSpacing:2.4,textTransform:"uppercase",padding:"5px 12px",background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.22)",borderRadius:50,marginBottom:22}}>{c.cat}</span>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,5.2vw,68px)",fontWeight:800,letterSpacing:"-.035em",lineHeight:.98,color:"#fff",margin:0,marginBottom:14}}>{c.name}</h2>
+          <p style={{fontFamily:"var(--jk)",fontSize:"clamp(15px,1.4vw,19px)",color:"#fff",lineHeight:1.5,margin:0,marginBottom:14,maxWidth:520,fontWeight:600}}>{outcomes[c.id]||c.brief}</p>
+          <p style={{fontFamily:"var(--in)",fontSize:"clamp(13px,1.05vw,15px)",color:"rgba(255,255,255,.7)",lineHeight:1.65,margin:0,marginBottom:22,maxWidth:480,fontWeight:400}}>{c.brief}</p>
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:28}}>
+            {c.tags.map(t=><span key={t} style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:600,color:"rgba(255,255,255,.78)",letterSpacing:.2,padding:"4px 10px",border:"1px solid rgba(255,255,255,.18)",borderRadius:6,background:"rgba(255,255,255,.04)"}}>{t}</span>)}
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:18,flexWrap:"wrap"}}>
+            <button onClick={()=>go("cases",c.id)} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"14px 26px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,border:"none",cursor:"pointer",transition:"transform .2s, box-shadow .25s",boxShadow:"0 2px 8px rgba(0,0,0,.22)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.34)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.22)";}}>Read more <Arr s={13} c="var(--blue)"/></button>
+            {(c as any).client&&<div style={{display:"flex",flexDirection:"column",gap:2,fontFamily:"var(--jk)"}}>
+              <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.55)",letterSpacing:1.6,textTransform:"uppercase"}}>Client</span>
+              <span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{(c as any).client}</span>
+            </div>}
+            {(c as any).period&&<div style={{display:"flex",flexDirection:"column",gap:2,fontFamily:"var(--jk)"}}>
+              <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.55)",letterSpacing:1.6,textTransform:"uppercase"}}>Period</span>
+              <span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{(c as any).period}</span>
+            </div>}
+          </div>
+        </div>
+        <div className="case-slide-stage" style={{position:"relative",borderRadius:18,background:"#F4F8FB",overflow:"hidden",height:"100%",boxShadow:"0 18px 48px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18)"}}>
+          <img src={heroSrcFor(c)} alt={`${c.name}, ${c.cat} case study`} loading="eager" decoding="async" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center",display:"block"}}/>
+        </div>
+      </div>;})()}
+      <div aria-hidden="true" style={{position:"absolute",width:0,height:0,overflow:"hidden",opacity:0,pointerEvents:"none"}}>
+        {featured.map(c=><img key={c.id} src={heroSrcFor(c)} alt="" loading="eager" decoding="async"/>)}
+      </div>
+      <div style={{display:"flex",gap:8}}>
+        {featured.map((c,i)=><button key={c.id} onClick={()=>setCIdx(i)} aria-label={`Show ${c.name}`} style={{flex:1,height:3,border:"none",background:"rgba(255,255,255,.16)",cursor:"pointer",padding:0,position:"relative",overflow:"hidden",borderRadius:0,transition:"background .3s"}}>
+          <span style={{position:"absolute",left:0,top:0,bottom:0,width:cIdx>i?"100%":cIdx===i?"100%":"0%",background:"#fff",transformOrigin:"left center",animation:cIdx===i&&!cPaused?"caseProgress 6.5s linear forwards":"none",transform:cIdx===i?undefined:cIdx>i?"scaleX(1)":"scaleX(0)"} as CSSProperties}/>
+        </button>)}
+      </div>
+    </W>
+  </section>;
+}
+
 /* ── HOME ── */
 function Home({go}:{go:(p:string,id?:string)=>void}){
   const[at,setAt]=useState(0);const[ap,setAp]=useState(0);const tlR=useRef<HTMLElement>(null);
@@ -843,11 +924,6 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
   ];
   const[hsIdx,setHsIdx]=useState(0);
   useEffect(()=>{const i=setInterval(()=>setHsIdx(p=>(p+1)%heroShowcase.length),4200);return()=>clearInterval(i);},[heroShowcase.length]);
-  // CASES SLIDER — cinematic full-viewport showcase of all 8 cases. Auto-advance with pause on hover.
-  const[cIdx,setCIdx]=useState(0);
-  const[cPaused,setCPaused]=useState(false);
-  // Slider cycles through the 6 most prominent cases; the full archive lives on /work.
-  useEffect(()=>{if(cPaused)return;const i=setInterval(()=>setCIdx(p=>(p+1)%6),6500);return()=>clearInterval(i);},[cPaused]);
   useEffect(()=>{const i=setInterval(()=>setAt(p=>(p+1)%tests.length),5000);return()=>clearInterval(i);},[]);
   useEffect(()=>{const h=()=>{if(!tlR.current)return;const r=tlR.current.getBoundingClientRect();const p=Math.max(0,Math.min(1,(-r.top+200)/(r.height-300)));setAp(Math.min(3,Math.floor(p*4)));};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);},[]);
 
@@ -882,14 +958,15 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
           </h1>
           <p className="fi d3" style={{fontSize:"clamp(18px,1.6vw,22px)",color:"rgba(255,255,255,.7)",lineHeight:1.55,maxWidth:580,marginBottom:48,fontWeight:400}}>Honest advice and expert support, from the very first step.</p>
           <div className="fi d4" style={{display:"flex",alignItems:"center",gap:28,flexWrap:"wrap"}}>
-            <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:12,background:"#fff",color:"var(--blue)",padding:"16px 32px",borderRadius:50,fontFamily:"var(--jk)",fontSize:15,fontWeight:700,border:"none",cursor:"pointer",transition:"transform .2s, box-shadow .25s",boxShadow:"0 2px 8px rgba(0,0,0,.18)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.28)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.18)";}}>Start a conversation <Arr s={14} c="var(--blue)"/></button>
+            <button onClick={()=>{const el=document.querySelector('.get-started');if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}} style={{display:"inline-flex",alignItems:"center",gap:12,background:"#fff",color:"var(--blue)",padding:"16px 32px",borderRadius:50,fontFamily:"var(--jk)",fontSize:15,fontWeight:700,border:"none",cursor:"pointer",transition:"transform .2s, box-shadow .25s",boxShadow:"0 2px 8px rgba(0,0,0,.18)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.28)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.18)";}}>Don't know where to start? <Arr s={14} c="var(--blue)"/></button>
+            <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"rgba(255,255,255,.08)",color:"#fff",padding:"14px 24px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,border:"1px solid rgba(255,255,255,.24)",cursor:"pointer",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",transition:"background .2s, border-color .2s, transform .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.16)";e.currentTarget.style.borderColor="rgba(255,255,255,.45)";e.currentTarget.style.transform="translateY(-1px)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.24)";e.currentTarget.style.transform="";}}>Start a conversation <Arr s={13} c="currentColor"/></button>
             <button onClick={()=>go("cases")} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,color:"rgba(255,255,255,.7)",letterSpacing:.1,transition:"color .2s, gap .2s"}} onMouseEnter={e=>{e.currentTarget.style.color="#fff";e.currentTarget.style.gap="12px";}} onMouseLeave={e=>{e.currentTarget.style.color="rgba(255,255,255,.7)";e.currentTarget.style.gap="8px";}}>or see our work <Arr s={13} c="currentColor"/></button>
           </div>
         </div>
       </W>
     </section>
     {/* TRUST STRIP — combined: award (clickable, left) + scrolling brand marquee (right). One credibility row. */}
-    <section className="trust-strip" style={{borderBottom:"1px solid var(--brd)",background:"#F4F8FB",overflow:"hidden"}}>
+    <section className="trust-strip" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
       <W className="trust-strip-row" style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
         {/* Award — clickable, prominent, on the left */}
         <div className="trust-award" onClick={()=>go("cases","farmwave")} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"){go("cases","farmwave");}}} style={{display:"flex",alignItems:"center",gap:14,padding:"16px clamp(20px,3vw,32px) 16px 0",cursor:"pointer",borderRight:"1px solid var(--brd)",flexShrink:0,transition:"opacity .2s"}} onMouseEnter={e=>e.currentTarget.style.opacity=".7"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
@@ -904,7 +981,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         {/* Brand marquee — anchored by a "20+ PARTNERS" label in flow (solid bg, real layout), then scrolling brand names beside it */}
         <div className="trust-marquee" style={{flex:1,minWidth:0,display:"flex",alignItems:"center"}}>
           {/* Anchor in flow — solid block, won't have z-index conflicts with the moving marquee */}
-          <div style={{flexShrink:0,paddingLeft:"clamp(20px,3vw,32px)",paddingRight:18,display:"flex",alignItems:"center",gap:10,background:"#F4F8FB",alignSelf:"stretch"}}>
+          <div style={{flexShrink:0,paddingLeft:"clamp(20px,3vw,32px)",paddingRight:18,display:"flex",alignItems:"center",gap:10,background:"var(--bg2)",alignSelf:"stretch"}}>
             <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>20+ partners since 2017</span>
             <span style={{width:14,height:1,background:"var(--brd)",flexShrink:0}}/>
           </div>
@@ -930,87 +1007,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         </div>)}
       </div>
     </W></section>
-    {/* CASES SLIDER — full-viewport cinematic showcase. Auto-rotates through all 8 cases, manual nav via arrows + stepper. */}
-    {(()=>{
-      const outcomes:Record<string,string>={
-        nomo:"Live in all 50 US states · sub-1s emergency alerts",
-        farmwave:"2025 AI Harvest Vision Award · 3–8 bushels per acre recovered",
-        muvr:"Acquired by Exactech, December 2020",
-        noctrix:"Acquired by ResMed for $340M · First FDA-authorised non-drug therapy for RLS",
-        beunity:"500+ member organisations across the EU",
-        mobility:"Corporate & leasing-company fleets across the EU",
-        drift:"Industry-first crop-type and seed-trait sharing tool",
-        crossiety:"Digital village square deployed across Switzerland & Germany",
-      };
-      const heroSrcFor=(c:typeof cases[0])=>{
-        if(c.id==="nomo")return process.env.PUBLIC_URL+"/images/nomo_4.png";
-        if(c.id==="farmwave")return process.env.PUBLIC_URL+"/images/farmwave_home_ai.png";
-        if(c.id==="crossiety")return process.env.PUBLIC_URL+"/images/crossiety_home.png";
-        if(c.id==="muvr")return process.env.PUBLIC_URL+"/images/muvr_ios.png";
-        if(c.id==="noctrix")return process.env.PUBLIC_URL+"/images/nidra_image.jpg";
-        // Prefer the product showcase shot (better aspect ratio for the slider) over the wide banner cover.
-        return (c as any).headerImg||(c as any).coverImg;
-      };
-      // Slider only features the first 6 cases. The remaining two live on /work via the "View more" link.
-      const featured=cases.slice(0,6);
-      const active=featured[cIdx];void active;
-      return <section className="cases-slider" onMouseEnter={()=>setCPaused(true)} onMouseLeave={()=>setCPaused(false)} style={{position:"relative",minHeight:640,background:"var(--blue)",overflow:"hidden",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
-        <W style={{position:"relative",zIndex:2,paddingTop:"clamp(40px,7vh,72px)",paddingBottom:"clamp(64px,9vh,104px)",color:"#fff",display:"flex",flexDirection:"column",gap:"clamp(28px,4vh,44px)"}}>
-          {/* Top row — section anchor + view-archive link */}
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:24}}>
-            <div style={{display:"flex",alignItems:"center",gap:12,fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"rgba(255,255,255,.6)",letterSpacing:2.4,textTransform:"uppercase"}}>
-              <span style={{width:24,height:1,background:"rgba(255,255,255,.4)"}}/>
-              <span>Selected work</span>
-              <span style={{width:4,height:4,borderRadius:"50%",background:"rgba(255,255,255,.45)"}}/>
-              <span style={{fontFeatureSettings:'"tnum"'}}>{`0${cIdx+1}`} / {`0${featured.length}`}</span>
-            </div>
-            <button onClick={()=>go("cases")} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:13,fontWeight:600,color:"rgba(255,255,255,.85)",letterSpacing:.1,transition:"color .2s, gap .2s"}} onMouseEnter={e=>{e.currentTarget.style.color="#fff";e.currentTarget.style.gap="12px";}} onMouseLeave={e=>{e.currentTarget.style.color="rgba(255,255,255,.85)";e.currentTarget.style.gap="8px";}}>View more <Arr s={13} c="currentColor"/></button>
-          </div>
-          {/* Magazine split — single active slide, remounts on cIdx change for a fresh fade-in. No overlap. */}
-          {(()=>{const c=featured[cIdx];return <div key={`slide-${c.id}`} className="case-slide-row" style={{display:"grid",gridTemplateColumns:"1fr 1.15fr",gap:"clamp(28px,5vw,72px)",alignItems:"stretch",height:"clamp(460px,52vh,560px)",animation:"caseSlideIn .55s cubic-bezier(.22,1,.36,1) both"}}>
-            {/* Left column — text content (centered vertically within the locked slide height) */}
-            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",minHeight:0,overflow:"hidden"}}>
-              <span style={{alignSelf:"flex-start",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"#fff",letterSpacing:2.4,textTransform:"uppercase",padding:"5px 12px",background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.22)",borderRadius:50,marginBottom:22}}>{c.cat}</span>
-              <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,5.2vw,68px)",fontWeight:800,letterSpacing:"-.035em",lineHeight:.98,color:"#fff",margin:0,marginBottom:14}}>{c.name}</h2>
-              {/* Outcome line — the punchy headline metric */}
-              <p style={{fontFamily:"var(--jk)",fontSize:"clamp(15px,1.4vw,19px)",color:"#fff",lineHeight:1.5,margin:0,marginBottom:14,maxWidth:520,fontWeight:600}}>{outcomes[c.id]||c.brief}</p>
-              {/* Brief — the case in one sentence, softer */}
-              <p style={{fontFamily:"var(--in)",fontSize:"clamp(13px,1.05vw,15px)",color:"rgba(255,255,255,.7)",lineHeight:1.65,margin:0,marginBottom:22,maxWidth:480,fontWeight:400}}>{c.brief}</p>
-              {/* Tags — quick read of what the project is about */}
-              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:28}}>
-                {c.tags.map(t=><span key={t} style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:600,color:"rgba(255,255,255,.78)",letterSpacing:.2,padding:"4px 10px",border:"1px solid rgba(255,255,255,.18)",borderRadius:6,background:"rgba(255,255,255,.04)"}}>{t}</span>)}
-              </div>
-              {/* Meta row — period + client + read CTA */}
-              <div style={{display:"flex",alignItems:"center",gap:18,flexWrap:"wrap"}}>
-                <button onClick={()=>go("cases",c.id)} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"14px 26px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,border:"none",cursor:"pointer",transition:"transform .2s, box-shadow .25s",boxShadow:"0 2px 8px rgba(0,0,0,.22)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.34)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.22)";}}>Read more <Arr s={13} c="var(--blue)"/></button>
-                {(c as any).client&&<div style={{display:"flex",flexDirection:"column",gap:2,fontFamily:"var(--jk)"}}>
-                  <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.55)",letterSpacing:1.6,textTransform:"uppercase"}}>Client</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{(c as any).client}</span>
-                </div>}
-                {(c as any).period&&<div style={{display:"flex",flexDirection:"column",gap:2,fontFamily:"var(--jk)"}}>
-                  <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.55)",letterSpacing:1.6,textTransform:"uppercase"}}>Period</span>
-                  <span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{(c as any).period}</span>
-                </div>}
-              </div>
-            </div>
-            {/* Right column — image stage. Clean light card so the product reads, no overlap with text. */}
-            <div className="case-slide-stage" style={{position:"relative",borderRadius:18,background:"#F4F8FB",overflow:"hidden",height:"100%",boxShadow:"0 18px 48px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18)"}}>
-              <img src={heroSrcFor(c)} alt={`${c.name}, ${c.cat} case study`} loading="eager" decoding="async" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center",display:"block"}}/>
-            </div>
-          </div>;})()}
-          {/* Hidden preloader — keeps the next images cached so the cross-fade feels snappy */}
-          <div aria-hidden="true" style={{position:"absolute",width:0,height:0,overflow:"hidden",opacity:0,pointerEvents:"none"}}>
-            {featured.map(c=><img key={c.id} src={heroSrcFor(c)} alt="" loading="eager" decoding="async"/>)}
-          </div>
-          {/* Progress stepper — slim bars at the bottom, active one fills over the 6.5s auto-advance interval */}
-          <div style={{display:"flex",gap:8}}>
-            {featured.map((c,i)=><button key={c.id} onClick={()=>setCIdx(i)} aria-label={`Show ${c.name}`} style={{flex:1,height:3,border:"none",background:"rgba(255,255,255,.16)",cursor:"pointer",padding:0,position:"relative",overflow:"hidden",borderRadius:0,transition:"background .3s"}}>
-              <span style={{position:"absolute",left:0,top:0,bottom:0,width:cIdx>i?"100%":cIdx===i?"100%":"0%",background:"#fff",transformOrigin:"left center",animation:cIdx===i&&!cPaused?"caseProgress 6.5s linear forwards":"none",transform:cIdx===i?undefined:cIdx>i?"scaleX(1)":"scaleX(0)"} as CSSProperties}/>
-            </button>)}
-          </div>
-        </W>
-      </section>;
-    })()}
+    <CasesSlider go={go}/>
     {/* PROCESS — compact horizontal 4-step row, ~120px tall instead of 800px. Sticky timeline + sparse layout retired. */}
     <section style={{padding:"clamp(56px,8vh,80px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
       <W>
@@ -1122,35 +1119,71 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         </W>
       </section>;
     })()}
-    {/* ── CLOSING CTA ── conversion moment, brand blue dominant ── */}
-    <section style={{padding:"clamp(80px,12vh,140px) 0",background:"#004C73",color:"#fff",position:"relative",overflow:"hidden",borderTop:"1px solid var(--brd)"}}>
-      <W style={{position:"relative",zIndex:2,textAlign:"center"}}>
-        <div style={{display:"inline-flex",alignItems:"center",gap:10,marginBottom:24,padding:"6px 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.18)",borderRadius:50,backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
-          <span style={{width:6,height:6,borderRadius:"50%",background:"#fff"}}/>
-          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"#fff",letterSpacing:1.6,textTransform:"uppercase"}}>Currently open for new projects</span>
+    {/* ── TECH PARTNER ── qualifying message for the buyer who has vision + budget but needs engineering ── */}
+    <section className="get-started" style={{padding:"clamp(72px,10vh,120px) 0",background:"var(--bg)",borderTop:"1px solid var(--brd)"}}><W>
+      <div style={{display:"grid",gridTemplateColumns:"1.15fr 1fr",gap:48,alignItems:"end",marginBottom:"clamp(40px,5vh,56px)"}} className="get-started-head">
+        <div>
+          <SL ch="Your tech partner"/>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(32px,4.5vw,56px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",color:"var(--txt)",margin:0}}>You've got the idea. <span style={{color:"var(--blue)"}}>We bring the tech.</span></h2>
         </div>
-        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,5.5vw,68px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.04em",color:"#fff",margin:"0 auto 20px",maxWidth:900}}>Tell us about <span style={{fontStyle:"italic",fontWeight:500}}>the problem.</span></h2>
-        <p style={{fontFamily:"var(--in)",fontSize:17,color:"rgba(255,255,255,.72)",lineHeight:1.6,maxWidth:560,margin:"0 auto 16px"}}>A 30-minute call. No deck, no pitch. You talk about your challenge, we'll be honest about whether and how we can help.</p>
-        <p style={{fontFamily:"var(--jk)",fontSize:13,color:"rgba(255,255,255,.5)",margin:"0 auto 40px",letterSpacing:.2}}>Reply within one business day · Founder-led · No commitment</p>
-        <div className="closing-cta-row" style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
-          <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"15px 30px",borderRadius:50,fontFamily:"var(--jk)",fontSize:15,fontWeight:700,border:"none",cursor:"pointer",transition:"transform .2s, box-shadow .25s",boxShadow:"0 4px 16px rgba(0,0,0,.22)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 12px 32px rgba(0,0,0,.32)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.22)";}}>Start a conversation <Arr s={14} c="var(--blue)"/></button>
-          <a href="mailto:jurica@lumo-lab.com" style={{display:"inline-flex",alignItems:"center",gap:10,background:"transparent",color:"rgba(255,255,255,.92)",padding:"14px 26px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,border:"1px solid rgba(255,255,255,.24)",cursor:"pointer",textDecoration:"none",transition:"background .2s, border-color .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.4)";}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="rgba(255,255,255,.24)";}}>Email Jurica directly</a>
+        <p style={{fontFamily:"var(--in)",fontSize:16,color:"var(--txt3)",lineHeight:1.65,margin:0,maxWidth:440,paddingBottom:6}}>The hard part isn't knowing what to build — it's knowing how. Start with a free consultation: we'll talk through your idea and where the engineering work actually sits.</p>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}} className="get-started-grid">
+        {/* Option 1 — Book a consultation via Calendly */}
+        <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" className="get-started-card" style={{textDecoration:"none",padding:"36px 32px",background:"var(--bg)",border:"1px solid var(--brd)",borderRadius:16,transition:"transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s",display:"flex",flexDirection:"column",gap:14,minHeight:220,position:"relative"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 16px 36px rgba(0,30,50,.10)";e.currentTarget.style.borderColor="rgba(0,76,115,.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="";e.currentTarget.style.borderColor="var(--brd)";}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4,textTransform:"uppercase"}}>01</span>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:800,color:"var(--txt)",margin:0,letterSpacing:"-.015em",lineHeight:1.15}}>Free consultation</h3>
+          <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"var(--txt3)",lineHeight:1.7,margin:0,flex:1}}>Bring the idea. We'll talk scope, stack, and what shipping it actually looks like — for as long as it takes. No deck, no sales pitch, just an honest read.</p>
+          <span style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",letterSpacing:.2,marginTop:4}}>Book on Calendly <Arr s={13} c="var(--blue)"/></span>
+        </a>
+        {/* Option 2 — Send your brief */}
+        <a href="mailto:jurica@lumo-lab.com?subject=Lumo%20Lab%20—%20Project%20brief" className="get-started-card" style={{textDecoration:"none",padding:"36px 32px",background:"var(--bg)",border:"1px solid var(--brd)",borderRadius:16,transition:"transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s",display:"flex",flexDirection:"column",gap:14,minHeight:220,position:"relative"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 16px 36px rgba(0,30,50,.10)";e.currentTarget.style.borderColor="rgba(0,76,115,.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="";e.currentTarget.style.borderColor="var(--brd)";}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4,textTransform:"uppercase"}}>02</span>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:800,color:"var(--txt)",margin:0,letterSpacing:"-.015em",lineHeight:1.15}}>Send your brief</h3>
+          <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"var(--txt3)",lineHeight:1.7,margin:0,flex:1}}>Got specs, a deck, or a rough doc already? Email it over. You'll get a written response with where we'd start.</p>
+          <span style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",letterSpacing:.2,marginTop:4}}>jurica@lumo-lab.com <Arr s={13} c="var(--blue)"/></span>
+        </a>
+        {/* Option 3 — See similar work */}
+        <div onClick={()=>go("cases")} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"){go("cases");}}} className="get-started-card" style={{cursor:"pointer",padding:"36px 32px",background:"var(--bg)",border:"1px solid var(--brd)",borderRadius:16,transition:"transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, border-color .25s",display:"flex",flexDirection:"column",gap:14,minHeight:220,position:"relative"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 16px 36px rgba(0,30,50,.10)";e.currentTarget.style.borderColor="rgba(0,76,115,.18)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="";e.currentTarget.style.borderColor="var(--brd)";}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4,textTransform:"uppercase"}}>03</span>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:800,color:"var(--txt)",margin:0,letterSpacing:"-.015em",lineHeight:1.15}}>See similar work</h3>
+          <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"var(--txt3)",lineHeight:1.7,margin:0,flex:1}}>Read what we've shipped — across health, agriculture, mobility, and SaaS. Get a feel for the kind of partner we are.</p>
+          <span style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",letterSpacing:.2,marginTop:4}}>Browse our work<Arr s={13} c="var(--blue)"/></span>
         </div>
-      </W>
-    </section>
+      </div>
+    </W></section>
   </div>;
 }
 
 /* ── ABOUT ── */
-function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
+function About({go}:{go:(p:string,id?:string)=>void}){return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 64px"}}><W><SL ch="About Us"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver. We handle the tech so you can focus on the <span style={{color:"var(--blue)"}}>big picture.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480}}>A technology consultancy based in Croatia, advising startups and enterprises worldwide.</p>
   </W></section>
-  <section style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",padding:"36px 0",background:"var(--bg2)"}}><W style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:24}} className="about-stats">
-    {[{n:10,s:"+",l:"Years"},{n:15,s:"+",l:"Clients"},{n:4,s:"",l:"Verticals"}].map((s,i)=><div key={i} style={{textAlign:"center"}}><div style={{fontFamily:"var(--jk)",fontSize:36,fontWeight:800,color:"var(--blue)"}}><AnimNum end={s.n} suffix={s.s}/></div><p style={{fontSize:10,color:"var(--txt4)",marginTop:6,fontWeight:600,textTransform:"uppercase",letterSpacing:2,fontFamily:"var(--jk)"}}>{s.l}</p></div>)}
-  </W></section>
-  <div style={{borderBottom:"1px solid var(--brd)",padding:"14px 0",overflow:"hidden"}}><div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.2}}/></span>)}</div></div>
+  {/* TRUST STRIP — same as on the home page. Award (clickable, left) + 20+ partners marquee (right). */}
+  <section className="trust-strip" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
+    <W className="trust-strip-row" style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
+      <div className="trust-award" onClick={()=>go("cases","farmwave")} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"){go("cases","farmwave");}}} style={{display:"flex",alignItems:"center",gap:14,padding:"16px clamp(20px,3vw,32px) 16px 0",cursor:"pointer",borderRight:"1px solid var(--brd)",flexShrink:0,transition:"opacity .2s"}} onMouseEnter={e=>e.currentTarget.style.opacity=".7"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
+        <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:36,height:36,borderRadius:10,background:"var(--blue)",color:"#fff",flexShrink:0,boxShadow:"0 4px 12px rgba(0,76,115,.22)"}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
+        </span>
+        <div style={{display:"flex",flexDirection:"column",gap:2}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase"}}>2025 Award winner</span>
+          <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)",lineHeight:1.2}}>AI Harvest Vision Solution <span style={{color:"var(--txt3)",fontWeight:500}}>· Farmwave case →</span></span>
+        </div>
+      </div>
+      <div className="trust-marquee" style={{flex:1,minWidth:0,display:"flex",alignItems:"center"}}>
+        <div style={{flexShrink:0,paddingLeft:"clamp(20px,3vw,32px)",paddingRight:18,display:"flex",alignItems:"center",gap:10,background:"var(--bg2)",alignSelf:"stretch"}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>20+ partners since 2017</span>
+          <span style={{width:14,height:1,background:"var(--brd)",flexShrink:0}}/>
+        </div>
+        <div style={{flex:1,minWidth:0,overflow:"hidden",position:"relative",alignSelf:"stretch",display:"flex",alignItems:"center",paddingRight:"clamp(20px,3vw,32px)"}}>
+          <div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontFamily:"var(--jk)",fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",letterSpacing:".005em",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/></span>)}</div>
+        </div>
+      </div>
+    </W>
+  </section>
   <section style={{padding:"80px 0"}}><W><SL ch="Our story"/>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:64,marginBottom:56}}>
       <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.5vw,32px)",fontWeight:800,color:"var(--txt)"}}>From a one-person studio to a global <span style={{color:"var(--blue)"}}>technology consultancy.</span></h2>
@@ -1170,8 +1203,9 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
     <div style={{display:"grid",gridTemplateColumns:"360px 1fr",borderRadius:24,overflow:"hidden",border:"1px solid var(--brd)",boxShadow:"0 4px 40px rgba(0,30,50,.06)"}}>
       {/* Photo panel */}
       <div style={{position:"relative",minHeight:520,background:"var(--blue)"}}>
-        <img alt="Jurica Mlinaric" src={process.env.PUBLIC_URL + "/images/jurica.png"} decoding="async" width={720} height={900} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
-        <div style={{position:"absolute",inset:0,background:"rgba(0,20,40,.45)"}}/>
+        <img alt="Jurica Mlinaric" src={process.env.PUBLIC_URL + "/images/jurica.png"} decoding="async" width={720} height={900} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block"}}/>
+        {/* Bottom-only dark band so the name + role read clearly without darkening the rest of the photo */}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,height:160,background:"rgba(0,20,40,.6)"}}/>
         <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"28px 28px 32px"}}>
           <h3 style={{fontFamily:"var(--jk)",fontSize:24,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1}}>Jurica Mlinaric</h3>
           <p style={{fontFamily:"var(--jk)",fontSize:13,color:"rgba(255,255,255,.55)",fontWeight:600,marginBottom:16}}>CEO & Founder</p>
@@ -1208,8 +1242,9 @@ function About({go}:{go:(p:string)=>void}){return <div style={{paddingTop:76}}>
     <div className="team-grid" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,maxWidth:980}}>
       {[{n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg"},{n:"Rudolf Lovrencic, PhD",r:"Software Architect"},{n:"Mato Poslon",r:"Full Stack Engineer"},{n:"Matija Sever",r:"Data Scientist"},{n:"Stefan Petrovic",r:"iOS Engineer",img:"stefan.jpeg"}].map((m,i)=>(
         <div key={i} style={{position:"relative",aspectRatio:"3/4",borderRadius:20,overflow:"hidden",background:"var(--blue)"}}>
-          <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} loading="lazy" decoding="async" width={400} height={480} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block",opacity:.92}}/>
-          <div style={{position:"absolute",inset:0,background:"rgba(0,20,40,.5)"}}/>
+          <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} loading="lazy" decoding="async" width={400} height={480} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block"}}/>
+          {/* Lumo-blue fade — sits only at the bottom strip so the photo dominates */}
+          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, var(--blue) 0%, rgba(0,76,115,.7) 15%, rgba(0,76,115,0) 35%)"}}/>
           <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"20px 24px 24px"}}>
             <h3 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1.2}}>{m.n}</h3>
             <p style={{fontSize:12,color:"rgba(255,255,255,.55)",fontWeight:600}}>{m.r}</p>
@@ -1306,7 +1341,7 @@ function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[
             <h3 style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:800,color:"var(--txt)",marginBottom:4}}>Not sure which model fits?</h3>
             <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6,maxWidth:520}}>A 30-minute call is often enough for us to recommend the right shape. No pressure, no sales pitch.</p>
           </div>
-          <button onClick={()=>go("contact")} className="cta-m" style={{flexShrink:0}}>Book an intro call <Arr s={14} c="#fff"/></button>
+          <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" className="cta-m" style={{flexShrink:0,textDecoration:"none"}}>Book on Calendly <Arr s={14} c="#fff"/></a>
         </div>
       </div>
     </div>

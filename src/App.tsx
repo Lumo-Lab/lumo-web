@@ -182,7 +182,6 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   /* Case detail cover: wide-banner images shrink to a thin strip on phones — give the cover a fixed mobile height and let the image fill via object-fit:cover so the title stays readable */
   .lumo .case-cover{min-height:340px!important;height:340px!important;max-height:340px!important}
   .lumo .case-cover-img{height:100%!important;width:100%!important;max-height:none!important;object-fit:cover!important;object-position:center!important;position:absolute!important;inset:0!important}
-  .lumo .case-cover-grad{height:100%!important;background:rgba(0,20,40,.5)!important}
   .lumo .case-cover-title{padding-bottom:32px!important}
   .lumo .case-cover-h1{font-size:clamp(28px,7vw,40px)!important;line-height:1.05!important;margin-top:6px!important}
   /* Case detail metrics strip — clean 2x2 grid on mobile with proper inter-cell borders */
@@ -463,7 +462,7 @@ type BlogBlock=
   |{type:"quote",content:string}
   |{type:"list",items:string[]};
 const blogs=[
-  {id:"b1",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"9 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",body:[
+  {id:"nomo-smart-care-case-study",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"9 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",body:[
     {type:"heading",content:"Project overview"},
     {type:"list",items:[
       "**Client**: [Nomo International, Inc](https://nomosmartcare.com/)",
@@ -535,7 +534,7 @@ const blogs=[
     ]},
     {type:"text",content:"Looking to build something ambitious, human-centered, and technically rock-solid? [Let's make it happen.](https://lumo-lab.com/contact)"},
   ] as BlogBlock[]},
-  {id:"b2",title:"Deep Learning for Audio Classification",cat:"Engineering",date:"March 11, 2025",read:"8 min",author:"Matija Sever",cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/nomo_3.jpg"),excerpt:"How convolutional neural networks learn to hear, and why spectrograms are the secret ingredient.",body:[
+  {id:"deep-learning-audio-classification",title:"Deep Learning for Audio Classification",cat:"Engineering",date:"March 11, 2025",read:"8 min",author:"Matija Sever",cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/nomo_3.jpg"),excerpt:"How convolutional neural networks learn to hear, and why spectrograms are the secret ingredient.",body:[
     {type:"heading",content:"Introduction"},
     {type:"text",content:"Audio classification, the process of assigning sound clips to predefined categories, is quietly reshaping a lot of modern technology. From smart security systems that detect alarm sounds in real time to automotive safety interfaces and healthcare diagnostics, robust audio-classification systems give real competitive advantage. By converting raw audio into visual representations (spectrograms and mel spectrograms) and applying deep learning, you can automatically extract intricate, hierarchical features from audio signals. This post walks through the foundational ideas, CNN architectures, audio-processing methods, and data-augmentation techniques that power modern audio-classification systems."},
     {type:"heading",content:"Foundations of deep learning in audio"},
@@ -593,7 +592,7 @@ const blogs=[
     {type:"heading",content:"Final thoughts"},
     {type:"text",content:"Combining deep learning with audio processing lets CNNs learn complex patterns directly from spectrogram images. The approach has produced state-of-the-art performance on audio classification, and as research keeps moving, these systems will continue to advance the field of audio analysis."},
   ] as BlogBlock[]},
-  {id:"b3",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic, PhD",cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers: why it's harder than it sounds, and how we made it work.",body:[
+  {id:"ai-on-microcontrollers",title:"AI on Microcontrollers",cat:"Engineering",date:"November 20, 2024",read:"7 min",author:"Rudolf Lovrencic, PhD",cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/blog_1.jpg"),excerpt:"Running deep learning models on ESP32 microcontrollers: why it's harder than it sounds, and how we made it work.",body:[
     {type:"text",content:"Running deep learning models on microcontrollers is not exactly a run-of-the-mill task due to the resource limitations of these devices. Microcontrollers are typically designed for low-power, low-cost embedded systems with minimal processing power and memory. Machine-learning algorithms, especially deep-learning models, often require significant computational resources and memory."},
     {type:"text",content:"One of our clients is [Nomo Smart Care](https://nomosmartcare.com/):"},
     {type:"quote",content:"The Nomo system is for caregivers who want to make sure a loved one is OK. The Nomo system uses sensors, not cameras, to monitor in-home motion. Data from sensors is sent to the Nomo mobile app and allows you, or a circle of trusted caregivers, to check in on your loved one from anywhere, any time."},
@@ -840,10 +839,19 @@ function Back({go,to,label}:{go:(to:string)=>void,to:string,label:string}){retur
 
 /* ── CASES SLIDER — shared between Home and About. Magazine split, auto-advance, brand-blue stage. ── */
 function CasesSlider({go}:{go:(p:string,id?:string)=>void}){
+  const SLIDE_MS=6500;
   const[cIdx,setCIdx]=useState(0);
   const[cPaused,setCPaused]=useState(false);
-  // Slider cycles through the 6 most prominent cases; the full archive lives on /work.
-  useEffect(()=>{if(cPaused)return;const i=setInterval(()=>setCIdx(p=>(p+1)%6),6500);return()=>clearInterval(i);},[cPaused]);
+  // Simple slide advancement: every SLIDE_MS, advance to the next slide. No
+  // progress-fill animation (was too easy to desync with React renders / CSS /
+  // hydration). The dot indicators below are pure state — past/current = filled,
+  // future = dim — so there's nothing visual that can stutter or get stuck.
+  useEffect(()=>{
+    if(cPaused)return;
+    const t=setTimeout(()=>setCIdx(p=>(p+1)%6),SLIDE_MS);
+    return()=>clearTimeout(t);
+  },[cIdx,cPaused]);
+  const goToSlide=(i:number)=>setCIdx(i);
   const outcomes:Record<string,string>={
     nomo:"Live in all 50 US states · sub-1s emergency alerts",
     farmwave:"2025 AI Harvest Vision Award · 3–8 bushels per acre recovered",
@@ -890,10 +898,6 @@ function CasesSlider({go}:{go:(p:string,id?:string)=>void}){
               <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.55)",letterSpacing:1.6,textTransform:"uppercase"}}>Client</span>
               <span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{(c as any).client}</span>
             </div>}
-            {(c as any).period&&<div style={{display:"flex",flexDirection:"column",gap:2,fontFamily:"var(--jk)"}}>
-              <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.55)",letterSpacing:1.6,textTransform:"uppercase"}}>Period</span>
-              <span style={{fontSize:13,fontWeight:600,color:"#fff"}}>{(c as any).period}</span>
-            </div>}
           </div>
         </div>
         <div className="case-slide-stage" style={{position:"relative",borderRadius:18,background:"#F4F8FB",overflow:"hidden",height:"100%",boxShadow:"0 18px 48px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18)"}}>
@@ -903,10 +907,24 @@ function CasesSlider({go}:{go:(p:string,id?:string)=>void}){
       <div aria-hidden="true" style={{position:"absolute",width:0,height:0,overflow:"hidden",opacity:0,pointerEvents:"none"}}>
         {featured.map(c=><img key={c.id} src={heroSrcFor(c)} alt="" loading="eager" decoding="async"/>)}
       </div>
-      <div style={{display:"flex",gap:8}}>
-        {featured.map((c,i)=><button key={c.id} onClick={()=>setCIdx(i)} aria-label={`Show ${c.name}`} style={{flex:1,height:3,border:"none",background:"rgba(255,255,255,.16)",cursor:"pointer",padding:0,position:"relative",overflow:"hidden",borderRadius:0,transition:"background .3s"}}>
-          <span style={{position:"absolute",left:0,top:0,bottom:0,width:cIdx>i?"100%":cIdx===i?"100%":"0%",background:"#fff",transformOrigin:"left center",animation:cIdx===i&&!cPaused?"caseProgress 6.5s linear forwards":"none",transform:cIdx===i?undefined:cIdx>i?"scaleX(1)":"scaleX(0)"} as CSSProperties}/>
-        </button>)}
+      <div style={{display:"flex",gap:10,alignItems:"center"}}>
+        {featured.map((c,i)=>{
+          const isPast=cIdx>i;
+          const isActive=cIdx===i;
+          // Current slide gets a wider pill so it's visually distinct from past/future
+          // dots. Past+current are filled white, future are dim. All transitions are
+          // CSS — no JS-driven values that can stutter.
+          return <button key={c.id} onClick={()=>goToSlide(i)} aria-label={`Show ${c.name}`} style={{
+            width:isActive?28:8,
+            height:8,
+            borderRadius:4,
+            border:"none",
+            padding:0,
+            background:(isPast||isActive)?"#fff":"rgba(255,255,255,.24)",
+            cursor:"pointer",
+            transition:"width .4s cubic-bezier(.22,1,.36,1), background .3s ease",
+          }}/>;
+        })}
       </div>
     </W>
   </section>;
@@ -951,12 +969,12 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
               <span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff",letterSpacing:.3}}>AI Harvest Vision <span style={{color:"rgba(255,255,255,.55)",fontWeight:500}}>· 2025</span></span>
             </button>
           </div>
-          <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8.5vw,128px)",fontWeight:800,lineHeight:.94,letterSpacing:"-0.045em",marginBottom:36,maxWidth:1040}}>
+          <h1 className="speakable-hero" style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8.5vw,128px)",fontWeight:800,lineHeight:.94,letterSpacing:"-0.045em",marginBottom:36,maxWidth:1040}}>
             {["We","advise,","guide,","and"].map((w,i)=><span key={w}>{i>0?" ":""}<span className="word" style={{animationDelay:`${0.1+i*0.08}s`}}>{w}</span></span>)}
             {" "}
             <span className="word" style={{animationDelay:"0.44s",animation:`wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,opacity:0,display:"inline-block",color:"#7DB9E8"}}>deliver.</span>
           </h1>
-          <p className="fi d3" style={{fontSize:"clamp(18px,1.6vw,22px)",color:"rgba(255,255,255,.7)",lineHeight:1.55,maxWidth:580,marginBottom:48,fontWeight:400}}>Honest advice and expert support, from the very first step.</p>
+          <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(18px,1.6vw,22px)",color:"rgba(255,255,255,.7)",lineHeight:1.55,maxWidth:580,marginBottom:48,fontWeight:400}}>Honest advice and expert support, from the very first step.</p>
           <div className="fi d4" style={{display:"flex",alignItems:"center",gap:28,flexWrap:"wrap"}}>
             <button onClick={()=>{const el=document.querySelector('.get-started');if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}} style={{display:"inline-flex",alignItems:"center",gap:12,background:"#fff",color:"var(--blue)",padding:"16px 32px",borderRadius:50,fontFamily:"var(--jk)",fontSize:15,fontWeight:700,border:"none",cursor:"pointer",transition:"transform .2s, box-shadow .25s",boxShadow:"0 2px 8px rgba(0,0,0,.18)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.28)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.18)";}}>Don't know where to start? <Arr s={14} c="var(--blue)"/></button>
             <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"rgba(255,255,255,.08)",color:"#fff",padding:"14px 24px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,border:"1px solid rgba(255,255,255,.24)",cursor:"pointer",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",transition:"background .2s, border-color .2s, transform .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.16)";e.currentTarget.style.borderColor="rgba(255,255,255,.45)";e.currentTarget.style.transform="translateY(-1px)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.24)";e.currentTarget.style.transform="";}}>Start a conversation <Arr s={13} c="currentColor"/></button>
@@ -1239,18 +1257,45 @@ function About({go}:{go:(p:string,id?:string)=>void}){return <div style={{paddin
   <section style={{padding:"80px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
     <SL ch="Core team"/>
     <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.5vw,28px)",fontWeight:800,color:"var(--txt)",marginBottom:48}}>The people who <span style={{color:"var(--blue)"}}>build it.</span></h2>
-    <div className="team-grid" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,maxWidth:980}}>
-      {[{n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg"},{n:"Rudolf Lovrencic, PhD",r:"Software Architect"},{n:"Mato Poslon",r:"Full Stack Engineer"},{n:"Matija Sever",r:"Data Scientist"},{n:"Stefan Petrovic",r:"iOS Engineer",img:"stefan.jpeg"}].map((m,i)=>(
-        <div key={i} style={{position:"relative",aspectRatio:"3/4",borderRadius:20,overflow:"hidden",background:"var(--blue)"}}>
-          <img src={process.env.PUBLIC_URL+"/images/"+(( m as any).img||"default_user.png")} alt={m.n} loading="lazy" decoding="async" width={400} height={480} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block"}}/>
-          {/* Lumo-blue fade — sits only at the bottom strip so the photo dominates */}
-          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, var(--blue) 0%, rgba(0,76,115,.7) 15%, rgba(0,76,115,0) 35%)"}}/>
-          <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"20px 24px 24px"}}>
-            <h3 style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,color:"#fff",marginBottom:4,lineHeight:1.2}}>{m.n}</h3>
-            <p style={{fontSize:12,color:"rgba(255,255,255,.55)",fontWeight:600}}>{m.r}</p>
+    <div className="team-grid" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:24,maxWidth:980}}>
+      {[
+        // `img` is the headshot file; `imgScale` zooms the image inside the circular
+        // crop when the source has padding around the subject (Domagoj's photo is a
+        // pre-cropped circle on a white background — we scale it up so the white ring
+        // gets clipped by the avatar's border-radius).
+        {n:"Domagoj Kolaric",r:"Lead Mobile Engineer",img:"domagoj.jpeg",imgScale:1.75,imgPos:"center 40%"},
+        {n:"Rudolf Lovrencic, PhD",r:"Software Architect",img:"rudi.jpeg",imgScale:1.05,imgPos:"center 28%"},
+        {n:"Mato Poslon",r:"Full Stack Engineer"},
+        {n:"Matija Sever",r:"Data Scientist",img:"matija.jpeg",imgScale:1.15,imgPos:"center 22%"},
+        {n:"Stefan Petrovic",r:"iOS Engineer",img:"stefan.jpeg",imgScale:1.1,imgPos:"center 28%"},
+      ].map((m:any,i)=>{
+        const clean=m.n.replace(/,.*$/,"").trim();
+        const parts=clean.split(/\s+/);
+        const initials=(parts.length>=2?parts[0][0]+parts[parts.length-1][0]:parts[0].slice(0,2)).toUpperCase();
+        return <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+          <div role={m.img?"img":undefined} aria-label={m.img?m.n:undefined} style={{
+            width:"100%",
+            maxWidth:140,
+            aspectRatio:"1/1",
+            borderRadius:"50%",
+            // Photo headshots are rendered as background-image — using an <img> tag
+            // with absolute positioning inside a border-radius parent hit a Chrome
+            // paint bug where the image fails to render on initial layout.
+            backgroundColor:"var(--blue)",
+            backgroundImage:m.img?`url("${process.env.PUBLIC_URL}/images/${m.img}")`:"radial-gradient(circle at 30% 25%, #1A6B96 0%, var(--blue) 55%, #003655 100%)",
+            backgroundSize:m.img?`${(m.imgScale||1)*100}%`:"auto",
+            backgroundPosition:m.img?(m.imgPos||"center"):"center",
+            backgroundRepeat:"no-repeat",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            marginBottom:18,
+            boxShadow:"0 8px 28px rgba(0,76,115,.22), inset 0 1px 0 rgba(255,255,255,.12)",
+          }}>
+            {!m.img&&<span aria-hidden="true" style={{fontFamily:"var(--jk)",fontSize:"clamp(26px,3.2vw,38px)",fontWeight:700,color:"#fff",letterSpacing:".5px",lineHeight:1}}>{initials}</span>}
           </div>
-        </div>
-      ))}
+          <h3 style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:700,color:"var(--txt)",marginBottom:4,lineHeight:1.25}}>{m.n}</h3>
+          <p style={{fontSize:12,color:"var(--txt3)",fontWeight:500,lineHeight:1.45}}>{m.r}</p>
+        </div>;
+      })}
     </div>
   </W></section>
   <section style={{padding:"80px 0",background:"var(--blue)"}}><W style={{textAlign:"center"}}>
@@ -1285,6 +1330,34 @@ const weekOne=[
   {d:"Day 4",t:"Synthesis",b:"We separate symptoms from root causes. We draft an initial hypothesis, surface the biggest risks and opportunities, and sketch options with trade-offs."},
   {d:"Day 5",t:"Alignment & roadmap",b:"A 60-minute working session: we present findings, align on priorities, and agree the shape of the engagement from week two forward. You leave with a written brief and a decision-ready plan."},
 ];
+
+// Press coverage — keep this list as the single source of truth for both the /press page and the schema graph.
+// Sorted by date descending (newest first) at module-evaluation time, so every consumer sees the same order.
+type PressItem={pub:string,year:string,date:string,headline:string,url:string,caseId?:string,kind:"award"|"acquisition"|"feature"|"launch"|"clinical"};
+const pressItems:PressItem[]=(([
+  // Noctrix Health — ResMed acquisition + FDA authorisation
+  {pub:"MassDevice",year:"2026",date:"2026-01-01",headline:"ResMed enters merger agreement to acquire Noctrix Health for $340M",url:"https://www.massdevice.com/resmed-enters-merger-agreement-to-acquire-noctrix-health-for-340-million/",caseId:"noctrix",kind:"acquisition"},
+  {pub:"PRNewswire",year:"2023",date:"2023-04-19",headline:"Noctrix Health announces successful RCT outcomes and FDA marketing authorization for its breakthrough TOMAC therapy",url:"https://www.prnewswire.com/news-releases/noctrix-health-announces-successful-randomized-controlled-trial-rct-outcomes-and-fda-marketing-authorization-for-its-breakthrough-tonic-motor-activation-tomac--restless-legs-syndrome-rls-therapy-301802232.html",caseId:"noctrix",kind:"clinical"},
+  // Farmwave — 2025 AI Harvest Vision award
+  {pub:"Agribusiness Review Europe",year:"2025",date:"2025-01-01",headline:"AI Harvest Vision Solution of the Year — Farmwave",url:"https://www.agribusinessreview.com/farmwave",caseId:"farmwave",kind:"award"},
+  {pub:"Western Producer",year:"2024",date:"2024-09-01",headline:"Cameras and artificial intelligence spot harvest losses",url:"https://www.producer.com/crops/cameras-and-artificial-intelligence-spot-harvest-losses/",caseId:"farmwave",kind:"feature"},
+  // Nomo Smart Care — CES 2025 launch + RapidSOS partnership
+  {pub:"PRNewswire",year:"2025",date:"2025-01-02",headline:"Nomo Smart Care revolutionizes in-home care with AI-powered safety technology (CES 2025)",url:"https://www.prnewswire.com/news-releases/nomo-smart-care-revolutionizes-in-home-care-with-ai-powered-safety-technology-302339442.html",caseId:"nomo",kind:"launch"},
+  {pub:"PRNewswire",year:"2023",date:"2023-10-09",headline:"Nomo Smart Care launches the Essential Care Kit with RapidSOS as their emergency services partner",url:"https://www.prnewswire.com/news-releases/nomo-smart-care-launches-the-essential-care-kit-with-rapidsos-as-their-emergency-services-partner-301950156.html",caseId:"nomo",kind:"launch"},
+  {pub:"RapidSOS",year:"2024",date:"2024-01-01",headline:"The real-time safety gap: How Nomo Smart Care protects aging adults",url:"https://rapidsos.com/blog/safety-gap-podcast-how-nomo-protects-aging-adults/",caseId:"nomo",kind:"feature"},
+  // Muvr — Exactech acquisition + App Innovation Award
+  {pub:"BusinessWire",year:"2020",date:"2020-12-02",headline:"Exactech acquires Muvr — innovative patient wearable and communication solutions for orthopaedic practices",url:"https://www.businesswire.com/news/home/20201202005809/en/Exactech-Acquires-Muvr-Innovative-Patient-Wearable-and-Communication-Solutions-for-Orthopaedic-Practices",caseId:"muvr",kind:"acquisition"},
+  {pub:"Progress Software",year:"2019",date:"2019-10-01",headline:"Progress announces winners of 2019 App Innovation Awards — Muvr",url:"https://investors.progress.com/news-releases/news-release-details/progress-announces-winners-2019-app-innovation-awards",caseId:"muvr",kind:"award"},
+  // Crossiety — Swiss startup coverage on Startupticker
+  {pub:"Startupticker.ch",year:"2020",date:"2020-07-01",headline:"Crossiety spins off its community app — beUnity created to serve associations and clubs",url:"https://www.startupticker.ch/en/news/crossiety-lagert-community-app-aus",caseId:"crossiety",kind:"launch"},
+  {pub:"Startupticker.ch",year:"2020",date:"2020-01-01",headline:"Crossiety expands to Germany — Swiss community-platform startup enters the DACH market",url:"https://www.startupticker.ch/en/news/crossiety-expandiert-nach-deutschland",caseId:"crossiety",kind:"feature"},
+  {pub:"Startupticker.ch",year:"2018",date:"2018-11-01",headline:"Pascale Bruderer joins IT startup Crossiety as shareholder and board member",url:"https://www.startupticker.ch/en/news/november-2018/pascale-bruderer-steigt-bei-it-startup-ein",caseId:"crossiety",kind:"feature"},
+  // beUnity — the third-party coverage of beUnity's creation is the same Startupticker piece (spin-off from Crossiety)
+  {pub:"Startupticker.ch",year:"2020",date:"2020-07-01",headline:"beUnity launches as Crossiety's community-platform spin-off for associations and clubs",url:"https://www.startupticker.ch/en/news/crossiety-lagert-community-app-aus",caseId:"beunity",kind:"launch"},
+  // Drift App — US ag-tech press
+  {pub:"WCIA News",year:"2022",date:"2022-04-01",headline:"From the Farm: Ditch Drift app offers herbicide spraying solution",url:"https://www.wcia.com/the-morning-show/from-the-farm-ditch-drift-app-offers-herbicide-spraying-solution/",caseId:"drift",kind:"feature"},
+  {pub:"ILSoyAdvisor",year:"2022",date:"2022-05-01",headline:"Mitigate spray drift damage with Drift App",url:"https://www.ilsoyadvisor.com/on-farm/ilsoyadvisor/mitigate-spray-drift-damage-drift-app",caseId:"drift",kind:"feature"},
+]) as PressItem[]).sort((a,b)=>b.date.localeCompare(a.date));
 function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 48px"}}><W><SL ch="For Clients"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",textAlign:"center",marginBottom:16}}>The right technology partner <span style={{color:"var(--blue)"}}>changes everything.</span></h1>
@@ -1346,6 +1419,37 @@ function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[
       </div>
     </div>
   </W></section>
+  {/* ENGAGEMENT COMPARISON — table-snippet candidate; helps qualifying clients at a glance */}
+  <section style={{padding:"56px 0 80px",borderTop:"1px solid var(--brd)",background:"var(--bg2)"}}><W>
+    <SL ch="Compare engagements"/>
+    <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.6vw,30px)",fontWeight:800,color:"var(--txt)",lineHeight:1.1,marginBottom:14}}>Which model fits your <span style={{color:"var(--blue)"}}>situation?</span></h2>
+    <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,maxWidth:560,marginBottom:24}}>A side-by-side at the four ways we work, so you can self-identify before the call.</p>
+    <div style={{overflowX:"auto",border:"1px solid var(--brd)",borderRadius:14,background:"var(--bg)"}}>
+      <table style={{width:"100%",minWidth:640,borderCollapse:"collapse",fontFamily:"var(--in)",fontSize:13.5,color:"var(--txt2)"}}>
+        <thead>
+          <tr style={{background:"var(--bg2)",borderBottom:"1px solid var(--brd)"}}>
+            <th scope="col" style={{textAlign:"left",padding:"14px 18px",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase"}}>Model</th>
+            <th scope="col" style={{textAlign:"left",padding:"14px 18px",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase"}}>Duration</th>
+            <th scope="col" style={{textAlign:"left",padding:"14px 18px",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase"}}>Pricing</th>
+            <th scope="col" style={{textAlign:"left",padding:"14px 18px",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase"}}>Best for</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            {m:"Advisory retainer",d:"Monthly, ongoing",p:"Fixed monthly fee",b:"Founders / CTOs who need a thinking partner on tap"},
+            {m:"Defined engagement",d:"2–16 weeks",p:"Fixed fee, scoped",b:"Well-defined problem, measurable outcome"},
+            {m:"Embedded team",d:"3-month minimum, rolling",p:"Monthly capacity",b:"Long-running product work where velocity matters"},
+            {m:"Startup partnership",d:"Custom",p:"Cash + equity / milestones",b:"Seed-stage founders with conviction and runway constraints"},
+          ].map((r,i)=>(<tr key={r.m} style={{borderTop:i>0?"1px solid var(--brd)":"none"}}>
+            <th scope="row" style={{textAlign:"left",padding:"16px 18px",fontFamily:"var(--jk)",fontWeight:700,color:"var(--txt)"}}>{r.m}</th>
+            <td style={{padding:"16px 18px"}}>{r.d}</td>
+            <td style={{padding:"16px 18px"}}>{r.p}</td>
+            <td style={{padding:"16px 18px"}}>{r.b}</td>
+          </tr>))}
+        </tbody>
+      </table>
+    </div>
+  </W></section>
   {/* FAQ */}
   <section style={{padding:"80px 0",borderTop:"1px solid var(--brd)"}}><W>
     <div className="svc-2col" style={{display:"grid",gridTemplateColumns:"300px 1fr",gap:64}}>
@@ -1363,7 +1467,7 @@ function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[
             </span>
           </button>
           <div style={{overflow:"hidden",maxHeight:open?440:0,opacity:open?1:0,transition:"max-height .3s ease, opacity .25s ease, padding .3s ease",paddingBottom:open?22:0}}>
-            <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.8,maxWidth:680,margin:0}}>{f.a}</p>
+            <p className="speakable-answer" style={{fontSize:14,color:"var(--txt2)",lineHeight:1.8,maxWidth:680,margin:0}}>{f.a}</p>
           </div>
         </div>;})}
       </div>
@@ -1450,7 +1554,6 @@ function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
       <span className="reveal d1" style={{fontSize:10,color:"rgba(255,255,255,.8)",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2.5,background:"rgba(255,255,255,.12)",padding:"5px 12px",borderRadius:6,backdropFilter:"blur(12px)",border:"1px solid rgba(255,255,255,.15)",display:"inline-block"}}>{c.cat}</span>
     </div>
     <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"40px"}}>
-      {c.period&&<p className="reveal d1" style={{fontSize:12,color:"rgba(255,255,255,.4)",fontFamily:"var(--jk)",fontWeight:600,letterSpacing:.5,marginBottom:10}}>{c.period}</p>}
       <h2 className="reveal d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,color:"#fff",marginBottom:14,lineHeight:1.05,maxWidth:700}}>{c.name}</h2>
       <p className="reveal d3" style={{fontSize:15,color:"rgba(255,255,255,.65)",lineHeight:1.7,maxWidth:580,marginBottom:24}}>{c.brief}</p>
       <div className="reveal d4" style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
@@ -1526,20 +1629,15 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
           </picture>
         : <div style={{position:"absolute",inset:0,background:"var(--blue)"}}/>
       }
-      <div className="case-cover-grad" style={{position:"absolute",bottom:0,left:0,right:0,height:140,background:"rgba(0,0,0,.45)",zIndex:1}}/>
-      <W className="case-cover-title" style={{position:"absolute",bottom:0,left:0,right:0,paddingBottom:52,zIndex:2,textShadow:"0 1px 2px rgba(0,0,0,.25), 0 4px 16px rgba(0,0,0,.35)"}}>
+      <W className="case-cover-title" style={{position:"absolute",bottom:0,left:0,right:0,paddingBottom:52,zIndex:2,textShadow:"0 1px 2px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.55), 0 6px 24px rgba(0,0,0,.45)"}}>
         <span style={{display:"block",fontSize:11,color:"rgba(255,255,255,.55)",fontWeight:700,fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:2}}>{ac.cat} <span style={{opacity:.5,marginLeft:8}}>· Case {String(acIdx+1).padStart(2,"0")} / {String(cases.length).padStart(2,"0")}</span></span>
-        {(ac as any).period&&<p style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:600,color:"rgba(255,255,255,.92)",marginTop:8,letterSpacing:.2,display:"flex",alignItems:"center",gap:8}}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{opacity:.85,filter:"drop-shadow(0 1px 2px rgba(0,0,0,.3))"}}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          {(ac as any).period}
-        </p>}
         <h1 className="case-cover-h1" style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,4vw,44px)",fontWeight:800,color:"#fff",marginTop:8,lineHeight:1.05}}>{ac.name}</h1>
       </W>
     </div>
     <section style={{padding:"0 0 80px"}}><W>
       <div style={{maxWidth:720,margin:"0 auto"}}>
         <div id="brief" style={{transform:"translateY(-44px)",marginBottom:-16,background:"#fff",borderRadius:16,padding:"32px 36px",boxShadow:"0 4px 24px rgba(0,30,50,.06)",border:"1px solid var(--brd)"}}>
-<p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.7,marginBottom:16}}>{ac.brief}</p>
+<p className="speakable-brief" style={{fontSize:15,color:"var(--txt3)",lineHeight:1.7,marginBottom:16}}>{ac.brief}</p>
           <div style={{display:"flex",flexWrap:"wrap",gap:5}}>{ac.tags.map(t=><span key={t} className="ft">{t}</span>)}</div>
         </div>
         {/* Metrics strip */}
@@ -1755,6 +1853,45 @@ function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){cons
   </div>;
 }
 
+/* ── PRESS ── */
+function Press({go}:{go:(p:string,id?:string)=>void}){
+  return <div style={{paddingTop:76}}>
+    <section style={{padding:"48px 0 24px"}}><W>
+      <SL ch="Press"/>
+      <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:680}}>What people are <span style={{color:"var(--blue)"}}>writing about.</span></h1>
+      <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:560}}>Third-party coverage of the work we've done and the companies we've built with. Updated when something new lands.</p>
+    </W></section>
+    <section style={{padding:"24px 0 80px"}}><W>
+      <div style={{display:"flex",flexDirection:"column"}}>
+        {pressItems.map((p,i)=>(
+          <article key={p.url} style={{display:"grid",gridTemplateColumns:"120px 1fr auto",gap:32,alignItems:"center",padding:"28px 0",borderTop:"1px solid var(--brd)",borderBottom:i===pressItems.length-1?"1px solid var(--brd)":"none"}} className="press-row">
+            <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",opacity:.5,fontFeatureSettings:'"tnum"'}}>{p.year}</span>
+            <div style={{minWidth:0}}>
+              <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--txt4)",letterSpacing:1.8,textTransform:"uppercase",marginBottom:6}}>
+                {p.pub}
+                <span style={{marginLeft:10,padding:"2px 8px",border:"1px solid var(--brd)",borderRadius:50,fontSize:9,color:"var(--blue)",background:"var(--bl)",textTransform:"capitalize"}}>{p.kind}</span>
+              </p>
+              <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(18px,1.8vw,22px)",fontWeight:800,color:"var(--txt)",lineHeight:1.25,margin:0,marginBottom:8,letterSpacing:"-.01em"}}>{p.headline}</h2>
+              {p.caseId&&<button onClick={()=>go("cases",p.caseId)} style={{background:"none",border:"none",padding:0,cursor:"pointer",fontFamily:"var(--jk)",fontSize:12,fontWeight:600,color:"var(--blue)",letterSpacing:.2}}>Read the case study →</button>}
+            </div>
+            <a href={p.url} target="_blank" rel="noopener noreferrer" style={{flexShrink:0,display:"inline-flex",alignItems:"center",gap:8,padding:"10px 18px",border:"1px solid var(--brd)",borderRadius:50,fontFamily:"var(--jk)",fontSize:12.5,fontWeight:600,color:"var(--txt2)",textDecoration:"none",transition:"all .2s",background:"var(--bg)"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--blue)";e.currentTarget.style.color="var(--blue)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--brd)";e.currentTarget.style.color="var(--txt2)";}}>Read on {p.pub} <Arr s={13} c="currentColor"/></a>
+          </article>
+        ))}
+      </div>
+    </W></section>
+    <section style={{padding:"56px 0 96px",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
+      <div style={{display:"grid",gridTemplateColumns:"1fr auto",gap:32,alignItems:"center",flexWrap:"wrap"}} className="press-cta">
+        <div>
+          <SL ch="For press"/>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.6vw,30px)",fontWeight:800,color:"var(--txt)",lineHeight:1.1,margin:0,marginBottom:8}}>Writing about something we've built?</h2>
+          <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.7,maxWidth:520,margin:0}}>Reach out and we'll happily share context, technical detail, or get you in front of the right client contact. Fastest route is email.</p>
+        </div>
+        <a href="mailto:hello@lumo-lab.com?subject=Press%20enquiry" className="cta-m" style={{textDecoration:"none",flexShrink:0}}>Email the team <Arr s={14} c="#fff"/></a>
+      </div>
+    </W></section>
+  </div>;
+}
+
 /* ── PRIVACY POLICY ── */
 /* ── 404 ── */
 function NotFound({go}:{go:(p:string,id?:string)=>void}){
@@ -1964,15 +2101,27 @@ function Contact({type="project"}:{type?:"project"|"job"}){
 }
 
 /* ── ROUTING ── */
-const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",privacy:"/privacy-policy",contact:"/contact"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
+const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",press:"/press",privacy:"/privacy-policy",contact:"/contact"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
+// Legacy blog ID → new slug. Maintain so old links from search results / external sites keep working.
+const BLOG_REDIRECTS:{[k:string]:string}={
+  b1:"nomo-smart-care-case-study",
+  b2:"deep-learning-audio-classification",
+  b3:"ai-on-microcontrollers",
+};
 function parseFromPath():{page:string,subId:string|null}{
   const parts=window.location.pathname.split("/").filter(Boolean);
   // Both `/for-clients` (canonical, matches the nav label) and `/services` (legacy alias) resolve to the Services page.
-  const pageMap:{[k:string]:string}={about:"about","for-clients":"services",services:"services",work:"cases",blog:"blog",careers:"careers","privacy-policy":"privacy",contact:"contact"};
+  const pageMap:{[k:string]:string}={about:"about","for-clients":"services",services:"services",work:"cases",blog:"blog",careers:"careers",press:"press","privacy-policy":"privacy",contact:"contact"};
   if(!parts.length)return{page:"home",subId:null};
   const page=pageMap[parts[0]];
   if(!page)return{page:"notfound",subId:null};
-  const subId=parts[1]||null;
+  let subId=parts[1]||null;
+  // Legacy blog slug redirect: /blog/b1 → /blog/nomo-smart-care-case-study, etc.
+  if(page==="blog"&&subId&&BLOG_REDIRECTS[subId]){
+    const newSlug=BLOG_REDIRECTS[subId];
+    window.history.replaceState({page,id:newSlug},"",`/blog/${newSlug}`);
+    subId=newSlug;
+  }
   // Validate known sub-routes; unknown IDs land on 404 rather than silently rendering the index
   if(subId){
     if(page==="cases"&&!cases.find(c=>c.id===subId))return{page:"notfound",subId:null};
@@ -1993,13 +2142,14 @@ const SITE_URL="https://lumo-lab.com";
 const SITE_NAME="Lumo Lab";
 const DEFAULT_OG=`${SITE_URL}/og-image.jpg`;
 const SEO_DEFAULTS:{[k:string]:{title:string,description:string,path:string,keywords?:string}}={
-  home:{title:`${SITE_NAME} | Technology Consultancy. Advise, Guide, Deliver`,description:"Lumo Lab is a technology consultancy. We advise, guide, and deliver for startups and enterprises, from first assessment to long-term partnership.",path:"/",keywords:"technology consultancy, software consulting, AI consulting, IoT, mobile app development, startup technology partner"},
+  home:{title:`${SITE_NAME} | We Advise, Guide and Deliver`,description:"Lumo Lab is a technology consultancy. We advise, guide, and deliver for startups and enterprises, from first assessment to long-term partnership.",path:"/",keywords:"technology consultancy, software consulting, AI consulting, IoT, mobile app development, startup technology partner"},
   about:{title:`About ${SITE_NAME} | Our Story & Approach`,description:"Meet Lumo Lab: an independent technology consultancy built around listening first, advising honestly, and delivering work that compounds over time.",path:"/about",keywords:"about Lumo Lab, technology consultancy team, software consulting company"},
   services:{title:`For Clients | Technology Consulting Services from ${SITE_NAME}`,description:"Technology strategy, product design, solution engineering, IoT, and AI. End-to-end consulting that reduces risk and delivers measurable outcomes.",path:"/for-clients",keywords:"technology consulting services, software engineering, AI consulting, IoT consulting, product design"},
   cases:{title:`Case Studies | Health, AgTech, AI & IoT Work by ${SITE_NAME}`,description:"Case studies across health, AgTech, social, IoT, and AI, including Nomo Smart Care, Farmwave, Drift App, Noctrix, MobilityOne, and more.",path:"/work",keywords:"case studies, software portfolio, health tech, AgTech, IoT, AI"},
   blog:{title:`Insights on Technology, AI & Product | ${SITE_NAME} Blog`,description:"Practical perspectives on technology strategy, AI, edge computing, and software engineering, written by the Lumo Lab team.",path:"/blog",keywords:"technology blog, AI insights, edge computing, software engineering"},
   careers:{title:`Careers at ${SITE_NAME} | Engineering, Design & Product`,description:"Join a small, senior team building meaningful products. We're not actively hiring right now, but we're always open to hearing from great people.",path:"/careers",keywords:"careers, software jobs, engineering, design, product, open application"},
   contact:{title:`Contact ${SITE_NAME} | Start Your Technology Partnership`,description:"Talk to Lumo Lab about your next technology initiative. Book an assessment, scope a project, or start a long-term partnership.",path:"/contact",keywords:"contact Lumo Lab, technology consulting inquiry, hire consultants"},
+  press:{title:`Press & Media | ${SITE_NAME}`,description:"Third-party coverage of Lumo Lab's work: ResMed's $340M acquisition of Noctrix Health, Farmwave's 2025 AI Harvest Vision Award, Muvr's App Innovation Award.",path:"/press",keywords:"Lumo Lab press, technology consultancy press, software case study coverage"},
   privacy:{title:`Privacy Policy | ${SITE_NAME}`,description:"Lumo Lab privacy policy. How we collect, use, and safeguard your personal data.",path:"/privacy-policy"},
   notfound:{title:`Page Not Found (404) | ${SITE_NAME}`,description:"The page you're looking for doesn't exist. Browse our work, read our insights, or get in touch.",path:"/404"},
 };
@@ -2081,10 +2231,14 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
     url:SITE_URL,
     logo:{"@type":"ImageObject",url:`${SITE_URL}/android-chrome-512x512.png`,width:512,height:512},
     image:`${SITE_URL}/android-chrome-512x512.png`,
-    sameAs:["https://www.linkedin.com/company/lumo-lab","https://www.instagram.com/lumo_lab_/"],
+    sameAs:["https://www.linkedin.com/company/lumo-lab","https://www.instagram.com/lumo_lab_/","https://clutch.co/profile/lumo-lab"],
     contactPoint:{"@type":"ContactPoint",email:"hello@lumo-lab.com",telephone:"+385-98-901-4448",contactType:"customer support",areaServed:["EU","US","Global"],availableLanguage:["English"]},
     address:{"@type":"PostalAddress",streetAddress:"Zivtov trg 3",addressLocality:"Zabok",addressRegion:"Krapina-Zagorje",postalCode:"49210",addressCountry:"HR"},
-    founder:{"@type":"Person",name:"Jurica Mlinaric"},
+    geo:{"@type":"GeoCoordinates",latitude:46.0306,longitude:15.9047},
+    award:["AI Harvest Vision Solution of the Year 2025 — Agribusiness Review Europe (work: Farmwave)"],
+    // Third-party press coverage — strengthens E-E-A-T and gives AI engines explicit external corroboration. Single source of truth is pressItems below.
+    subjectOf:pressItems.map(p=>({"@type":"NewsArticle",headline:p.headline,url:p.url,publisher:{"@type":"Organization",name:p.pub},datePublished:p.date})),
+    founder:{"@type":"Person","@id":`${SITE_URL}/#jurica`,name:"Jurica Mlinaric"},
     foundingDate:"2022",
     numberOfEmployees:{"@type":"QuantitativeValue",minValue:10,maxValue:25},
     slogan:"We advise, guide, and deliver.",
@@ -2099,15 +2253,29 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
     "@id":`${SITE_URL}/#website`,
     url:SITE_URL,
     name:SITE_NAME,
-    description:"Technology consultancy. We advise, guide, and deliver.",
+    description:"We advise, guide, and deliver.",
     publisher:{"@id":`${SITE_URL}/#organization`},
     inLanguage:"en-US",
   };
   const graph:unknown[]=[organization,website];
+  // Site-wide WebPage entity with speakable selectors — voice assistants will read aloud the hero + key value props
+  if(page==="home"){
+    graph.push({
+      "@type":"WebPage",
+      "@id":`${seo.url}#webpage`,
+      url:seo.url,
+      name:seo.title,
+      description:seo.description,
+      isPartOf:{"@id":`${SITE_URL}/#website`},
+      about:{"@id":`${SITE_URL}/#organization`},
+      speakable:{"@type":"SpeakableSpecification",cssSelector:[".speakable-hero",".speakable-tagline"]},
+      inLanguage:"en-US",
+    });
+  }
   // Breadcrumbs for sub-pages
   if(page!=="home"){
-    const labels:{[k:string]:string}={about:"About",services:"For Clients",cases:"Work",blog:"Blog",careers:"Careers",contact:"Contact",privacy:"Privacy Policy"};
-    const paths:{[k:string]:string}={about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",contact:"/contact",privacy:"/privacy-policy"};
+    const labels:{[k:string]:string}={about:"About",services:"For Clients",cases:"Work",blog:"Blog",careers:"Careers",press:"Press",contact:"Contact",privacy:"Privacy Policy"};
+    const paths:{[k:string]:string}={about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",press:"/press",contact:"/contact",privacy:"/privacy-policy"};
     const items:unknown[]=[
       {"@type":"ListItem",position:1,name:"Home",item:`${SITE_URL}/`},
       {"@type":"ListItem",position:2,name:labels[page]||page,item:`${SITE_URL}${paths[page]||"/"}`},
@@ -2144,7 +2312,32 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
         "@type":"Question",
         name:f.q,
         acceptedAnswer:{"@type":"Answer",text:f.a},
+        speakable:{"@type":"SpeakableSpecification",xpath:["/html/head/title"]},
       })),
+    });
+    // HowTo schema for the Week One onboarding — five named steps, eligible for step-snippet boxes
+    graph.push({
+      "@type":"HowTo",
+      name:"How Lumo Lab's Week One assessment works",
+      description:"A five-day, no-commitment assessment that produces a written brief and a decision-ready plan by Friday.",
+      totalTime:"P5D",
+      estimatedCost:{"@type":"MonetaryAmount",currency:"EUR",value:"0"},
+      supply:[],
+      tool:[],
+      step:weekOne.map((w,i)=>({
+        "@type":"HowToStep",
+        position:i+1,
+        name:`${w.d}: ${w.t}`,
+        text:w.b,
+        url:`${seo.url}#week-one-day-${i+1}`,
+      })),
+    });
+    // SpeakableSpecification for voice assistants — point at FAQ answer block
+    graph.push({
+      "@type":"WebPage",
+      "@id":`${seo.url}#speakable`,
+      url:seo.url,
+      speakable:{"@type":"SpeakableSpecification",cssSelector:[".speakable-answer"]},
     });
   }
   if(page==="cases"&&!subId){
@@ -2161,6 +2354,14 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
   if(page==="cases"&&subId){
     const c=cases.find(x=>x.id===subId);
     if(c){
+      // Derive datePublished from the case `period` field ("March 2021 to Present", "May 2024 to Present", etc.)
+      // Falls back to founding year if period is empty.
+      const m=((c as any).period||"").match(/^(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/);
+      const months={January:1,February:2,March:3,April:4,May:5,June:6,July:7,August:8,September:9,October:10,November:11,December:12} as Record<string,number>;
+      const datePublished=m?`${m[2]}-${String(months[m[1]]).padStart(2,"0")}-01`:"2022-01-01";
+      // dateModified: if the engagement is still "Present", use a recent date; otherwise use end date if parseable.
+      const isOngoing=/(Present|present)/.test((c as any).period||"");
+      const dateModified=isOngoing?new Date().toISOString().slice(0,10):datePublished;
       graph.push({
         "@type":"Article",
         mainEntityOfPage:seo.url,
@@ -2173,8 +2374,23 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
         articleSection:c.cat,
         keywords:c.tags.join(", "),
         about:c.client||c.name,
+        datePublished,
+        dateModified,
         inLanguage:"en-US",
+        speakable:{"@type":"SpeakableSpecification",cssSelector:[".speakable-brief"]},
       });
+      // FAQPage from the case study's "Why" Q&A blocks — turns each case page into a snippet candidate
+      const why=(c as any).why as {t:string,d:string}[]|undefined;
+      if(why&&why.length){
+        graph.push({
+          "@type":"FAQPage",
+          mainEntity:why.map(w=>({
+            "@type":"Question",
+            name:w.t,
+            acceptedAnswer:{"@type":"Answer",text:w.d},
+          })),
+        });
+      }
     }
   }
   if(page==="blog"&&!subId){
@@ -2196,10 +2412,21 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
   if(page==="blog"&&subId){
     const b=blogs.find(x=>x.id===subId);
     if(b){
+      // Author Person entities — stable @id per author so AI engines can link across posts
+      const authorSlug=String(b.author).toLowerCase().replace(/[^a-z]+/g,"-").replace(/^-|-$/g,"");
       const authorImg=(b as any).authorImg?toAbs((b as any).authorImg):undefined;
-      const authorEntity:any={"@type":"Person",name:b.author};
+      const authorEntity:any={"@type":"Person","@id":`${SITE_URL}/#author-${authorSlug}`,name:b.author};
       if(authorImg)authorEntity.image=authorImg;
       authorEntity.worksFor={"@id":`${SITE_URL}/#organization`};
+      // Per-author knowsAbout for additional context
+      const authorKnowsAbout:{[k:string]:string[]}={
+        "jurica-mlinaric":["Technology Consulting","iOS Development","Android Development","IoT","Edge AI","Product Engineering"],
+        "matija-sever":["Machine Learning","Deep Learning","Audio Classification","Data Science","Neural Networks"],
+        "rudolf-lovrencic-phd":["Embedded Systems","Microcontrollers","AI on the Edge","ESP32","TensorFlow Lite","Software Architecture"],
+      };
+      if(authorKnowsAbout[authorSlug])authorEntity.knowsAbout=authorKnowsAbout[authorSlug];
+      // Add author Person as a top-level graph entity (de-duplicated by @id)
+      graph.push(authorEntity);
       graph.push({
         "@type":"BlogPosting",
         mainEntityOfPage:seo.url,
@@ -2208,7 +2435,8 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
         author:authorEntity,
         publisher:{"@id":`${SITE_URL}/#organization`},
         datePublished:new Date(b.date).toISOString(),
-        dateModified:new Date(b.date).toISOString(),
+        // Honest dateModified: if the blog data carries a `modified` field (manually bumped on edit), use it; otherwise fall back to publish date.
+        dateModified:new Date((b as any).modified||b.date).toISOString(),
         image:[seo.image],
         articleSection:b.cat,
         keywords:[b.cat,"Lumo Lab","technology"].join(", "),
@@ -2229,6 +2457,27 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
       }))},
     });
   }
+  if(page==="press"){
+    graph.push({
+      "@type":"CollectionPage",
+      name:"Press & Media",
+      description:seo.description,
+      url:seo.url,
+      isPartOf:{"@id":`${SITE_URL}/#website`},
+      about:{"@id":`${SITE_URL}/#organization`},
+      mainEntity:{"@type":"ItemList",itemListElement:pressItems.map((p,i)=>({
+        "@type":"ListItem",
+        position:i+1,
+        item:{
+          "@type":"NewsArticle",
+          headline:p.headline,
+          url:p.url,
+          publisher:{"@type":"Organization",name:p.pub},
+          datePublished:p.date,
+        },
+      }))},
+    });
+  }
   if(page==="contact"){
     graph.push({
       "@type":"ContactPage",
@@ -2245,6 +2494,21 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
       description:seo.description,
       url:seo.url,
       mainEntity:{"@id":`${SITE_URL}/#organization`},
+      speakable:{"@type":"SpeakableSpecification",cssSelector:[".speakable-hero",".speakable-tagline"]},
+    });
+    // Founder Person entity — reinforces E-E-A-T for AI engines and Knowledge Graph
+    graph.push({
+      "@type":"Person",
+      "@id":`${SITE_URL}/#jurica`,
+      name:"Jurica Mlinaric",
+      jobTitle:"CEO & Founder",
+      worksFor:{"@id":`${SITE_URL}/#organization`},
+      url:`${SITE_URL}/about`,
+      image:`${SITE_URL}/images/jurica.png`,
+      email:"jurica@lumo-lab.com",
+      sameAs:["https://www.linkedin.com/in/juricamlinaric"],
+      knowsAbout:["Technology Consulting","iOS Development","Android Development","IoT","Edge AI","Product Engineering"],
+      description:"Founder of Lumo Lab. Has been building mobile products since 2015 — iOS, Android, IoT, wearables, edge AI — for clients across Croatia, the US, and Switzerland.",
     });
   }
   return {"@context":"https://schema.org","@graph":graph};
@@ -2276,6 +2540,8 @@ function applySeo(page:string,subId:string|null){
   }
   // Twitter
   setMeta("name","twitter:card","summary_large_image");
+  setMeta("name","twitter:site","@lumo_lab_");
+  setMeta("name","twitter:creator","@lumo_lab_");
   setMeta("name","twitter:title",seo.title);
   setMeta("name","twitter:description",seo.description);
   setMeta("name","twitter:image",seo.image);
@@ -2323,6 +2589,7 @@ export default function App(){
     {page==="cases"&&<Cases go={go} sel={subId}/>}
     {page==="blog"&&<Blog go={go} sel={subId}/>}
     {page==="careers"&&<Careers go={go} sel={subId}/>}
+    {page==="press"&&<Press go={go}/>}
     {page==="privacy"&&<Privacy/>}
     {page==="contact"&&<Contact type={subId==="job"?"job":"project"}/>}
     {page==="notfound"&&<NotFound go={go}/>}
@@ -2376,7 +2643,7 @@ export default function App(){
               <div>
                 <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Company</p>
                 <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                  {[{l:"Careers",p:"careers"},{l:"Contact",p:"contact"},{l:"Privacy Policy",p:"privacy"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+                  {[{l:"Careers",p:"careers"},{l:"Press",p:"press"},{l:"Contact",p:"contact"},{l:"Privacy Policy",p:"privacy"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
                 </div>
               </div>
             </div>

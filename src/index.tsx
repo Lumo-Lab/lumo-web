@@ -4,14 +4,25 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// SEO: when react-snap has pre-rendered the route at build time, the #root element
+// already contains the rendered HTML. We hydrate it (keeps the existing DOM, attaches
+// event handlers). Otherwise we render fresh.
+const rootEl = document.getElementById('root') as HTMLElement;
+if (rootEl.hasChildNodes()) {
+  ReactDOM.hydrateRoot(
+    rootEl,
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  const root = ReactDOM.createRoot(rootEl);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

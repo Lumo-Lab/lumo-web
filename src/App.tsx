@@ -276,6 +276,18 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .footer-grid>div{text-align:left!important}
   /* Hero CTA buttons — only the primary/secondary CTA row, NOT the credibility chips above the H1 */
   .lumo .hero-s .fi.d4>button{width:100%!important;justify-content:center!important}
+  /* Home hero fits the visible screen on phones: real viewport height (svh, not vh) + tighter rhythm */
+  .hero-s{min-height:100svh!important}
+  .hero-w{min-height:100svh!important;padding-top:84px!important;padding-bottom:48px!important;justify-content:center!important}
+  .hero-creds{margin-bottom:16px!important}
+  .speakable-hero{margin-bottom:14px!important}
+  .speakable-tagline{margin-bottom:22px!important;font-size:16px!important;line-height:1.5!important}
+  .hero-s .fi.d4{gap:12px!important}
+  /* For Clients hero: clear the nav, tighten rhythm so the whole block fits the screen */
+  .fc-hero{padding-top:88px!important;padding-bottom:44px!important}
+  .fc-hero h1{font-size:32px!important;line-height:1.06!important;margin-bottom:16px!important}
+  .fc-hero p{font-size:15.5px!important;line-height:1.55!important;margin-bottom:20px!important}
+  .fc-hero .fc-chips{margin-bottom:22px!important;gap:8px!important}
   /* Services bento → single column on phones */
   .svc-grid{grid-template-columns:1fr!important}
   .svc-grid>div{grid-column:span 1!important;min-height:0!important}
@@ -982,7 +994,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       {/* Flat readability overlay */}
       <div style={{position:"absolute",inset:0,zIndex:1,background:"rgba(0,30,50,.5)"}}/>
       <div className="hero-grain"/>
-      <W style={{position:"relative",zIndex:3,paddingTop:140,paddingBottom:100,color:"#fff",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"calc(100vh - 60px)"}}>
+      <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:140,paddingBottom:100,color:"#fff",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"calc(100vh - 60px)"}}>
         {/* Quiet hero — H1 + one sentence + one CTA. Single column. Massive breathing room. Nothing else. */}
         <div className="hero-content" style={{maxWidth:1080}}>
           {/* Credibility tags — Clutch rating + AI Harvest Vision Award. Sit above the H1 as quiet anchors. */}
@@ -1397,7 +1409,7 @@ const pressItems:PressItem[]=(([
   {pub:"ILSoyAdvisor",year:"2022",date:"2022-05-01",headline:"Mitigate spray drift damage with Drift App",url:"https://www.ilsoyadvisor.com/on-farm/ilsoyadvisor/mitigate-spray-drift-damage-drift-app",caseId:"drift",kind:"feature"},
 ]) as PressItem[]).sort((a,b)=>b.date.localeCompare(a.date));
 function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div>
-  <section style={{position:"relative",overflow:"hidden",padding:"calc(60px + clamp(40px,6vh,72px)) 0 clamp(44px,6vh,68px)",background:"#004C73",color:"#fff"}}>
+  <section className="fc-hero" style={{position:"relative",overflow:"hidden",padding:"calc(60px + clamp(40px,6vh,72px)) 0 clamp(44px,6vh,68px)",background:"#004C73",color:"#fff"}}>
     <div className="hero-grain"/>
     <W style={{position:"relative",zIndex:3}}>
     <div style={{maxWidth:880,textAlign:"left"}}>
@@ -1407,7 +1419,7 @@ function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[
       </div>
       <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(34px,5.2vw,60px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",color:"#fff",marginBottom:22}}>The right technology partner <span style={{color:"#7DB9E8"}}>changes everything.</span></h1>
       <p style={{fontSize:"clamp(16px,1.5vw,19px)",color:"rgba(255,255,255,.72)",lineHeight:1.65,maxWidth:620,margin:"0 0 28px"}}>From a first idea to a product in people's hands, we bring the <em style={{fontStyle:"normal",color:"#fff",fontWeight:600}}>strategy, design, and engineering</em> to make it real — with honest advice at every step.</p>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",gap:8,flexWrap:"wrap",marginBottom:32}}>
+      <div className="fc-chips" style={{display:"flex",alignItems:"center",justifyContent:"flex-start",gap:8,flexWrap:"wrap",marginBottom:32}}>
         {[
           {ic:<span style={{color:"#7DB9E8",fontSize:11,letterSpacing:-1}}>★★★★★</span>,t:"5.0 on Clutch"},
           {ic:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7DB9E8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>,t:"AI Harvest Vision · 2025"},

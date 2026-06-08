@@ -278,13 +278,13 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .hero-s .fi.d4>button{width:100%!important;justify-content:center!important}
   /* Home hero fits the visible screen on phones: real viewport height (svh, not vh) + tighter rhythm */
   .hero-s{min-height:100svh!important}
-  .hero-w{min-height:100svh!important;padding-top:84px!important;padding-bottom:48px!important;justify-content:center!important}
+  .hero-w{min-height:100svh!important;padding-top:104px!important;padding-bottom:48px!important;justify-content:flex-start!important}
   .hero-creds{margin-bottom:16px!important}
   .speakable-hero{margin-bottom:14px!important}
   .speakable-tagline{margin-bottom:22px!important;font-size:16px!important;line-height:1.5!important}
   .hero-s .fi.d4{gap:12px!important}
   /* For Clients hero: clear the nav, tighten rhythm so the whole block fits the screen */
-  .fc-hero{padding-top:88px!important;padding-bottom:44px!important}
+  .lumo .fc-hero{min-height:100svh!important;padding-top:104px!important;padding-bottom:48px!important}
   .fc-hero h1{font-size:32px!important;line-height:1.06!important;margin-bottom:16px!important}
   .fc-hero p{font-size:15.5px!important;line-height:1.55!important;margin-bottom:20px!important}
   .fc-hero .fc-chips{margin-bottom:22px!important;gap:8px!important}
@@ -1409,7 +1409,7 @@ const pressItems:PressItem[]=(([
   {pub:"ILSoyAdvisor",year:"2022",date:"2022-05-01",headline:"Mitigate spray drift damage with Drift App",url:"https://www.ilsoyadvisor.com/on-farm/ilsoyadvisor/mitigate-spray-drift-damage-drift-app",caseId:"drift",kind:"feature"},
 ]) as PressItem[]).sort((a,b)=>b.date.localeCompare(a.date));
 function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div>
-  <section className="fc-hero" style={{position:"relative",overflow:"hidden",padding:"calc(60px + clamp(40px,6vh,72px)) 0 clamp(44px,6vh,68px)",background:"#004C73",color:"#fff"}}>
+  <section className="fc-hero" style={{position:"relative",overflow:"hidden",paddingTop:"calc(60px + clamp(40px,6vh,72px))",paddingBottom:"clamp(44px,6vh,68px)",paddingLeft:0,paddingRight:0,background:"#004C73",color:"#fff"}}>
     <div className="hero-grain"/>
     <W style={{position:"relative",zIndex:3}}>
     <div style={{maxWidth:880,textAlign:"left"}}>

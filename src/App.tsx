@@ -276,7 +276,33 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .footer-grid>div{text-align:left!important}
   /* Hero CTA buttons — only the primary/secondary CTA row, NOT the credibility chips above the H1 */
   .lumo .hero-s .fi.d4>button{width:100%!important;justify-content:center!important}
+  /* Services bento → single column on phones */
+  .svc-grid{grid-template-columns:1fr!important}
+  .svc-grid>div{grid-column:span 1!important;min-height:0!important}
+  /* For Clients hero proof chips + CTA stack */
+  .fc-hero-cta{flex-direction:column!important;align-items:stretch!important}
+  .fc-hero-cta>a,.fc-hero-cta>button{width:100%!important;justify-content:center!important}
+  /* Services-in-depth row → stack icon/title and meta */
+  .sd-row{flex-direction:column!important;align-items:flex-start!important;gap:16px!important}
+  .sd-row .sd-meta{width:100%!important;justify-content:space-between!important}
+  /* Expanded service body → single column, drop the divider */
+  .sd .svc-2col{display:flex!important;flex-direction:column!important;gap:22px!important}
+  .sd-stack-col{border-left:none!important;padding-left:0!important;border-top:1px solid var(--brd)!important;padding-top:20px!important}
+  .sd-body.open{max-height:1200px!important}
 }
+@media(min-width:601px) and (max-width:900px){
+  .svc-grid{grid-template-columns:1fr 1fr!important}
+  .svc-grid>div{grid-column:span 1!important}
+}
+@media(max-width:860px){
+  /* No room for header tech tags on narrower screens — they reappear inside the expanded panel */
+  .sd-tags-collapse{display:none!important}
+}
+.svc-card .svc-go{opacity:0;transform:translateX(-6px) scale(.92);transition:opacity .3s cubic-bezier(.22,1,.36,1),transform .3s cubic-bezier(.22,1,.36,1)}
+.svc-card:hover .svc-go{opacity:1;transform:none}
+.sd-tag-row{display:flex;flex-wrap:wrap;gap:5px}
+.sd .sd-plus{transition:transform .3s ease,background .25s ease,border-color .25s ease}
+.sd:hover .sd-plus{border-color:rgba(0,76,115,.3);background:var(--bl)}
 `;
 
 const W=({children,style={},className}:{children:ReactNode,style?:CSSProperties,className?:string})=><div className={className} style={{maxWidth:1200,margin:"0 auto",padding:"0 clamp(16px,4vw,48px)",...style}}>{children}</div>;
@@ -951,6 +977,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       {/* Video background */}
       <video autoPlay muted loop playsInline preload="auto" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.35}}>
         <source src={process.env.PUBLIC_URL + "/videos/hero.mp4"} type="video/mp4"/>
+        <source src={process.env.PUBLIC_URL + "/videos/hero.mov"} type="video/quicktime"/>
       </video>
       {/* Flat readability overlay */}
       <div style={{position:"absolute",inset:0,zIndex:1,background:"rgba(0,30,50,.5)"}}/>
@@ -1017,12 +1044,23 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)"}}>How we help you <span style={{color:"var(--blue)"}}>move forward.</span></h2>
         <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,paddingTop:4}}>From initial assessment to long-term advisory, always focused on clarity, quality, and measurable outcomes.</p>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
-        {svcs.map((s,i)=><div key={i} className="card" style={{gridColumn:s.span?"span 2":"span 1",cursor:"pointer"}} onClick={()=>go("services")}>
-          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{s.n}</span>
-          <h3 style={{fontFamily:"var(--jk)",fontSize:s.span?18:16,fontWeight:700,margin:"10px 0 6px",color:"var(--txt)"}}>{s.t}</h3>
-          <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6}}>{s.hl}</p>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}} className="svc-grid">
+        {svcs.map((s,i)=><div key={i} className="card svc-card" style={{gridColumn:s.span?"span 2":"span 1",cursor:"pointer",display:"flex",flexDirection:"column",minHeight:s.span?200:220,padding:"30px 28px"}} onClick={()=>go("services")}>
+          <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:20}}>
+            <span style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:700,color:"var(--blue)",letterSpacing:1,fontFeatureSettings:'"tnum"'}}>{s.n}</span>
+            <span style={{flex:1,height:1,background:"var(--brd)"}}/>
+          </div>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:s.span?22:18,fontWeight:800,margin:0,marginBottom:8,color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.15}}>{s.t}</h3>
+          <p style={{fontSize:s.span?15:13.5,fontWeight:600,color:"var(--txt2)",lineHeight:1.5,margin:0,marginBottom:8}}>{s.hl}</p>
+          <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6,margin:0,marginBottom:18,flex:1}}>{s.d}</p>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginTop:"auto"}}>
+            <div style={{display:"flex",flexWrap:"wrap",gap:5}}>{s.tech.slice(0,s.span?5:3).map(t=><span key={t} className="ft">{t}</span>)}</div>
+            <span className="svc-go" style={{flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",width:34,height:34,borderRadius:"50%",background:"var(--blue)",color:"#fff"}}><Arr s={14} c="#fff"/></span>
+          </div>
         </div>)}
+      </div>
+      <div style={{marginTop:18,display:"flex",justifyContent:"flex-end"}}>
+        <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:8,background:"none",border:"none",cursor:"pointer",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",letterSpacing:.2,padding:0,transition:"gap .2s"}} onMouseEnter={e=>e.currentTarget.style.gap="12px"} onMouseLeave={e=>e.currentTarget.style.gap="8px"}>See all services in depth <Arr s={13} c="currentColor"/></button>
       </div>
     </W></section>
     <CasesSlider go={go}/>
@@ -1358,27 +1396,65 @@ const pressItems:PressItem[]=(([
   {pub:"WCIA News",year:"2022",date:"2022-04-01",headline:"From the Farm: Ditch Drift app offers herbicide spraying solution",url:"https://www.wcia.com/the-morning-show/from-the-farm-ditch-drift-app-offers-herbicide-spraying-solution/",caseId:"drift",kind:"feature"},
   {pub:"ILSoyAdvisor",year:"2022",date:"2022-05-01",headline:"Mitigate spray drift damage with Drift App",url:"https://www.ilsoyadvisor.com/on-farm/ilsoyadvisor/mitigate-spray-drift-damage-drift-app",caseId:"drift",kind:"feature"},
 ]) as PressItem[]).sort((a,b)=>b.date.localeCompare(a.date));
-function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div style={{paddingTop:76}}>
-  <section style={{padding:"48px 0 48px"}}><W><SL ch="For Clients"/>
-    <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",textAlign:"center",marginBottom:16}}>The right technology partner <span style={{color:"var(--blue)"}}>changes everything.</span></h1>
-    <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480,textAlign:"center",margin:"0 auto 28px"}}>We advise, guide, and deliver.</p>
-    <div style={{textAlign:"center"}}><button onClick={()=>go("contact")} className="cta-m">Let's talk <Arr s={14} c="#fff"/></button></div>
+function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div>
+  <section style={{position:"relative",overflow:"hidden",padding:"calc(60px + clamp(40px,6vh,72px)) 0 clamp(44px,6vh,68px)",background:"#004C73",color:"#fff"}}>
+    <div className="hero-grain"/>
+    <W style={{position:"relative",zIndex:3}}>
+    <div style={{maxWidth:880,textAlign:"left"}}>
+      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:24}}>
+        <span style={{width:28,height:2,background:"rgba(255,255,255,.3)"}}/>
+        <span style={{fontSize:11,color:"rgba(255,255,255,.5)",fontWeight:700,textTransform:"uppercase",letterSpacing:3,fontFamily:"var(--jk)"}}>For Clients</span>
+      </div>
+      <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(34px,5.2vw,60px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-.03em",color:"#fff",marginBottom:22}}>The right technology partner <span style={{color:"#7DB9E8"}}>changes everything.</span></h1>
+      <p style={{fontSize:"clamp(16px,1.5vw,19px)",color:"rgba(255,255,255,.72)",lineHeight:1.65,maxWidth:620,margin:"0 0 28px"}}>From a first idea to a product in people's hands, we bring the <em style={{fontStyle:"normal",color:"#fff",fontWeight:600}}>strategy, design, and engineering</em> to make it real — with honest advice at every step.</p>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"flex-start",gap:8,flexWrap:"wrap",marginBottom:32}}>
+        {[
+          {ic:<span style={{color:"#7DB9E8",fontSize:11,letterSpacing:-1}}>★★★★★</span>,t:"5.0 on Clutch"},
+          {ic:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7DB9E8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>,t:"AI Harvest Vision · 2025"},
+          {ic:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7DB9E8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19a6 6 0 0112 0M16 6.5a3 3 0 010 5.5M21 19a6 6 0 00-4-5.6"/></svg>,t:"20+ partners since 2017"},
+        ].map((c,i)=><span key={i} style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.22)",borderRadius:50,backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,color:"#fff"}}>{c.ic}{c.t}</span>)}
+      </div>
+      <div className="fc-hero-cta" style={{display:"flex",alignItems:"center",justifyContent:"flex-start",gap:14,flexWrap:"wrap"}}>
+        <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:10,background:"#fff",color:"var(--blue)",padding:"15px 30px",borderRadius:50,fontFamily:"var(--jk)",fontSize:15,fontWeight:700,textDecoration:"none",border:"none",boxShadow:"0 2px 8px rgba(0,0,0,.18)",transition:"transform .2s, box-shadow .25s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.28)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.18)";}}>Book a 30-min call <Arr s={14} c="var(--blue)"/></a>
+        <button onClick={()=>go("contact")} style={{display:"inline-flex",alignItems:"center",gap:10,background:"rgba(255,255,255,.08)",color:"#fff",padding:"14px 24px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,border:"1px solid rgba(255,255,255,.24)",cursor:"pointer",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",transition:"background .2s, border-color .2s, transform .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.16)";e.currentTarget.style.borderColor="rgba(255,255,255,.45)";e.currentTarget.style.transform="translateY(-1px)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.24)";e.currentTarget.style.transform="";}}>Send us your brief <Arr s={13} c="currentColor"/></button>
+      </div>
+    </div>
   </W></section>
-  <section className="grid-bg" style={{padding:"48px 0 80px"}}><W><SL ch="Services in depth"/>
+  <section className="grid-bg" style={{padding:"clamp(48px,7vh,72px) 0 80px"}}><W>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"end",marginBottom:36}} className="svc-2col">
+      <div><SL ch="Services in depth"/><h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,38px)",fontWeight:800,lineHeight:1.05,letterSpacing:"-.02em",color:"var(--txt)",margin:0}}>Five ways we <span style={{color:"var(--blue)"}}>move you forward.</span></h2></div>
+      <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,margin:0,maxWidth:420}}>Open any one to see what we deliver and the stack behind it. Most engagements blend two or three.</p>
+    </div>
     <div style={{display:"flex",flexDirection:"column",gap:14}}>
-      {svcs.map((s,i)=><div key={i} className="sd" onClick={()=>setEx(ex===i?-1:i)}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-          <div><div style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}><span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.4}}>{s.n}</span><h2 style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"var(--txt)"}}>{s.t}</h2></div><p style={{fontSize:14,color:"var(--txt2)",fontWeight:500}}>{s.hl}</p></div>
-          <div style={{width:32,height:32,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginLeft:16,transition:"all .3s",transform:ex===i?"rotate(45deg)":"none"}}><span style={{fontSize:16,color:ex===i?"var(--blue)":"var(--txt4)"}}>+</span></div>
-        </div>
-        <div style={{maxHeight:ex===i?400:0,overflow:"hidden",transition:"max-height .4s",marginTop:ex===i?20:0}}>
-          <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.75,marginBottom:20,maxWidth:540}}>{s.d}</p>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:28}}>
-            <div><p style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",marginBottom:10,opacity:.4}}>Deliverables</p>{s.del.map((d,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><div style={{width:4,height:4,borderRadius:"50%",background:"var(--blue)",opacity:.3}}/><span style={{fontSize:12,color:"var(--txt2)"}}>{d}</span></div>)}</div>
-            <div><p style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",marginBottom:10,opacity:.4}}>Technologies</p><div style={{display:"flex",flexWrap:"wrap",gap:5}}>{s.tech.map(t=><span key={t} className="ft">{t}</span>)}</div></div>
+      {svcs.map((s,i)=>{const open=ex===i;return <div key={i} className="sd" onClick={()=>setEx(open?-1:i)} role="button" tabIndex={0} aria-expanded={open} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setEx(open?-1:i);}}}>
+        <div className="sd-row" style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:24}}>
+          <div style={{display:"flex",alignItems:"center",gap:18,minWidth:0}}>
+            <span style={{width:3,height:42,borderRadius:3,background:open?"var(--blue)":"var(--brd)",flexShrink:0,transition:"background .3s"}}/>
+            <div style={{minWidth:0}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:4}}><span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.45}}>{s.n}</span><h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(18px,2vw,21px)",fontWeight:800,color:"var(--txt)",margin:0,letterSpacing:"-.01em"}}>{s.t}</h3></div>
+              <p style={{fontSize:14,color:"var(--txt2)",fontWeight:500,margin:0}}>{s.hl}</p>
+            </div>
+          </div>
+          <div className="sd-meta" style={{display:"flex",alignItems:"center",gap:18,flexShrink:0}}>
+            {!open&&<div className="sd-tag-row sd-tags-collapse" style={{justifyContent:"flex-end",maxWidth:300}}>{s.tech.slice(0,3).map(t=><span key={t} className="ft">{t}</span>)}</div>}
+            <span className="sd-plus" style={{width:34,height:34,borderRadius:"50%",border:"1px solid var(--brd)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transform:open?"rotate(45deg)":"none",background:open?"var(--bl)":"transparent"}}><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--blue)" strokeWidth="1.8" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg></span>
           </div>
         </div>
-      </div>)}
+        <div className={open?"sd-body open":"sd-body"} style={{maxHeight:open?520:0,overflow:"hidden",transition:"max-height .4s ease",marginTop:open?22:0}}>
+          <div style={{display:"grid",gridTemplateColumns:"1.3fr 1fr",gap:36}} className="svc-2col">
+            <div>
+              <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.8,marginBottom:20}}>{s.d}</p>
+              <p style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",marginBottom:12,opacity:.5}}>What you get</p>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px 24px"}}>{s.del.map((d,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:9}}><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--blue)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M13 4L6 11 3 8"/></svg><span style={{fontSize:13,color:"var(--txt2)"}}>{d}</span></div>)}</div>
+            </div>
+            <div style={{borderLeft:"1px solid var(--brd)",paddingLeft:36}} className="sd-stack-col">
+              <p style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",marginBottom:12,opacity:.5}}>Stack & tools</p>
+              <div className="sd-tag-row" style={{marginBottom:22}}>{s.tech.map(t=><span key={t} className="ft">{t}</span>)}</div>
+              <button onClick={e=>{e.stopPropagation();go("contact");}} style={{display:"inline-flex",alignItems:"center",gap:8,background:"none",border:"none",cursor:"pointer",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",padding:0,transition:"gap .2s"}} onMouseEnter={e=>e.currentTarget.style.gap="12px"} onMouseLeave={e=>e.currentTarget.style.gap="8px"}>Talk to us about this <Arr s={13} c="currentColor"/></button>
+            </div>
+          </div>
+        </div>
+      </div>;})}
     </div>
   </W></section>
   {/* ENGAGEMENT MODELS */}

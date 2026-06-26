@@ -343,6 +343,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .hero-dot{transition:width .35s cubic-bezier(.23,1,.32,1), background .25s ease, transform .2s ease}
 @media(hover:hover){.hero-dot:hover{transform:scale(1.3)}}
 @media(max-width:900px){.hero-2col{grid-template-columns:1fr!important;gap:32px!important}.hero-proof-row{margin-top:28px!important}}
+@media(max-width:640px){.hero-proof-row{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px!important}.hero-proof-chips{justify-content:center}.hero-proof-trust{justify-content:center}.hero-proof-divider{display:none}}
 .hero-live-dot{animation:livePulse 2s ease-in-out infinite}
 @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.35}}
 @media(prefers-reduced-motion:reduce){.hero-live-dot{animation:none}.hero-shot{transition:none}.hero-shot:hover{transform:none}}
@@ -1222,16 +1223,22 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         </div>
         {/* PROOF ROW — in the fold */}
         <div className="fi d4 hero-proof-row" style={{display:"flex",alignItems:"center",gap:"12px 18px",flexWrap:"wrap",marginTop:"clamp(28px,4vh,52px)"}}>
-          <a href="https://clutch.co/profile/lumo-lab" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,textDecoration:"none",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}><span aria-hidden="true" style={{color:"#E8A33D",fontSize:11,letterSpacing:-1}}>★★★★★</span><span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff"}}>5.0 on Clutch</span></a>
-          <span style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(125,185,232,.12)",border:"1px solid rgba(125,185,232,.3)",borderRadius:50,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#cfe4f6"}}>🏆 2025 AI Harvest Vision — Solution of the Year</span>
-          <span aria-hidden="true" style={{width:1,height:20,background:"rgba(255,255,255,.18)",margin:"0 2px"}}/>
-          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,.4)"}}>Trusted by</span>
-          {["Farmwave","Nomo","Noctrix"].map((n,i)=>(
-            <span key={n} style={{display:"inline-flex",alignItems:"center",gap:"12px 18px"}}>
-              {i>0&&<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.28)",marginRight:18}}/>}
-              <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"rgba(255,255,255,.62)"}}>{n}</span>
+          <div className="hero-proof-chips" style={{display:"flex",alignItems:"center",gap:"10px 12px",flexWrap:"wrap"}}>
+            <a href="https://clutch.co/profile/lumo-lab" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,textDecoration:"none",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}><span aria-hidden="true" style={{color:"#E8A33D",fontSize:11,letterSpacing:-1}}>★★★★★</span><span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff"}}>5.0 on Clutch</span></a>
+            <span style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(125,185,232,.12)",border:"1px solid rgba(125,185,232,.3)",borderRadius:50,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#cfe4f6"}}>🏆 2025 AI Harvest Vision — Solution of the Year</span>
+          </div>
+          <div className="hero-proof-trust" style={{display:"flex",alignItems:"center",gap:"8px 12px",flexWrap:"wrap"}}>
+            <span aria-hidden="true" className="hero-proof-divider" style={{width:1,height:20,background:"rgba(255,255,255,.18)"}}/>
+            <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,.4)"}}>Trusted by</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:14}}>
+              {["Farmwave","Nomo","Noctrix"].map((n,i)=>(
+                <span key={n} style={{display:"inline-flex",alignItems:"center",gap:14}}>
+                  {i>0&&<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.28)"}}/>}
+                  <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"rgba(255,255,255,.62)"}}>{n}</span>
+                </span>
+              ))}
             </span>
-          ))}
+          </div>
         </div>
       </W>
     </section>

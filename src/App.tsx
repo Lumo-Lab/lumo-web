@@ -5,7 +5,7 @@ const css = `
 *{margin:0;padding:0;box-sizing:border-box}
 ::selection{background:rgba(0,76,115,.15);color:#004C73}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04)}
+:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04);--accent:#7DB9E8;--on-dark:#fff;--on-dark-muted:rgba(255,255,255,.8);--hero-overlay:rgba(0,30,50,.55);--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;--text-eyebrow:12px;--text-hero:clamp(46px,8vw,120px);--text-proof:clamp(13px,1.1vw,15px);--text-cta:15.5px;--on-teal:#06303a}
 .dark{--bg:#0D1117;--bg2:#161B22;--txt:#E6EDF3;--txt2:#B1BAC4;--txt3:#8B949E;--txt4:#6E7681;--brd:rgba(255,255,255,.10);--bl:rgba(125,185,232,.10);--nav-bg:rgba(13,17,23,.88);--nav-border:rgba(255,255,255,.06)}
 .dark [style*="color: var(--blue)"],.dark [style*="color:var(--blue)"]{color:#7DB9E8!important}
 .dark .card{background:var(--bg2)}
@@ -315,6 +315,57 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .sd-tag-row{display:flex;flex-wrap:wrap;gap:5px}
 .sd .sd-plus{transition:transform .3s ease,background .25s ease,border-color .25s ease}
 .sd:hover .sd-plus{border-color:rgba(0,76,115,.3);background:var(--bl)}
+.bento-tile{transition:transform .25s cubic-bezier(.22,1,.36,1), border-color .25s ease, background .25s ease}
+@media(hover:hover){.bento-tile:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.3)}}
+@media(max-width:980px){
+  .bento{grid-template-columns:repeat(2,1fr)!important}
+  .bento>*{grid-column:auto!important;grid-row:auto!important}
+  .bento .bento-head,.bento .bento-img{grid-column:1 / -1!important}
+  .bento .bento-img{min-height:220px!important}
+  .hero-s{min-height:auto!important}
+  .hero-w{min-height:auto!important;padding-top:100px!important;padding-bottom:48px!important}
+}
+@media(max-width:600px){.bento{grid-template-columns:1fr!important}}
+/* Hero CTAs — tokenized, reusable, state-driven (no inline JS) */
+.hero-cta{display:inline-flex;align-items:center;gap:var(--space-3);background:var(--on-dark);color:var(--blue);padding:var(--space-4) var(--space-8);border-radius:50px;font-family:var(--jk);font-size:var(--text-cta);font-weight:700;text-decoration:none;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:transform .2s ease, box-shadow .25s ease}
+.hero-cta:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.hero-cta:active{transform:scale(.98)}
+/* headline line reveal */
+.hl-line{display:block;overflow:hidden;padding-bottom:.1em}
+.hl-line>span{display:inline-block;transform:translateY(118%);animation:lineUp .75s cubic-bezier(.16,1,.3,1) forwards}
+.hl-line.l1>span{animation-delay:.12s}
+.hl-line.l2>span{animation-delay:.26s}
+@keyframes lineUp{to{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.hl-line>span{transform:none;animation:none}}
+.hero-shot{transition:transform .25s cubic-bezier(.23,1,.32,1), box-shadow .25s ease}
+@media(hover:hover){.hero-shot:hover{transform:translateY(-4px);box-shadow:0 44px 110px rgba(0,16,28,.6)}}
+.hero-shot:active{transform:scale(.99)}
+.hero-dot{transition:width .35s cubic-bezier(.23,1,.32,1), background .25s ease, transform .2s ease}
+@media(hover:hover){.hero-dot:hover{transform:scale(1.3)}}
+@media(max-width:900px){.hero-2col{grid-template-columns:1fr!important;gap:32px!important}.hero-proof-row{margin-top:28px!important}}
+.hero-live-dot{animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.hero-live-dot{animation:none}.hero-shot{transition:none}.hero-shot:hover{transform:none}}
+.hd-line{stroke-dasharray:1200;stroke-dashoffset:1200;animation:hdDraw 2.1s cubic-bezier(.22,1,.36,1) .25s forwards}
+.hd-line2{animation-delay:.5s;animation-duration:2.3s}
+.hd-area{opacity:0;animation:hdFade 1.3s ease 1s forwards}
+.hd-end{opacity:0;animation:hdFade .5s ease 2.1s forwards}
+@keyframes hdDraw{to{stroke-dashoffset:0}}
+@keyframes hdFade{to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.hd-line,.hd-line2{stroke-dashoffset:0;animation:none}.hd-area,.hd-end{opacity:1;animation:none}}
+.hero-slide{opacity:0;transform:scale(.985);filter:blur(6px);transition:opacity .5s cubic-bezier(.23,1,.32,1), transform .5s cubic-bezier(.23,1,.32,1), filter .5s cubic-bezier(.23,1,.32,1);pointer-events:none}
+.hero-slide.on{opacity:1;transform:none;filter:blur(0);pointer-events:auto}
+@media(prefers-reduced-motion:reduce){.hero-slide{transition:opacity .4s ease;transform:none;filter:none}.hero-slide.on{transform:none;filter:none}}
+.hero-slide .hero-spark-line{stroke-dasharray:1400;stroke-dashoffset:1400}
+.hero-slide .hero-spark-area{opacity:0}
+.hero-slide.on .hero-spark-line{animation:sparkDraw 1s cubic-bezier(.23,1,.32,1) .12s forwards}
+.hero-slide.on .hero-spark-area{animation:sparkFade .8s ease .5s forwards}
+@keyframes sparkDraw{to{stroke-dashoffset:0}}
+@keyframes sparkFade{from{opacity:0}to{opacity:.1}}
+@media(prefers-reduced-motion:reduce){.hero-slide .hero-spark-line,.hero-slide.on .hero-spark-line{stroke-dashoffset:0;animation:none}.hero-slide .hero-spark-area,.hero-slide.on .hero-spark-area{opacity:.1;animation:none}}
+.hero-ghost{display:inline-flex;align-items:center;gap:var(--space-2);background:none;border:none;cursor:pointer;padding:0;font-family:var(--jk);font-size:15px;font-weight:600;color:var(--on-dark-muted);transition:color .2s ease, gap .2s ease}
+.hero-ghost:hover{color:var(--on-dark);gap:14px}
+@media(prefers-reduced-motion:reduce){.hero-cta,.hero-ghost{transition:none}.hero-cta:hover,.hero-cta:active{transform:none}.hero-ghost:hover{gap:var(--space-2)}}
 `;
 
 const W=({children,style={},className}:{children:ReactNode,style?:CSSProperties,className?:string})=><div className={className} style={{maxWidth:1200,margin:"0 auto",padding:"0 clamp(16px,4vw,48px)",...style}}>{children}</div>;
@@ -969,6 +1020,167 @@ function CasesSlider({go}:{go:(p:string,id?:string)=>void}){
 }
 
 /* ── HOME ── */
+// ---- Coded product dashboards (no images) for the hero slideshow ----
+function DashSpark({color,d,d2,label}:{color:string,d:string,d2?:string,label:string}){
+  return (<>
+    <span style={{position:"absolute",top:0,left:0,fontFamily:"var(--in)",fontSize:11,color:"rgba(255,255,255,.5)"}}>{label}</span>
+    <svg viewBox="0 0 600 230" preserveAspectRatio="none" style={{position:"absolute",left:0,bottom:0,width:"100%",height:"86%"}} aria-hidden="true">
+      {[60,115,170].map(y=>(<line key={y} x1="0" y1={y} x2="600" y2={y} stroke="rgba(255,255,255,.06)" strokeWidth="1" vectorEffect="non-scaling-stroke"/>))}
+      <path className="hero-spark-area" d={`${d} L600,230 L0,230 Z`} fill={color}/>
+      {d2&&<path className="hero-spark-line" d={d2} fill="none" stroke="rgba(255,255,255,.35)" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>}
+      <path className="hero-spark-line" d={d} fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+    </svg>
+  </>);
+}
+const Ck=({c}:{c:string})=>(<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>);
+// live event feed (no chart)
+function DashFeed({rows}:{rows:{txt:string,time:string,c:string,done?:boolean}[]}){
+  return (<div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",gap:8,justifyContent:"center"}}>
+    {rows.map((r,k)=>(
+      <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"9px 12px",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",borderRadius:10}}>
+        <span style={{width:26,height:26,flexShrink:0,borderRadius:8,background:`${r.c}1f`,border:`1px solid ${r.c}55`,display:"flex",alignItems:"center",justifyContent:"center"}}>{r.done?<Ck c={r.c}/>:<span style={{width:7,height:7,borderRadius:"50%",background:r.c}}/>}</span>
+        <span style={{flex:1,minWidth:0,fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.84)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.txt}</span>
+        <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:600,color:"rgba(255,255,255,.42)",flexShrink:0}}>{r.time}</span>
+      </div>
+    ))}
+  </div>);
+}
+// Noctrix NTX100 neurostimulation therapy session (no chart)
+function DashNoctrix({color}:{color:string}){
+  return (<div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",gap:13,justifyContent:"center"}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <span style={{fontFamily:"var(--in)",fontSize:12,color:"rgba(255,255,255,.6)"}}>Evening therapy session</span>
+      <span style={{display:"inline-flex",alignItems:"center",gap:7,height:22,padding:"0 10px",background:`${color}1f`,border:`1px solid ${color}4d`,borderRadius:50}}>
+        <span className="hero-live-dot" aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:color}}/>
+        <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,letterSpacing:.5,color:"#fff",opacity:.85}}>Stimulating</span>
+      </span>
+    </div>
+    <div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:8}}><span style={{fontFamily:"var(--in)",fontSize:11,color:"rgba(255,255,255,.55)"}}>Stimulation intensity</span><span style={{fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,color}}>Level 6 / 10</span></div>
+      <div style={{display:"flex",gap:5}}>{Array.from({length:10}).map((_,k)=>(<span key={k} style={{flex:1,height:10,borderRadius:3,background:k<6?color:"rgba(255,255,255,.12)"}}/>))}</div>
+    </div>
+    <div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:7}}><span style={{fontFamily:"var(--in)",fontSize:11,color:"rgba(255,255,255,.55)"}}>Session progress</span><span style={{fontFamily:"var(--jk)",fontSize:11.5,fontWeight:600,color:"rgba(255,255,255,.7)"}}>18 min left</span></div>
+      <div style={{height:6,borderRadius:50,background:"rgba(255,255,255,.1)",overflow:"hidden"}}><div style={{height:"100%",width:"55%",borderRadius:50,background:color}}/></div>
+    </div>
+    <div style={{display:"flex",alignItems:"center",gap:11,padding:"11px 13px",background:`${color}14`,border:`1px solid ${color}3d`,borderRadius:11}}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0}}><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
+      <div style={{display:"flex",flexDirection:"column"}}>
+        <span style={{fontFamily:"var(--jk)",fontSize:13.5,fontWeight:800,color:"#fff",lineHeight:1.25}}>Acquired by ResMed · $340M</span>
+        <span style={{fontFamily:"var(--in)",fontSize:11.5,color:"rgba(255,255,255,.62)"}}>First FDA-authorised non-drug RLS therapy</span>
+      </div>
+    </div>
+  </div>);
+}
+// progress bar + checklist (no chart)
+function DashChecklist({color,pct,items}:{color:string,pct:number,items:{label:string,done:boolean}[]}){
+  return (<div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",gap:11,justifyContent:"center"}}>
+    <div>
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:7}}><span style={{fontFamily:"var(--in)",fontSize:11.5,color:"rgba(255,255,255,.6)"}}>Today's plan</span><span style={{fontFamily:"var(--jk)",fontSize:11.5,fontWeight:700,color}}>{Math.round(pct*100)}%</span></div>
+      <div style={{height:6,borderRadius:50,background:"rgba(255,255,255,.1)",overflow:"hidden"}}><div style={{height:"100%",width:`${pct*100}%`,borderRadius:50,background:color}}/></div>
+    </div>
+    {items.map((it,k)=>(
+      <div key={k} style={{display:"flex",alignItems:"center",gap:10}}>
+        <span style={{width:20,height:20,flexShrink:0,borderRadius:6,background:it.done?`${color}22`:"transparent",border:`1px solid ${it.done?color+"88":"rgba(255,255,255,.22)"}`,display:"flex",alignItems:"center",justifyContent:"center"}}>{it.done&&<Ck c={color}/>}</span>
+        <span style={{fontFamily:"var(--in)",fontSize:13,color:it.done?"rgba(255,255,255,.85)":"rgba(255,255,255,.5)"}}>{it.label}</span>
+      </div>
+    ))}
+  </div>);
+}
+// go / no-go verdict + condition rows (no chart)
+function DashVerdict({color,verdict,sub,conditions}:{color:string,verdict:string,sub:string,conditions:{label:string,val:string}[]}){
+  return (<div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",gap:12,justifyContent:"center"}}>
+    <div style={{display:"flex",alignItems:"center",gap:14}}>
+      <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:62,height:48,padding:"0 16px",borderRadius:12,background:`${color}1f`,border:`1px solid ${color}66`,fontFamily:"var(--jk)",fontSize:26,fontWeight:800,color}}>{verdict}</span>
+      <span style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.7)",lineHeight:1.4}}>{sub}</span>
+    </div>
+    <div style={{display:"flex",flexDirection:"column",gap:7}}>
+      {conditions.map((c,k)=>(
+        <div key={k} style={{display:"flex",alignItems:"center",gap:9,fontFamily:"var(--in)",fontSize:12.5}}>
+          <Ck c={color}/>
+          <span style={{flex:1,color:"rgba(255,255,255,.6)"}}>{c.label}</span>
+          <span style={{fontFamily:"var(--jk)",fontWeight:700,color:"#fff"}}>{c.val}</span>
+        </div>
+      ))}
+    </div>
+  </div>);
+}
+// community groups list with avatar initials (no chart)
+function DashList({rows}:{rows:{title:string,meta:string,initial:string,c:string}[]}){
+  return (<div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",gap:8,justifyContent:"center"}}>
+    {rows.map((r,k)=>(
+      <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"8px 12px",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",borderRadius:10}}>
+        <span style={{width:28,height:28,flexShrink:0,borderRadius:"50%",background:`${r.c}26`,border:`1px solid ${r.c}66`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--jk)",fontSize:12,fontWeight:800,color:r.c}}>{r.initial}</span>
+        <span style={{flex:1,minWidth:0,fontFamily:"var(--in)",fontSize:12.5,fontWeight:500,color:"rgba(255,255,255,.85)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.title}</span>
+        <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:`${r.c}`,flexShrink:0}}>{r.meta}</span>
+      </div>
+    ))}
+  </div>);
+}
+// 2x2 big stat grid (no chart)
+function DashStatGrid({items}:{items:{l:string,v:string,c:string}[]}){
+  return (<div style={{position:"absolute",inset:0,display:"grid",gridTemplateColumns:"1fr 1fr",gridTemplateRows:"1fr 1fr",gap:10}}>
+    {items.map((t,k)=>(
+      <div key={k} style={{display:"flex",flexDirection:"column",justifyContent:"center",padding:"0 14px",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:11}}>
+        <span style={{fontFamily:"var(--jk)",fontSize:26,fontWeight:800,color:t.c,lineHeight:1}}>{t.v}</span>
+        <span style={{fontFamily:"var(--in)",fontSize:11.5,color:"rgba(255,255,255,.6)",marginTop:5}}>{t.l}</span>
+      </div>
+    ))}
+  </div>);
+}
+function DashPanel({accent,title,tiles,children}:{accent:string,title:string,tiles?:{l:string,v:string,c?:string}[],children:React.ReactNode}){
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:14,height:"100%",padding:"16px 16px 15px",textAlign:"left",boxSizing:"border-box"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <span style={{display:"inline-flex",alignItems:"center",gap:9,minWidth:0}}>
+          <span aria-hidden="true" style={{width:22,height:22,flexShrink:0,borderRadius:7,background:accent}}/>
+          <span style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:800,color:"#fff",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{title}</span>
+        </span>
+        <span style={{display:"inline-flex",alignItems:"center",gap:7,height:24,flexShrink:0,padding:"0 11px",background:`${accent}1f`,border:`1px solid ${accent}4d`,borderRadius:50}}>
+          <span className="hero-live-dot" aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:accent}}/>
+          <span style={{fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"#fff",opacity:.85}}>Live</span>
+        </span>
+      </div>
+      <div style={{position:"relative",flex:1,minHeight:0}}>{children}</div>
+      {tiles&&<div style={{display:"grid",gridTemplateColumns:`repeat(${tiles.length},1fr)`,gap:9}}>
+        {tiles.map(t=>(
+          <div key={t.l} style={{padding:"9px 11px",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:10,minWidth:0}}>
+            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:5}}>
+              <span aria-hidden="true" style={{width:6,height:6,flexShrink:0,borderRadius:"50%",background:t.c||accent}}/>
+              <span style={{fontFamily:"var(--in)",fontSize:10.5,color:"rgba(255,255,255,.6)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.l}</span>
+            </div>
+            <span style={{display:"block",fontFamily:"var(--jk)",fontSize:t.v.length>5?17:22,fontWeight:800,color:t.c||"#fff",lineHeight:1}}>{t.v}</span>
+          </div>
+        ))}
+      </div>}
+    </div>
+  );
+}
+function HeroDashboards({go}:{go:(p:string,id?:string)=>void}){
+  const slides=[
+    {id:"nomo",label:"Nomo Smart Care",node:<DashPanel accent="#F5A623" title="Nomo Smart Care"><DashFeed rows={[{txt:"Morning routine on track",time:"8:42",c:"#F5A623",done:true},{txt:"Kitchen activity detected",time:"9:15",c:"#F5A623"},{txt:"Medication taken",time:"9:30",c:"#F5A623",done:true},{txt:"Fall check — all clear",time:"now",c:"#F5A623",done:true}]}/></DashPanel>},
+    {id:"farmwave",label:"Farmwave",node:<DashPanel accent="#1E88D8" title="Farmwave AI Harvest Vision" tiles={[{l:"Left header",v:"5",c:"#1E88D8"},{l:"Right header",v:"16",c:"#1E88D8"},{l:"Rear combine",v:"12",c:"#1E88D8"}]}><DashSpark color="#1E88D8" label="Grain loss · bu/acre — last 60 min" d="M0,150 C60,128 100,160 150,118 C200,84 250,128 300,96 C360,62 420,100 480,64 C540,38 580,58 600,46" d2="M0,175 C70,165 110,182 160,150 C215,118 265,150 320,138 C380,124 430,150 490,118 C545,92 580,108 600,100"/></DashPanel>},
+    {id:"noctrix",label:"Noctrix Health",node:<DashPanel accent="#8A7DD0" title="Noctrix NTX100"><DashNoctrix color="#8A7DD0"/></DashPanel>},
+    {id:"muvr",label:"Muvr",node:<DashPanel accent="#22B3B6" title="Muvr Recovery"><DashChecklist color="#22B3B6" pct={.75} items={[{label:"Morning mobility",done:true},{label:"Knee flexion · 110°",done:true},{label:"Strength set · 3×12",done:true},{label:"Evening stretch",done:false}]}/></DashPanel>},
+    {id:"drift",label:"Drift App",node:<DashPanel accent="#33A6D7" title="Drift Sprayability"><DashVerdict color="#33A6D7" verdict="GO" sub="Safe to spray — clear window for the next 4 hours." conditions={[{label:"Wind",val:"6 mph"},{label:"Temperature",val:"72°F"},{label:"Humidity",val:"54%"},{label:"Inversion risk",val:"Low"}]}/></DashPanel>},
+    {id:"mobility",label:"mobilityONE",node:<DashPanel accent="#8BBA33" title="mobilityONE Fleet"><DashStatGrid items={[{l:"Vehicles managed",v:"1,240",c:"#8BBA33"},{l:"Utilization",v:"78%",c:"#8BBA33"},{l:"Active now",v:"312",c:"#8BBA33"},{l:"Fleet uptime",v:"99.9%",c:"#8BBA33"}]}/></DashPanel>},
+    {id:"beunity",label:"beUnity",node:<DashPanel accent="#7C4DC9" title="beUnity Community" tiles={[{l:"Organisations",v:"500+",c:"#7C4DC9"},{l:"Reach",v:"Across EU"},{l:"In",v:"One app"}]}><DashList rows={[{initial:"P",title:"Photography Club",meta:"128 members",c:"#7C4DC9"},{initial:"G",title:"Annual Gala 2026",meta:"64 going",c:"#7C4DC9"},{initial:"B",title:"Board announcements",meta:"3 new",c:"#7C4DC9"}]}/></DashPanel>},
+  ];
+  const[i,setI]=useState(0);const[paused,setPaused]=useState(false);
+  useEffect(()=>{if(paused)return;const t=setInterval(()=>setI(p=>(p+1)%slides.length),4800);return()=>clearInterval(t);},[paused,slides.length]);
+  return (
+    <div className="hero-visual fi d3" style={{position:"relative",width:"100%"}} onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)}>
+      <button onClick={()=>go("cases",slides[i].id)} aria-label={`See the ${slides[i].label} case study`} className="hero-shot" style={{position:"relative",zIndex:1,display:"block",width:"100%",padding:"10px",border:"1px solid rgba(255,255,255,.16)",borderRadius:22,cursor:"pointer",background:"#013a52",boxShadow:"0 30px 70px rgba(0,14,26,.45)"}}>
+        <div style={{position:"relative",aspectRatio:"3 / 2",borderRadius:13,overflow:"hidden",border:"1px solid rgba(0,0,0,.35)",background:"#00263a"}}>
+          {slides.map((s,idx)=>(<div key={s.id} className={"hero-slide"+(idx===i?" on":"")} style={{position:"absolute",inset:0}}>{s.node}</div>))}
+        </div>
+      </button>
+      <div style={{position:"relative",zIndex:1,display:"flex",justifyContent:"center",alignItems:"center",gap:7,marginTop:16}}>
+        {slides.map((s,idx)=>(<button key={s.id} className="hero-dot" onClick={()=>setI(idx)} aria-label={`Show ${s.label}`} style={{width:idx===i?20:7,height:7,borderRadius:50,border:"none",padding:0,cursor:"pointer",background:idx===i?(s.node.props as {accent:string}).accent:"rgba(255,255,255,.28)"}}/>))}
+      </div>
+    </div>
+  );
+}
 function Home({go}:{go:(p:string,id?:string)=>void}){
   const[at,setAt]=useState(0);const[ap,setAp]=useState(0);const tlR=useRef<HTMLElement>(null);
   // Hero rotating product showcase — cycles through best cases with image + outcome stat
@@ -984,41 +1196,42 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
   useEffect(()=>{const h=()=>{if(!tlR.current)return;const r=tlR.current.getBoundingClientRect();const p=Math.max(0,Math.min(1,(-r.top+200)/(r.height-300)));setAp(Math.min(3,Math.floor(p*4)));};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);},[]);
 
   return <div>
-    {/* HERO */}
-    <section className="hero-s" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"#004C73"}}>
-      {/* Video background */}
-      <video autoPlay muted loop playsInline preload="auto" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.35}}>
+    {/* HERO — proof-led split: message (left) · real product visual (right) · proof row in the fold */}
+    <section className="hero-s" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"var(--blue)"}}>
+      <video autoPlay muted loop playsInline preload="auto" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.18}}>
         <source src={process.env.PUBLIC_URL + "/videos/hero.mp4"} type="video/mp4"/>
         <source src={process.env.PUBLIC_URL + "/videos/hero.mov"} type="video/quicktime"/>
       </video>
-      {/* Flat readability overlay */}
-      <div style={{position:"absolute",inset:0,zIndex:1,background:"rgba(0,30,50,.5)"}}/>
+      <div aria-hidden="true" style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(900px 620px at 12% 24%, rgba(0,76,115,.55), transparent 55%), radial-gradient(1100px 760px at 92% -10%, rgba(125,185,232,.22), transparent 55%), linear-gradient(180deg, rgba(0,28,46,.5), rgba(0,28,46,.66))"}}/>
       <div className="hero-grain"/>
-      <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:140,paddingBottom:100,color:"#fff",display:"flex",flexDirection:"column",justifyContent:"center",minHeight:"calc(100vh - 60px)"}}>
-        {/* Quiet hero — H1 + one sentence + one CTA. Single column. Massive breathing room. Nothing else. */}
-        <div className="hero-content" style={{maxWidth:1080}}>
-          {/* Credibility tags — Clutch rating + AI Harvest Vision Award. Sit above the H1 as quiet anchors. */}
-          <div className="fi d1 hero-creds" style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap",marginBottom:32}}>
-            <a href="https://clutch.co/profile/lumo-lab" target="_blank" rel="noopener noreferrer" aria-label="See Lumo Lab reviews on Clutch" style={{display:"inline-flex",alignItems:"center",gap:8,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.22)",borderRadius:50,textDecoration:"none",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",transition:"background .2s, border-color .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.14)";e.currentTarget.style.borderColor="rgba(255,255,255,.35)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.22)";}}>
-              <span aria-hidden="true" style={{display:"inline-flex",gap:1,color:"#7DB9E8",fontSize:11,letterSpacing:-1}}>★★★★★</span>
-              <span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff",letterSpacing:.3}}>5.0 <span style={{color:"rgba(255,255,255,.55)",fontWeight:500}}>· Clutch</span></span>
-            </a>
-            <button onClick={()=>go("cases","farmwave")} aria-label="Read the Farmwave case study" style={{display:"inline-flex",alignItems:"center",gap:8,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.22)",borderRadius:50,backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",cursor:"pointer",transition:"background .2s, border-color .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.14)";e.currentTarget.style.borderColor="rgba(255,255,255,.35)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.22)";}}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7DB9E8" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
-              <span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff",letterSpacing:.3}}>AI Harvest Vision <span style={{color:"rgba(255,255,255,.55)",fontWeight:500}}>· 2025</span></span>
-            </button>
+      <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:128,paddingBottom:96,color:"var(--on-dark)",minHeight:"calc(100vh - 60px)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+        <div className="hero-2col" style={{display:"grid",gridTemplateColumns:"1.05fr .95fr",gap:"clamp(36px,5vw,72px)",alignItems:"center",width:"100%"}}>
+          {/* LEFT — message */}
+          <div className="hero-content">
+            <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:"var(--text-eyebrow)",fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:28,height:2,background:"var(--accent)"}}/>Product · AI · IoT engineering</span>
+            <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(32px,3.6vw,56px)",fontWeight:800,lineHeight:1.07,letterSpacing:"-0.03em",margin:0,marginBottom:"var(--space-6)",maxWidth:600}}>You've got the idea. <span style={{color:"var(--accent)"}}>We bring the tech.</span></h1>
+            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(15px,1.2vw,18px)",color:"var(--on-dark-muted)",lineHeight:1.62,margin:0,marginBottom:"var(--space-8)",maxWidth:480}}>From AI and IoT to high-fidelity product design, we architect, build, and ship the hard parts. Trusted by teams whose products got acquired.</p>
+            <div className="fi d4" style={{display:"flex",alignItems:"center",gap:"var(--space-4)",flexWrap:"wrap"}}>
+              <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" className="hero-cta">Book a tech assessment <Arr s={14} c="var(--blue)"/></a>
+              <button onClick={()=>go("cases")} className="hero-ghost">See our work <Arr s={14} c="currentColor"/></button>
+            </div>
+            <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.55)",margin:0,marginTop:"var(--space-4)"}}>30 minutes · no pitch decks · a senior engineer, not a salesperson.</p>
           </div>
-          <h1 className="speakable-hero" style={{fontFamily:"var(--jk)",fontSize:"clamp(52px,8.5vw,128px)",fontWeight:800,lineHeight:.94,letterSpacing:"-0.045em",marginBottom:36,maxWidth:1040}}>
-            {["We","advise,","guide,","and"].map((w,i)=><span key={w}>{i>0?" ":""}<span className="word" style={{animationDelay:`${0.1+i*0.08}s`}}>{w}</span></span>)}
-            {" "}
-            <span className="word" style={{animationDelay:"0.44s",animation:`wordIn .6s cubic-bezier(.16,1,.3,1) .44s forwards`,opacity:0,display:"inline-block",color:"#7DB9E8"}}>deliver.</span>
-          </h1>
-          <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(18px,1.6vw,22px)",color:"rgba(255,255,255,.7)",lineHeight:1.55,maxWidth:580,marginBottom:48,fontWeight:400}}>Honest advice and expert support, from the very first step.</p>
-          <div className="fi d4" style={{display:"flex",alignItems:"center",gap:28,flexWrap:"wrap"}}>
-            <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:12,background:"#fff",color:"var(--blue)",padding:"16px 32px",borderRadius:50,fontFamily:"var(--jk)",fontSize:15,fontWeight:700,border:"none",cursor:"pointer",textDecoration:"none",transition:"transform .2s, box-shadow .25s",boxShadow:"0 2px 8px rgba(0,0,0,.18)"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-1px)";e.currentTarget.style.boxShadow="0 10px 28px rgba(0,0,0,.28)";}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="0 2px 8px rgba(0,0,0,.18)";}}>Free discovery call <Arr s={14} c="var(--blue)"/></a>
-            <button onClick={()=>{const el=document.querySelector('.get-started');if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}} style={{display:"inline-flex",alignItems:"center",gap:10,background:"rgba(255,255,255,.08)",color:"#fff",padding:"14px 24px",borderRadius:50,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,border:"1px solid rgba(255,255,255,.24)",cursor:"pointer",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",transition:"background .2s, border-color .2s, transform .2s"}} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.16)";e.currentTarget.style.borderColor="rgba(255,255,255,.45)";e.currentTarget.style.transform="translateY(-1px)";}} onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.24)";e.currentTarget.style.transform="";}}>Don't know where to start? <Arr s={13} c="currentColor"/></button>
-            <button onClick={()=>go("cases")} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:14,fontWeight:600,color:"rgba(255,255,255,.7)",letterSpacing:.1,transition:"color .2s, gap .2s"}} onMouseEnter={e=>{e.currentTarget.style.color="#fff";e.currentTarget.style.gap="12px";}} onMouseLeave={e=>{e.currentTarget.style.color="rgba(255,255,255,.7)";e.currentTarget.style.gap="8px";}}>or see our work <Arr s={13} c="currentColor"/></button>
-          </div>
+          {/* RIGHT — rotating coded product dashboards */}
+          <HeroDashboards go={go}/>
+        </div>
+        {/* PROOF ROW — in the fold */}
+        <div className="fi d4 hero-proof-row" style={{display:"flex",alignItems:"center",gap:"12px 18px",flexWrap:"wrap",marginTop:"clamp(28px,4vh,52px)"}}>
+          <a href="https://clutch.co/profile/lumo-lab" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,textDecoration:"none",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}><span aria-hidden="true" style={{color:"#E8A33D",fontSize:11,letterSpacing:-1}}>★★★★★</span><span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff"}}>5.0 on Clutch</span></a>
+          <span style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(125,185,232,.12)",border:"1px solid rgba(125,185,232,.3)",borderRadius:50,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#cfe4f6"}}>🏆 2025 AI Harvest Vision — Solution of the Year</span>
+          <span aria-hidden="true" style={{width:1,height:20,background:"rgba(255,255,255,.18)",margin:"0 2px"}}/>
+          <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,.4)"}}>Trusted by</span>
+          {["Farmwave","Nomo","Noctrix"].map((n,i)=>(
+            <span key={n} style={{display:"inline-flex",alignItems:"center",gap:"12px 18px"}}>
+              {i>0&&<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.28)",marginRight:18}}/>}
+              <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"rgba(255,255,255,.62)"}}>{n}</span>
+            </span>
+          ))}
         </div>
       </W>
     </section>
@@ -2084,6 +2297,15 @@ function Contact({type="project"}:{type?:"project"|"job"}){
   const[dragOver,setDragOver]=useState(false);
   const[form,setForm]=useState({name:"",email:"",company:"",budget:"",message:"",role:"",portfolio:""});
   const set=(k:string)=>(e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>)=>setForm(f=>({...f,[k]:e.target.value}));
+  // Visitor's local timezone — Calendly auto-shows slots in this zone; we surface it to kill the "what time is that for me?" doubt for US visitors.
+  const tz=(()=>{try{return (Intl.DateTimeFormat().resolvedOptions().timeZone||"").replace(/_/g," ");}catch{return "";}})();
+  useEffect(()=>{
+    if(isJob)return;
+    const id="calendly-widget-js";
+    if(!document.getElementById(id)){
+      const s=document.createElement("script");s.id=id;s.src="https://assets.calendly.com/assets/external/widget.js";s.async=true;document.body.appendChild(s);
+    }
+  },[isJob]);
   const inputStyle:CSSProperties={width:"100%",padding:"12px 16px",border:"1px solid var(--brd)",borderRadius:10,fontFamily:"var(--in)",fontSize:14,color:"var(--txt)",background:"#fff",outline:"none",transition:"border-color .2s"};
   const labelStyle:CSSProperties={display:"block",fontSize:12,fontWeight:600,color:"var(--txt2)",fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:1.2,marginBottom:6};
   const field=(label:string,key:string,t="text",placeholder="")=>(
@@ -2136,6 +2358,29 @@ function Contact({type="project"}:{type?:"project"|"job"}){
           <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.7,marginBottom:40}}>
             {isJob?"Tell us about yourself and what you're looking for. We read every application.":"Tell us about your project. We'll get back to you within 1 to 2 business days."}
           </p>
+          {!isJob&&<>
+            {/* US trust strip */}
+            <div style={{display:"flex",alignItems:"center",gap:"10px 18px",flexWrap:"wrap",padding:"14px 0",marginBottom:32,borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
+              <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--txt4)",letterSpacing:1.5,textTransform:"uppercase"}}>Trusted by US companies</span>
+              {["Nomo","Farmwave","Noctrix → ResMed"].map(n=><span key={n} style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt2)"}}>{n}</span>)}
+              <span style={{display:"inline-flex",alignItems:"center",gap:6,marginLeft:"auto"}}><span aria-hidden="true" style={{color:"#E8A33D",fontSize:11,letterSpacing:-1}}>★★★★★</span><span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt2)"}}>5.0 · Clutch</span></span>
+            </div>
+            {/* Book a call — timezone aware */}
+            <div style={{marginBottom:36}}>
+              <h2 style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"var(--txt)",marginBottom:6}}>Grab a 30-minute slot</h2>
+              <p style={{display:"flex",alignItems:"center",gap:8,fontSize:13.5,color:"var(--txt3)",lineHeight:1.55,marginBottom:16}}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                <span>Times shown in your timezone{tz?` (${tz})`:""} — we keep hours that overlap with US business days.</span>
+              </p>
+              <div className="calendly-inline-widget" data-url="https://calendly.com/jurica-lumo-lab/30min?hide_gdpr_banner=1" style={{minWidth:320,height:680,border:"1px solid var(--brd)",borderRadius:14,overflow:"hidden"}}/>
+            </div>
+            {/* divider */}
+            <div style={{display:"flex",alignItems:"center",gap:16,margin:"4px 0 30px"}}>
+              <span style={{flex:1,height:1,background:"var(--brd)"}}/>
+              <span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt4)",letterSpacing:1,textTransform:"uppercase"}}>or send a message</span>
+              <span style={{flex:1,height:1,background:"var(--brd)"}}/>
+            </div>
+          </>}
           {sent?<div style={{textAlign:"center",padding:"56px 0"}}>
             <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(0,76,115,.08)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--blue)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
             <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:700,color:"var(--txt)",marginBottom:8}}>Message sent!</h3>

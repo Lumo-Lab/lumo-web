@@ -343,7 +343,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .hero-dot{transition:width .35s cubic-bezier(.23,1,.32,1), background .25s ease, transform .2s ease}
 @media(hover:hover){.hero-dot:hover{transform:scale(1.3)}}
 @media(max-width:900px){.hero-2col{grid-template-columns:1fr!important;gap:32px!important}.hero-proof-row{margin-top:28px!important}}
-@media(max-width:640px){.hero-proof-row{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px!important}.hero-proof-chips{justify-content:center}.hero-proof-trust{justify-content:center}.hero-proof-divider{display:none}}
+@media(max-width:640px){.hero-proof-row{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px!important}.hero-proof-chips{justify-content:center}.hero-proof-trust{justify-content:center}.hero-proof-divider{display:none}.hero-visual{display:none!important}}
 .hero-live-dot{animation:livePulse 2s ease-in-out infinite}
 @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.35}}
 @media(prefers-reduced-motion:reduce){.hero-live-dot{animation:none}.hero-shot{transition:none}.hero-shot:hover{transform:none}}

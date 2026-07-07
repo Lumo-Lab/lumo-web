@@ -387,7 +387,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 @media(hover:hover){.cc-opt:hover{border-color:var(--blue)!important}.cc-chip:hover{border-color:var(--blue)!important}}
 .cc-send{transition:transform .18s cubic-bezier(.23,1,.32,1)}
 .cc-send:active{transform:scale(.98)}
-.cc-mobilebar{display:none}
+.cc-mobilebar{display:none;transition:transform .3s cubic-bezier(.23,1,.32,1)}
+.cc-mobilebar.cc-hide{transform:translateY(130%)}
 @media(max-width:820px){.cc-grid{grid-template-columns:1fr}.cc-cards{grid-template-columns:1fr}.cc-result>div{position:static!important}.cc-mobilebar{display:flex}.cc-page{padding-bottom:76px}}
 @media(prefers-reduced-motion:reduce){.cta-pop-back,.cta-pop-card{transition:opacity .2s ease!important;transform:none!important}}
 @keyframes sparkDraw{to{stroke-dashoffset:0}}
@@ -1191,6 +1192,7 @@ function DashPanel({accent,title,tiles,children}:{accent:string,title:string,til
     </div>
   );
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function HeroDashboards({go}:{go:(p:string,id?:string)=>void}){
   const slides=[
     {id:"nomo",label:"Nomo Smart Care",node:<DashPanel accent="#F5A623" title="Nomo Smart Care"><DashFeed rows={[{txt:"Morning routine on track",time:"8:42",c:"#F5A623",done:true},{txt:"Kitchen activity detected",time:"9:15",c:"#F5A623"},{txt:"Medication taken",time:"9:30",c:"#F5A623",done:true},{txt:"Fall check — all clear",time:"now",c:"#F5A623",done:true}]}/></DashPanel>},
@@ -1240,20 +1242,19 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
       <div aria-hidden="true" style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(900px 620px at 12% 24%, rgba(0,76,115,.55), transparent 55%), radial-gradient(1100px 760px at 92% -10%, rgba(125,185,232,.22), transparent 55%), linear-gradient(180deg, rgba(0,28,46,.5), rgba(0,28,46,.66))"}}/>
       <div className="hero-grain"/>
       <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:128,paddingBottom:96,color:"var(--on-dark)",minHeight:"calc(100vh - 60px)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
-        <div className="hero-2col" style={{display:"grid",gridTemplateColumns:"1.05fr .95fr",gap:"clamp(36px,5vw,72px)",alignItems:"center",width:"100%"}}>
+        <div className="hero-2col" style={{display:"grid",gridTemplateColumns:"1fr",gap:"clamp(36px,5vw,72px)",alignItems:"center",width:"100%"}}>
           {/* LEFT — message */}
           <div className="hero-content">
-            <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:"var(--text-eyebrow)",fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:28,height:2,background:"var(--accent)"}}/>Product · AI · IoT engineering</span>
-            <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(32px,3.6vw,56px)",fontWeight:800,lineHeight:1.07,letterSpacing:"-0.03em",margin:0,marginBottom:"var(--space-6)",maxWidth:600}}>You've got the idea. <span style={{color:"var(--accent)"}}>We bring the tech.</span></h1>
-            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(15px,1.2vw,18px)",color:"var(--on-dark-muted)",lineHeight:1.62,margin:0,marginBottom:"var(--space-8)",maxWidth:480}}>From AI and IoT to high-fidelity product design, we architect, build, and ship the hard parts. Trusted by teams whose products got acquired.</p>
+            <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:32,height:2,background:"var(--accent)"}}/>Product · AI · IoT engineering</span>
+            <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(40px,6vw,80px)",fontWeight:800,lineHeight:1.04,letterSpacing:"-0.035em",margin:0,marginBottom:"var(--space-8)",maxWidth:860}}>You've got the idea. <span style={{color:"var(--accent)"}}>We bring the tech.</span></h1>
+            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(17px,1.7vw,22px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-10)",maxWidth:620}}>From AI and IoT to high-fidelity product design, we architect, build, and ship the hard parts. Trusted by teams whose products got acquired.</p>
             <div className="fi d4" style={{display:"flex",alignItems:"center",gap:"var(--space-4)",flexWrap:"wrap"}}>
               <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" className="hero-cta">Book a tech assessment <Arr s={14} c="var(--blue)"/></a>
               <button onClick={()=>go("cases")} className="hero-ghost">See our work <Arr s={14} c="currentColor"/></button>
             </div>
             <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.55)",margin:0,marginTop:"var(--space-4)"}}>30 minutes · no pitch decks · a senior engineer, not a salesperson.</p>
           </div>
-          {/* RIGHT — rotating coded product dashboards */}
-          <HeroDashboards go={go}/>
+          {/* Product dashboards hidden for a simpler hero — re-enable with <HeroDashboards go={go}/> */}
         </div>
         {/* PROOF ROW — in the fold */}
         <div className="fi d4 hero-proof-row" style={{display:"flex",alignItems:"center",gap:"12px 18px",flexWrap:"wrap",marginTop:"clamp(28px,4vh,52px)"}}>
@@ -3074,6 +3075,8 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
   const[rush,setRush]=useState(false);
   const[email,setEmail]=useState("");
   const[sent,setSent]=useState(false);const[sending,setSending]=useState(false);const[err,setErr]=useState(false);
+  const[nearBottom,setNearBottom]=useState(false);
+  useEffect(()=>{const on=()=>{const d=document.documentElement;setNearBottom(window.scrollY+window.innerHeight>=d.scrollHeight-180);};on();window.addEventListener("scroll",on,{passive:true});window.addEventListener("resize",on);return()=>{window.removeEventListener("scroll",on);window.removeEventListener("resize",on);};},[]);
   const t=CC_TYPES[type];
   const extra=Math.max(0,platforms.length-1);
   const lines:{label:string,l:number,h:number}[]=[{label:t.label,l:t.l,h:t.h}];
@@ -3219,7 +3222,7 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
       </div>
     </W></section>
     {/* Mobile sticky estimate bar */}
-    <div className="cc-mobilebar" style={{position:"fixed",left:0,right:0,bottom:0,zIndex:120,background:"var(--blue)",color:"#fff",padding:"11px 16px calc(11px + env(safe-area-inset-bottom))",alignItems:"center",justifyContent:"space-between",gap:12,boxShadow:"0 -6px 24px rgba(0,20,34,.28)"}}>
+    <div className={"cc-mobilebar"+(nearBottom?" cc-hide":"")} style={{position:"fixed",left:0,right:0,bottom:0,zIndex:120,background:"var(--blue)",color:"#fff",padding:"11px 16px calc(11px + env(safe-area-inset-bottom))",alignItems:"center",justifyContent:"space-between",gap:12,boxShadow:"0 -6px 24px rgba(0,20,34,.28)"}}>
       <div style={{minWidth:0}}>
         <span style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:800,lineHeight:1}}>{ccFmt(mid)}</span>
         <span style={{fontFamily:"var(--in)",fontSize:12,color:"rgba(255,255,255,.75)",marginLeft:8}}>{ccFmt(low)}–{ccFmt(high)} · {wl}–{wh} wks</span>

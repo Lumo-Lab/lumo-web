@@ -361,6 +361,35 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .hero-slide .hero-spark-area{opacity:0}
 .hero-slide.on .hero-spark-line{animation:sparkDraw 1s cubic-bezier(.23,1,.32,1) .12s forwards}
 .hero-slide.on .hero-spark-area{animation:sparkFade .8s ease .5s forwards}
+.cta-pop-x:hover{background:var(--blue)!important;color:#fff!important}
+.blog-body-grid{display:grid;grid-template-columns:230px 1fr;gap:clamp(44px,6vw,88px);align-items:start;margin-top:14px}
+.blog-toc{position:sticky;top:96px;max-height:calc(100vh - 116px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--art, var(--accent)) transparent;padding-right:6px;margin-right:-6px}
+.blog-toc::-webkit-scrollbar{width:5px}
+.blog-toc::-webkit-scrollbar-thumb{background:var(--art, var(--accent));border-radius:50px}
+.blog-toc:hover::-webkit-scrollbar-thumb{background:var(--art, var(--blue))}
+.toc-link:hover{color:var(--art, var(--blue))!important}
+.blog-list li::marker{color:var(--art, var(--teal))}
+.blog-list strong{color:var(--art, var(--blue))}
+.dark .blog-list strong{color:var(--art, #7DB9E8)}
+.blog-share-ico{transition:background .25s,border-color .25s,color .25s,transform .2s cubic-bezier(.23,1,.32,1)}
+.blog-share-ico:active{transform:scale(.94)}
+@media(hover:hover){.blog-share-ico:hover{background:var(--blue);border-color:var(--blue);color:#fff;transform:translateY(-2px)}}
+.blog-related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.blog-rel-card{transition:transform .25s cubic-bezier(.23,1,.32,1), box-shadow .25s ease}
+.blog-rel-card:active{transform:scale(.99)}
+@media(hover:hover){.blog-rel-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,30,50,.1)}}
+.blog-cta-btn{transition:transform .2s cubic-bezier(.23,1,.32,1),box-shadow .2s ease}
+.blog-cta-btn:active{transform:scale(.97)}
+@media(hover:hover){.blog-cta-btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.18)}}
+@media(max-width:820px){.blog-body-grid{grid-template-columns:1fr;gap:24px}.blog-toc{position:static;max-height:none;overflow:visible;margin-right:0;padding-right:0}.toc-contents{display:none}.blog-related-grid{grid-template-columns:1fr}}
+.cc-grid{display:grid;grid-template-columns:1fr 340px;gap:clamp(32px,5vw,56px);align-items:start}
+.cc-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(hover:hover){.cc-opt:hover{border-color:var(--blue)!important}.cc-chip:hover{border-color:var(--blue)!important}}
+.cc-send{transition:transform .18s cubic-bezier(.23,1,.32,1)}
+.cc-send:active{transform:scale(.98)}
+.cc-mobilebar{display:none}
+@media(max-width:820px){.cc-grid{grid-template-columns:1fr}.cc-cards{grid-template-columns:1fr}.cc-result>div{position:static!important}.cc-mobilebar{display:flex}.cc-page{padding-bottom:76px}}
+@media(prefers-reduced-motion:reduce){.cta-pop-back,.cta-pop-card{transition:opacity .2s ease!important;transform:none!important}}
 @keyframes sparkDraw{to{stroke-dashoffset:0}}
 @keyframes sparkFade{from{opacity:0}to{opacity:.1}}
 @media(prefers-reduced-motion:reduce){.hero-slide .hero-spark-line,.hero-slide.on .hero-spark-line{stroke-dashoffset:0;animation:none}.hero-slide .hero-spark-area,.hero-slide.on .hero-spark-area{opacity:.1;animation:none}}
@@ -386,6 +415,11 @@ function ReadingProgress(){
     return()=>{window.removeEventListener('scroll',onScroll);window.removeEventListener('resize',onScroll);};
   },[]);
   return <div className="read-progress" style={{width:`${p}%`}}/>;
+}
+function ArticleProgress(){
+  const[p,setP]=useState(0);
+  useEffect(()=>{const on=()=>{const h=document.documentElement;const t=h.scrollHeight-h.clientHeight;setP(t?Math.min(100,Math.max(0,h.scrollTop/t*100)):0);};on();window.addEventListener('scroll',on,{passive:true});window.addEventListener('resize',on);return()=>{window.removeEventListener('scroll',on);window.removeEventListener('resize',on);};},[]);
+  return <div style={{height:4,borderRadius:50,background:"var(--brd)",overflow:"hidden"}}><div style={{height:"100%",width:`${p}%`,background:"var(--blue)",borderRadius:50,transition:"width .12s linear"}}/></div>;
 }
 
 /* Animated metric value: parses "<1s", "72.7%", "3-8+" etc and counts up the first numeric portion */
@@ -552,7 +586,7 @@ type BlogBlock=
   |{type:"quote",content:string}
   |{type:"list",items:string[]};
 const blogs=[
-  {id:"nomo-smart-care-case-study",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"9 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",body:[
+  {id:"nomo-smart-care-case-study",title:"Nomo Smart Care: Case Study",cat:"Case Study",date:"April 8, 2025",read:"9 min",author:"Jurica Mlinaric",authorImg:(process.env.PUBLIC_URL + "/images/jurica.png"),cover:"#004C73",headerImg:(process.env.PUBLIC_URL + "/images/nomo_header.png"),excerpt:"How we built a full-stack AI-powered elder care platform, from edge audio models to native mobile apps.",accent:"#C2740C",body:[
     {type:"heading",content:"Project overview"},
     {type:"list",items:[
       "**Client**: [Nomo International, Inc](https://nomosmartcare.com/)",
@@ -2059,45 +2093,126 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
 }
 
 /* ── BLOG ── */
-function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const fil=filt==="All"?blogs:blogs.filter(p=>p.cat===filt);const ac=sel?blogs.find(p=>p.id===sel):null;
-  if(ac)return <div style={{paddingTop:76}}>
-    {/* Cover */}
-    <div style={{height:380,background:ac.cover,position:"relative",overflow:"hidden"}}>
-      {(ac as any).headerImg
-        ? <img alt={ac.title} fetchPriority="high" decoding="async" width={1600} height={900} src={(ac as any).headerImg} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-        : <div style={{position:"absolute",inset:0,background:"var(--blue)"}}/>
-      }
-      <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,background:"rgba(0,0,0,.25)"}}/>
-    </div>
-    <section style={{padding:"0 0 80px"}}><W>
-      <div style={{maxWidth:680,margin:"0 auto"}}>
-        <div style={{transform:"translateY(-28px)",background:"#fff",borderRadius:16,padding:"32px 36px",boxShadow:"0 4px 24px rgba(0,30,50,.06)",border:"1px solid var(--brd)"}}>
+const blogSlug=(s:string)=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const[copied,setCopied]=useState(false);const[activeId,setActiveId]=useState("");const fil=filt==="All"?blogs:blogs.filter(p=>p.cat===filt);const ac=sel?blogs.find(p=>p.id===sel):null;
+  useEffect(()=>{
+    if(!ac)return;
+    const ids=ac.body.filter(b=>b.type==="heading").map(b=>blogSlug((b as {content:string}).content));
+    const els=ids.map(id=>document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if(!els.length)return;
+    const obs=new IntersectionObserver((entries)=>{
+      const vis=entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);
+      if(vis.length)setActiveId((vis[0].target as HTMLElement).id);
+    },{rootMargin:"-90px 0px -68% 0px"});
+    els.forEach(e=>obs.observe(e));
+    return()=>obs.disconnect();
+  },[ac]);
+  if(ac){
+    const slugify=blogSlug;
+    const headings=ac.body.filter(b=>b.type==="heading").map(b=>({text:(b as {content:string}).content,id:slugify((b as {content:string}).content)}));
+    const related=[...blogs.filter(b=>b.id!==ac.id&&b.cat===ac.cat),...blogs.filter(b=>b.id!==ac.id&&b.cat!==ac.cat)].slice(0,3);
+    const copyLink=()=>{try{navigator.clipboard.writeText(window.location.href);setCopied(true);setTimeout(()=>setCopied(false),2000);}catch{}};
+    const shareUrl=typeof window!=="undefined"?window.location.href:"";
+    const firstText=ac.body.findIndex(b=>b.type==="text");
+    const art=(ac as any).accent;
+    return <div style={{paddingTop:76,...(art?{["--art" as any]:art}:{})}}>
+    <ReadingProgress/>
+    <section style={{padding:"40px 0 80px"}}><W>
+      <div style={{maxWidth:1060,margin:"0 auto"}}>
+        {/* Back */}
+        <div style={{marginBottom:24}}>
           <Back go={()=>go("blog")} to="" label="All articles"/>
-          <div style={{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}}><span className="ft">{ac.cat}</span><span style={{fontSize:12,color:"var(--txt4)"}}>{ac.read} read</span></div>
-          <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,3.5vw,34px)",fontWeight:800,color:"var(--txt)",marginBottom:16,lineHeight:1.1}}>{ac.title}</h1>
-          <div style={{display:"flex",alignItems:"center",gap:12,paddingBottom:24,borderBottom:"1px solid var(--brd)",marginBottom:28}}>
-            <img src={ac.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={ac.author} loading="lazy" decoding="async" width={36} height={36} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:36,height:36,borderRadius:"50%",objectFit:"cover",objectPosition:"top"}}/>
-            <div>
-              <p style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)",lineHeight:1}}>{ac.author}</p>
-              <p style={{fontSize:12,color:"var(--txt4)",marginTop:3}}>{ac.date}</p>
-            </div>
-          </div>
-          <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.75,fontStyle:"italic",marginBottom:28}}>{ac.excerpt}</p>
-          {ac.body.map((block:BlogBlock,i:number)=>{
-            if(block.type==="img")return <figure key={i} style={{margin:"24px 0"}}>
-              <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
-              {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
-            </figure>;
-            if(block.type==="heading")return <h2 key={i} style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.4vw,26px)",fontWeight:800,color:"var(--txt)",lineHeight:1.2,marginTop:36,marginBottom:14}}>{block.content}</h2>;
-            if(block.type==="code")return <pre key={i} style={{margin:"18px 0",padding:"18px 20px",background:"#0f1c24",color:"#e6edf3",borderRadius:10,fontSize:12.5,lineHeight:1.6,overflowX:"auto",fontFamily:"ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace",border:"1px solid rgba(255,255,255,.06)"}}><code>{block.content}</code></pre>;
-            if(block.type==="quote")return <blockquote key={i} style={{margin:"22px 0",padding:"6px 0 6px 22px",borderLeft:"3px solid var(--blue)",fontSize:15,fontStyle:"italic",color:"var(--txt3)",lineHeight:1.8}}>{renderRichText(block.content)}</blockquote>;
-            if(block.type==="list")return <ul key={i} style={{paddingLeft:24,marginBottom:18,fontSize:15,color:"var(--txt2)",lineHeight:1.9}}>{block.items.map((it,j)=><li key={j} style={{marginBottom:6}}>{renderRichText(it)}</li>)}</ul>;
-            return <p key={i} style={{fontSize:15,color:"var(--txt2)",lineHeight:1.9,marginBottom:18}}>{renderRichText(block.content)}</p>;
-          })}
         </div>
+        {/* Body grid: sticky ToC + article */}
+        <div className="blog-body-grid">
+          <aside className="blog-toc">
+            {/* Meta */}
+            <div style={{marginBottom:24}}>
+              <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:14}}>
+                <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:600,color:"var(--txt2)",whiteSpace:"nowrap"}}>{ac.date}</span>
+                <span aria-hidden="true" style={{width:1,height:14,background:"var(--art, var(--teal))",flexShrink:0}}/>
+                <span style={{fontFamily:"var(--jk)",fontSize:11.5,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--art, var(--blue))",whiteSpace:"nowrap"}}>{ac.cat}</span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:11}}>
+                <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:600,color:"var(--txt2)"}}>{ac.author}</span>
+                <span aria-hidden="true" style={{width:1,height:14,background:"var(--art, var(--teal))"}}/>
+                <span style={{fontFamily:"var(--in)",fontSize:13,color:"var(--txt3)"}}>{ac.read} read</span>
+              </div>
+            </div>
+            <ArticleProgress/>
+            {/* Share */}
+            <div style={{display:"flex",alignItems:"center",gap:10,margin:"24px 0 44px"}}>
+              <a href={"https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(shareUrl)} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn" className="blog-share-ico" style={{width:36,height:36,minWidth:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",background:"var(--bg2)",color:"var(--txt3)",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+              <a href={"https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(shareUrl)} target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook" className="blog-share-ico" style={{width:36,height:36,minWidth:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",background:"var(--bg2)",color:"var(--txt3)",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+              <button onClick={copyLink} aria-label="Copy link" className="blog-share-ico" style={{width:36,height:36,minWidth:36,flexShrink:0,borderRadius:"50%",border:"1px solid var(--brd)",background:"var(--bg2)",cursor:"pointer",color:copied?"var(--blue)":"var(--txt3)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                {copied
+                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>}
+              </button>
+            </div>
+            {/* Contents */}
+            {headings.length>0&&<div className="toc-contents">
+              <p style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,color:"var(--txt)",marginBottom:22}}>Contents</p>
+              <nav style={{display:"flex",flexDirection:"column",gap:19}}>
+                {headings.map(h=>{const on=activeId===h.id;return <button key={h.id} onClick={()=>{const el=document.getElementById(h.id);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}} className="toc-link" style={{textAlign:"left",background:"none",border:"none",padding:0,fontFamily:"var(--in)",fontSize:14,color:on?"var(--art, var(--blue))":"var(--txt2)",fontWeight:on?600:400,cursor:"pointer",lineHeight:1.4,transition:"color .2s"}}>{h.text}</button>;})}
+              </nav>
+            </div>}
+          </aside>
+          <article style={{minWidth:0,maxWidth:740}}>
+            <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,3.6vw,42px)",fontWeight:800,color:"var(--txt)",marginTop:-6,marginBottom:24,lineHeight:1.1,letterSpacing:"-0.025em"}}>{ac.title}</h1>
+            <p style={{fontSize:"clamp(18px,2vw,20px)",color:"var(--txt2)",lineHeight:1.7,fontWeight:500,marginBottom:40,paddingBottom:36,borderBottom:"1px solid var(--brd)"}}>{ac.excerpt}</p>
+            {ac.body.map((block:BlogBlock,i:number)=>{
+              if(block.type==="img")return <figure key={i} style={{margin:"26px 0"}}>
+                <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
+                {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
+              </figure>;
+              if(block.type==="heading")return <div key={i} id={slugify(block.content)} style={{scrollMarginTop:100,marginTop:56,marginBottom:18}}>
+                <span aria-hidden="true" style={{display:"block",width:40,height:3,borderRadius:2,background:"linear-gradient(90deg, var(--art, var(--blue)), var(--art, var(--accent)))",marginBottom:16}}/>
+                <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(21px,2.5vw,27px)",fontWeight:800,color:"var(--txt)",lineHeight:1.2,letterSpacing:"-0.01em",margin:0}}>{block.content}</h2>
+              </div>;
+              if(block.type==="code")return <pre key={i} style={{margin:"18px 0",padding:"18px 20px",background:"#0f1c24",color:"#e6edf3",borderRadius:10,fontSize:12.5,lineHeight:1.6,overflowX:"auto",fontFamily:"ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace",border:"1px solid rgba(255,255,255,.06)"}}><code>{block.content}</code></pre>;
+              if(block.type==="quote")return <blockquote key={i} style={{margin:"36px 0",padding:"22px 26px",borderLeft:"3px solid var(--art, var(--blue))",background:"color-mix(in srgb, var(--art, var(--blue)) 8%, transparent)",borderRadius:"0 12px 12px 0",fontFamily:"var(--jk)",fontSize:"clamp(18px,2.3vw,23px)",fontWeight:600,color:"var(--txt)",lineHeight:1.5,letterSpacing:"-0.01em"}}>{renderRichText(block.content)}</blockquote>;
+              if(block.type==="list")return <ul key={i} className="blog-list" style={{paddingLeft:24,marginBottom:24,fontSize:16.5,color:"var(--txt2)",lineHeight:1.9}}>{block.items.map((it,j)=><li key={j} style={{marginBottom:10}}>{renderRichText(it)}</li>)}</ul>;
+              return <p key={i} style={{fontSize:16.5,color:"var(--txt2)",lineHeight:1.9,marginBottom:24}}>{renderRichText(block.content)}</p>;
+            })}
+            {/* Author bio */}
+            <div style={{marginTop:48,paddingTop:30,borderTop:"1px solid var(--brd)",display:"flex",gap:16,alignItems:"center"}}>
+              <img src={ac.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={ac.author} loading="lazy" decoding="async" width={56} height={56} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:56,height:56,borderRadius:"50%",objectFit:"cover",objectPosition:"top",flexShrink:0}}/>
+              <div>
+                <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:1.5,color:"var(--txt4)",marginBottom:5}}>Written by</p>
+                <p style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:800,color:"var(--txt)",lineHeight:1.1}}>{ac.author}</p>
+                <p style={{fontFamily:"var(--in)",fontSize:13.5,color:"var(--txt3)",lineHeight:1.6,marginTop:5,maxWidth:460}}>Part of the team at Lumo Lab, a technology consultancy that advises, guides, and delivers across AI, IoT, and product engineering.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+        {/* End CTA */}
+        <div style={{marginTop:72,background:"var(--blue)",borderRadius:20,padding:"clamp(28px,5vw,44px)",display:"flex",flexWrap:"wrap",alignItems:"center",justifyContent:"space-between",gap:20}}>
+          <div>
+            <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:"var(--accent)",marginBottom:10}}>Have a similar challenge?</p>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,3vw,30px)",fontWeight:800,color:"#fff",lineHeight:1.15,letterSpacing:"-0.02em",margin:0}}>Let's build it together.</h3>
+          </div>
+          <button onClick={()=>go("contact")} className="blog-cta-btn" style={{display:"inline-flex",alignItems:"center",gap:8,background:"#fff",color:"var(--blue)",border:"none",borderRadius:50,padding:"13px 24px",fontFamily:"var(--jk)",fontSize:14.5,fontWeight:700,cursor:"pointer",flexShrink:0}}>Book a discovery call<Arr s={15} c="var(--blue)"/></button>
+        </div>
+        {/* Keep reading */}
+        {related.length>0&&<div style={{marginTop:72,borderTop:"1px solid var(--brd)",paddingTop:52}}>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.6vw,26px)",fontWeight:800,color:"var(--txt)",marginBottom:6}}>Keep reading</h2>
+          <p style={{fontSize:14,color:"var(--txt3)",marginBottom:28}}>Similar articles for further insights.</p>
+          <div className="blog-related-grid">
+            {related.map(p=><div key={p.id} onClick={()=>go("blog",p.id)} className="blog-rel-card" style={{cursor:"pointer",display:"flex",flexDirection:"column",borderRadius:12,overflow:"hidden",border:"1px solid var(--brd)",background:"var(--bg)"}}>
+              <div style={{height:150,background:p.cover,overflow:"hidden"}}>{(p as any).headerImg?<img src={(p as any).headerImg} alt={p.title} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>:null}</div>
+              <div style={{padding:"16px 18px 20px",display:"flex",flexDirection:"column",flex:1}}>
+                <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:10}}><span className="ft">{p.cat}</span><span style={{fontSize:11,color:"var(--txt4)"}}>{p.read} read</span></div>
+                <p style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:700,color:"var(--txt)",lineHeight:1.3,marginBottom:8}}>{p.title}</p>
+                <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6,display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical",overflow:"hidden"}}>{p.excerpt}</p>
+              </div>
+            </div>)}
+          </div>
+        </div>}
       </div>
     </W></section>
   </div>;
+  }
   return <div style={{paddingTop:76}}><section style={{padding:"48px 0 48px"}}><W>
     <SL ch="Blog"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,color:"var(--txt)",marginBottom:16}}>Insights on technology <span style={{color:"var(--blue)"}}>strategy.</span></h1>
@@ -2441,7 +2556,7 @@ function Contact({type="project"}:{type?:"project"|"job"}){
 }
 
 /* ── ROUTING ── */
-const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",press:"/press",privacy:"/privacy-policy",contact:"/contact"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
+const toPath=(p:string,id?:string)=>{const base:{[k:string]:string}={home:"/",about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",press:"/press",privacy:"/privacy-policy",contact:"/contact",calc:"/app-cost-calculator"};return id?`${base[p]||"/"}/${id}`:base[p]||"/";};
 // Legacy blog ID → new slug. Maintain so old links from search results / external sites keep working.
 const BLOG_REDIRECTS:{[k:string]:string}={
   b1:"nomo-smart-care-case-study",
@@ -2451,7 +2566,7 @@ const BLOG_REDIRECTS:{[k:string]:string}={
 function parseFromPath():{page:string,subId:string|null}{
   const parts=window.location.pathname.split("/").filter(Boolean);
   // Both `/for-clients` (canonical, matches the nav label) and `/services` (legacy alias) resolve to the Services page.
-  const pageMap:{[k:string]:string}={about:"about","for-clients":"services",services:"services",work:"cases",blog:"blog",careers:"careers",press:"press","privacy-policy":"privacy",contact:"contact"};
+  const pageMap:{[k:string]:string}={about:"about","for-clients":"services",services:"services",work:"cases",blog:"blog",careers:"careers",press:"press","privacy-policy":"privacy",contact:"contact","app-cost-calculator":"calc"};
   if(!parts.length)return{page:"home",subId:null};
   const page=pageMap[parts[0]];
   if(!page)return{page:"notfound",subId:null};
@@ -2482,10 +2597,11 @@ const SITE_URL="https://lumo-lab.com";
 const SITE_NAME="Lumo Lab";
 const DEFAULT_OG=`${SITE_URL}/og-image.jpg`;
 const SEO_DEFAULTS:{[k:string]:{title:string,description:string,path:string,keywords?:string}}={
-  home:{title:`${SITE_NAME} | We Advise, Guide and Deliver`,description:"Lumo Lab is a technology consultancy. We advise, guide, and deliver for startups and enterprises, from first assessment to long-term partnership.",path:"/",keywords:"technology consultancy, software consulting, AI consulting, IoT, mobile app development, startup technology partner"},
-  about:{title:`About ${SITE_NAME} | Our Story & Approach`,description:"Meet Lumo Lab: an independent technology consultancy built around listening first, advising honestly, and delivering work that compounds over time.",path:"/about",keywords:"about Lumo Lab, technology consultancy team, software consulting company"},
-  services:{title:`For Clients | Technology Consulting Services from ${SITE_NAME}`,description:"Technology strategy, product design, solution engineering, IoT, and AI. End-to-end consulting that reduces risk and delivers measurable outcomes.",path:"/for-clients",keywords:"technology consulting services, software engineering, AI consulting, IoT consulting, product design"},
-  cases:{title:`Case Studies | Health, AgTech, AI & IoT Work by ${SITE_NAME}`,description:"Case studies across health, AgTech, social, IoT, and AI, including Nomo Smart Care, Farmwave, Drift App, Noctrix, MobilityOne, and more.",path:"/work",keywords:"case studies, software portfolio, health tech, AgTech, IoT, AI"},
+  home:{title:`AI, Mobile & Product Development Company | ${SITE_NAME}`,description:"Lumo Lab is a senior product-engineering studio building AI, IoT, and mobile apps for startups and enterprises — from MVP to acquisition. Book a free tech assessment.",path:"/",keywords:"AI development company, product development studio, mobile app development, software development company, MVP development, startup technology partner, enterprise software development"},
+  about:{title:`About ${SITE_NAME} | Senior Product Engineering Team`,description:"Meet Lumo Lab: a senior product-engineering team that advises, designs, and ships AI, mobile, and software products — from first assessment to acquisition.",path:"/about",keywords:"about Lumo Lab, product engineering team, software development company, senior engineers"},
+  services:{title:`Software, AI & Product Development Services | ${SITE_NAME}`,description:"AI development, mobile apps, MVPs, UX/UI design, and enterprise software. Senior architects who diagnose before they build. Book a free tech assessment.",path:"/for-clients",keywords:"software development services, AI development, mobile app development, product design, MVP development, enterprise software development"},
+  cases:{title:`Case Studies: AI, Mobile, IoT & Product Work | ${SITE_NAME}`,description:"Real results: a $340M client exit (Noctrix), AI Harvest Vision Solution of the Year (Farmwave), Nomo live in all 50 US states. See how Lumo Lab ships.",path:"/work",keywords:"software development case studies, AI case study, mobile app portfolio, product engineering, health tech, AgTech, IoT"},
+  calc:{title:`App Development Cost Calculator (2026) | ${SITE_NAME}`,description:"How much does it cost to build an app? Estimate your project cost and timeline in under a minute — MVP, consumer, enterprise, or AI product. Free tool by Lumo Lab.",path:"/app-cost-calculator",keywords:"app development cost calculator, how much does it cost to build an app, app development cost, mobile app cost estimate, software development cost"},
   blog:{title:`Insights on Technology, AI & Product | ${SITE_NAME} Blog`,description:"Practical perspectives on technology strategy, AI, edge computing, and software engineering, written by the Lumo Lab team.",path:"/blog",keywords:"technology blog, AI insights, edge computing, software engineering"},
   careers:{title:`Careers at ${SITE_NAME} | Engineering, Design & Product`,description:"Join a small, senior team building meaningful products. We're not actively hiring right now, but we're always open to hearing from great people.",path:"/careers",keywords:"careers, software jobs, engineering, design, product, open application"},
   contact:{title:`Contact ${SITE_NAME} | Start Your Technology Partnership`,description:"Talk to Lumo Lab about your next technology initiative. Book an assessment, scope a project, or start a long-term partnership.",path:"/contact",keywords:"contact Lumo Lab, technology consulting inquiry, hire consultants"},
@@ -2614,8 +2730,8 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
   }
   // Breadcrumbs for sub-pages
   if(page!=="home"){
-    const labels:{[k:string]:string}={about:"About",services:"For Clients",cases:"Work",blog:"Blog",careers:"Careers",press:"Press",contact:"Contact",privacy:"Privacy Policy"};
-    const paths:{[k:string]:string}={about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",press:"/press",contact:"/contact",privacy:"/privacy-policy"};
+    const labels:{[k:string]:string}={about:"About",services:"For Clients",cases:"Work",blog:"Blog",careers:"Careers",press:"Press",contact:"Contact",privacy:"Privacy Policy",calc:"App Cost Calculator"};
+    const paths:{[k:string]:string}={about:"/about",services:"/for-clients",cases:"/work",blog:"/blog",careers:"/careers",press:"/press",contact:"/contact",privacy:"/privacy-policy",calc:"/app-cost-calculator"};
     const items:unknown[]=[
       {"@type":"ListItem",position:1,name:"Home",item:`${SITE_URL}/`},
       {"@type":"ListItem",position:2,name:labels[page]||page,item:`${SITE_URL}${paths[page]||"/"}`},
@@ -2629,6 +2745,14 @@ function buildJsonLd(page:string,subId:string|null,seo:SeoMeta){
     graph.push({"@type":"BreadcrumbList",itemListElement:items});
   }
   // Page-specific entities
+  if(page==="calc"){
+    graph.push({"@type":"WebApplication",name:"App Development Cost Calculator",url:seo.url,applicationCategory:"BusinessApplication",operatingSystem:"Web",offers:{"@type":"Offer",price:"0",priceCurrency:"USD"},provider:{"@id":`${SITE_URL}/#organization`}});
+    graph.push({"@type":"FAQPage",mainEntity:([
+      ["How much does it cost to build an app?","With a senior EU team, a simple MVP typically costs €10k–€18k, a consumer app €25k–€45k, and an enterprise or AI-heavy platform €45k–€75k+. The biggest cost drivers are the number of platforms, custom design depth, backend complexity, and specialist features like AI, IoT, or payments."],
+      ["What drives app development cost the most?","Platforms and features. Each additional platform (iOS, Android, web) adds meaningful engineering, and specialist features — AI/ML, IoT, payments, real-time sync — carry the highest cost."],
+      ["How long does it take to build an app?","A focused MVP usually ships in 6–12 weeks, a full consumer app 10–20 weeks, and enterprise or AI platforms 16–32 weeks."],
+    ] as [string,string][]).map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))});
+  }
   if(page==="services"){
     graph.push({
       "@type":"Service",
@@ -2899,6 +3023,255 @@ function applySeo(page:string,subId:string|null){
 }
 
 /* ── APP ── */
+/* ── APP COST CALCULATOR (lead magnet) ── */
+const CC_TYPES:{[k:string]:{l:number,h:number,label:string,wk:[number,number]}}={
+  mvp:{l:7000,h:13000,label:"MVP / proof of concept",wk:[5,9]},
+  consumer:{l:22000,h:34000,label:"Consumer app",wk:[8,14]},
+  enterprise:{l:42000,h:64000,label:"Enterprise / internal platform",wk:[14,24]},
+  ai:{l:32000,h:50000,label:"AI-powered product",wk:[10,20]},
+};
+const CC_PLATFORMS=[{k:"ios",label:"iOS"},{k:"android",label:"Android"},{k:"web",label:"Web app"}];
+const CC_DESIGNS:{[k:string]:{label:string,l:number,h:number}}={
+  standard:{label:"Standard, clean UI",l:0,h:0},
+  custom:{label:"Custom UI design",l:5000,h:9000},
+  system:{label:"Design system + UX research",l:11000,h:17000},
+};
+const CC_BACKENDS:{[k:string]:{label:string,l:number,h:number}}={
+  none:{label:"None / minimal",l:0,h:0},
+  standard:{label:"Standard API + database",l:5000,h:9000},
+  complex:{label:"Complex (scale, real-time, integrations)",l:15000,h:24000},
+};
+const CC_FEATURES=[
+  {k:"auth",label:"Accounts & login",l:1500,h:3500},
+  {k:"payments",label:"Payments / subscriptions",l:3000,h:6000},
+  {k:"chat",label:"Chat / messaging",l:3500,h:7000},
+  {k:"maps",label:"Maps & geolocation",l:2000,h:5000},
+  {k:"push",label:"Push notifications",l:1000,h:2500},
+  {k:"offline",label:"Offline mode / sync",l:3000,h:7000},
+  {k:"admin",label:"Admin dashboard",l:3500,h:7000},
+  {k:"integrations",label:"3rd-party integrations",l:2000,h:6000},
+  {k:"iot",label:"IoT / hardware",l:8000,h:18000},
+  {k:"realtime",label:"Real-time / live data",l:3500,h:8000},
+  {k:"analytics",label:"Analytics & reporting",l:2000,h:4500},
+];
+const CC_AI=[
+  {k:"chatbot",label:"AI chatbot / assistant",l:4000,h:10000},
+  {k:"llm",label:"LLM / generative AI",l:6000,h:15000},
+  {k:"rag",label:"RAG (chat with your data)",l:6000,h:14000},
+  {k:"agents",label:"AI agents / automation",l:8000,h:19000},
+  {k:"vision",label:"Computer vision",l:8000,h:19000},
+  {k:"reco",label:"Recommendations / ML",l:4000,h:10000},
+];
+const ccFmt=(n:number)=>"€"+Math.round(n/1000)+"k";
+function CostCalc({go}:{go:(p:string,id?:string)=>void}){
+  const[type,setType]=useState("consumer");
+  const[platforms,setPlatforms]=useState<string[]>(["ios"]);
+  const[design,setDesign]=useState("standard");
+  const[feats,setFeats]=useState<string[]>([]);
+  const[backend,setBackend]=useState("standard");
+  const[ai,setAi]=useState<string[]>([]);
+  const[aiBuild,setAiBuild]=useState(true);
+  const[rush,setRush]=useState(false);
+  const[email,setEmail]=useState("");
+  const[sent,setSent]=useState(false);const[sending,setSending]=useState(false);const[err,setErr]=useState(false);
+  const t=CC_TYPES[type];
+  const extra=Math.max(0,platforms.length-1);
+  const lines:{label:string,l:number,h:number}[]=[{label:t.label,l:t.l,h:t.h}];
+  if(extra>0)lines.push({label:`${extra} extra platform${extra>1?"s":""}`,l:extra*6000,h:extra*11000});
+  if(design!=="standard")lines.push({label:CC_DESIGNS[design].label,l:CC_DESIGNS[design].l,h:CC_DESIGNS[design].h});
+  feats.forEach(k=>{const f=CC_FEATURES.find(x=>x.k===k);if(f)lines.push({label:f.label,l:f.l,h:f.h});});
+  ai.forEach(k=>{const f=CC_AI.find(x=>x.k===k);if(f)lines.push({label:f.label,l:f.l,h:f.h});});
+  if(backend!=="none")lines.push({label:CC_BACKENDS[backend].label,l:CC_BACKENDS[backend].l,h:CC_BACKENDS[backend].h});
+  let sub=lines.reduce((s,x)=>s+x.l,0), subH=lines.reduce((s,x)=>s+x.h,0);
+  if(aiBuild){const dl=-Math.round(sub*0.15),dh=-Math.round(subH*0.15);lines.push({label:"AI-assisted delivery",l:dl,h:dh});sub+=dl;subH+=dh;}
+  if(rush){const rl=Math.round(sub*0.2),rh=Math.round(subH*0.2);lines.push({label:"Fast-track premium",l:rl,h:rh});sub+=rl;subH+=rh;}
+  const low=Math.round(sub/1000)*1000, high=Math.round(subH/1000)*1000;
+  const mid=Math.round((low+high)/2/1000)*1000;
+  let wl=t.wk[0]+Math.round((feats.length+ai.length)*0.6)+extra*2, wh=t.wk[1]+feats.length+ai.length+extra*3;
+  if(backend==="complex"){wl+=4;wh+=8;}else if(backend==="standard"){wl+=1;wh+=3;}
+  if(aiBuild){wl=Math.round(wl*0.8);wh=Math.round(wh*0.85);}
+  if(rush){wl=Math.round(wl*0.85);wh=Math.round(wh*0.85);}
+  wl=Math.max(3,wl);wh=Math.max(wl+2,wh);
+  const ccLine=(m:number)=>(m<0?"−€":"€")+Math.abs(Math.round(m/1000))+"k";
+  const toggle=(arr:string[],set:(v:string[])=>void,k:string)=>set(arr.includes(k)?arr.filter(x=>x!==k):[...arr,k]);
+  const submit=async(e:React.FormEvent)=>{
+    e.preventDefault();if(!email||sending)return;setSending(true);setErr(false);
+    const summary=`New app-cost-calculator lead.\n\nEstimate: ${ccFmt(low)}–${ccFmt(high)} over ${wl}–${wh} weeks\n\nApp type: ${t.label}\nPlatforms: ${platforms.map(p=>CC_PLATFORMS.find(x=>x.k===p)?.label).join(", ")}\nDesign: ${CC_DESIGNS[design].label}\nBackend: ${CC_BACKENDS[backend].label}\nFeatures: ${feats.map(k=>CC_FEATURES.find(x=>x.k===k)?.label).join(", ")||"none selected"}\nAI capabilities: ${ai.map(k=>CC_AI.find(x=>x.k===k)?.label).join(", ")||"none selected"}\nDelivery: ${aiBuild?"AI-assisted":"Standard"}\nTimeline: ${rush?"Fast-track":"Standard"}`;
+    try{
+      await emailjs.send(process.env.REACT_APP_EMAILJS_SERVICE_ID!,process.env.REACT_APP_EMAILJS_CONTACT_TEMPLATE_ID!,{from_name:"App Cost Calculator",from_email:email,company:"Cost calculator lead",message:summary},process.env.REACT_APP_EMAILJS_PUBLIC_KEY!);
+      setSent(true);
+    }catch{setErr(true);}finally{setSending(false);}
+  };
+  const OptCard=({active,onClick,label,sub}:{active:boolean,onClick:()=>void,label:string,sub?:string})=>(
+    <button onClick={onClick} className="cc-opt" style={{textAlign:"left",padding:"12px 14px",borderRadius:12,border:`1.5px solid ${active?"var(--blue)":"var(--brd)"}`,background:active?"var(--bl)":"var(--bg)",cursor:"pointer",transition:"border-color .2s, background .2s"}}>
+      <span style={{display:"block",fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:active?"var(--blue)":"var(--txt)"}}>{label}</span>
+      {sub&&<span style={{display:"block",fontFamily:"var(--in)",fontSize:12,color:"var(--txt3)",marginTop:3}}>{sub}</span>}
+    </button>
+  );
+  const Chip=({active,onClick,label}:{active:boolean,onClick:()=>void,label:string})=>(
+    <button onClick={onClick} className="cc-chip" style={{padding:"8px 14px",borderRadius:50,border:`1.5px solid ${active?"var(--blue)":"var(--brd)"}`,background:active?"var(--blue)":"var(--bg)",color:active?"#fff":"var(--txt2)",fontFamily:"var(--jk)",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{label}</button>
+  );
+  const Group=({label,children}:{label:string,children:React.ReactNode})=>(
+    <div style={{marginBottom:32}}>
+      <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"var(--txt4)",marginBottom:14}}>{label}</p>
+      {children}
+    </div>
+  );
+  return <div className="cc-page" style={{paddingTop:76}}>
+    <section style={{padding:"48px 0 40px"}}><W>
+      <div style={{maxWidth:760,margin:"0 auto",textAlign:"center"}}>
+        <span style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--blue)",marginBottom:16}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--teal)"}}/>Free tool</span>
+        <h1 className="speakable-hero" style={{fontFamily:"var(--jk)",fontSize:"clamp(30px,4.6vw,46px)",fontWeight:800,color:"var(--txt)",lineHeight:1.08,letterSpacing:"-0.025em",margin:"0 0 18px"}}>App Development Cost Calculator</h1>
+        <p className="speakable-tagline" style={{fontSize:"clamp(16px,1.7vw,18px)",color:"var(--txt2)",lineHeight:1.65,margin:0}}>How much does it cost to build an app? With a senior EU team, most custom apps range from <strong>€10k to €90k+</strong> depending on platforms, features, and complexity. Configure your project below for a ballpark estimate and timeline in under a minute — reflecting our AI-assisted delivery, which typically ships faster than traditional development.</p>
+      </div>
+    </W></section>
+    <section style={{padding:"0 0 72px"}}><W>
+      <div className="cc-grid" style={{maxWidth:1080,margin:"0 auto"}}>
+        {/* Configurator */}
+        <div className="cc-config">
+          <Group label="What are you building?">
+            <div className="cc-cards">{Object.keys(CC_TYPES).map(k=><OptCard key={k} active={type===k} onClick={()=>setType(k)} label={CC_TYPES[k].label}/>)}</div>
+          </Group>
+          <Group label="Platforms">
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_PLATFORMS.map(p=><Chip key={p.k} active={platforms.includes(p.k)} onClick={()=>toggle(platforms,setPlatforms,p.k)} label={p.label}/>)}</div>
+          </Group>
+          <Group label="Design">
+            <div className="cc-cards">{Object.keys(CC_DESIGNS).map(k=><OptCard key={k} active={design===k} onClick={()=>setDesign(k)} label={CC_DESIGNS[k].label}/>)}</div>
+          </Group>
+          <Group label="Features">
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_FEATURES.map(f=><Chip key={f.k} active={feats.includes(f.k)} onClick={()=>toggle(feats,setFeats,f.k)} label={f.label}/>)}</div>
+          </Group>
+          <Group label="AI capabilities">
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_AI.map(f=><Chip key={f.k} active={ai.includes(f.k)} onClick={()=>toggle(ai,setAi,f.k)} label={f.label}/>)}</div>
+          </Group>
+          <Group label="Backend & data">
+            <div className="cc-cards">{Object.keys(CC_BACKENDS).map(k=><OptCard key={k} active={backend===k} onClick={()=>setBackend(k)} label={CC_BACKENDS[k].label}/>)}</div>
+          </Group>
+          <Group label="How we build">
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              <Chip active={aiBuild} onClick={()=>setAiBuild(true)} label="AI-assisted (faster)"/>
+              <Chip active={!aiBuild} onClick={()=>setAiBuild(false)} label="Standard delivery"/>
+            </div>
+            <p style={{fontFamily:"var(--in)",fontSize:12.5,color:"var(--txt3)",marginTop:10,lineHeight:1.55}}>We build with AI-assisted engineering — LLM pair-programming, code generation, and automated testing — which typically trims cost and timeline versus traditional delivery.</p>
+          </Group>
+          <Group label="Timeline">
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              <Chip active={!rush} onClick={()=>setRush(false)} label="Standard pace"/>
+              <Chip active={rush} onClick={()=>setRush(true)} label="Fast-track (rush)"/>
+            </div>
+          </Group>
+        </div>
+        {/* Estimate card */}
+        <div className="cc-result" id="cc-estimate">
+          <div style={{position:"sticky",top:96,background:"var(--blue)",borderRadius:18,padding:"28px 26px",color:"#fff",boxShadow:"0 24px 60px rgba(0,20,34,.25)"}}>
+            <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--accent)",margin:"0 0 8px"}}>Typical investment</p>
+            <p style={{fontFamily:"var(--jk)",fontSize:"clamp(32px,4.4vw,44px)",fontWeight:800,lineHeight:1.02,letterSpacing:"-0.02em",margin:0}}>{ccFmt(mid)}</p>
+            <p style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.72)",margin:"8px 0 0"}}>Range {ccFmt(low)}–{ccFmt(high)} · <strong style={{color:"#fff"}}>{wl}–{wh} weeks</strong></p>
+            {/* itemized breakdown */}
+            <div style={{margin:"20px 0 0",padding:"14px 0 2px",borderTop:"1px solid rgba(255,255,255,.16)"}}>
+              <p style={{fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,letterSpacing:1.2,textTransform:"uppercase",color:"rgba(255,255,255,.5)",margin:"0 0 10px"}}>What's in this estimate</p>
+              {lines.map((x,i)=>{const m=Math.round((x.l+x.h)/2);const neg=m<0;return <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",gap:12,padding:"4px 0"}}><span style={{fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.8)"}}>{x.label}</span><span style={{fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,color:neg?"var(--teal)":"#fff",whiteSpace:"nowrap"}}>{ccLine(m)}</span></div>;})}
+            </div>
+            <div style={{height:1,background:"rgba(255,255,255,.16)",margin:"18px 0"}}/>
+            {sent
+              ? <div style={{textAlign:"center",padding:"8px 0"}}>
+                  <div style={{width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+                  <p style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,margin:"0 0 6px"}}>Estimate on its way</p>
+                  <p style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.8)",margin:0}}>We'll send a detailed breakdown and follow up within one business day.</p>
+                </div>
+              : <form onSubmit={submit}>
+                  <p style={{fontFamily:"var(--in)",fontSize:13.5,color:"rgba(255,255,255,.82)",margin:"0 0 12px",lineHeight:1.5}}>Get this estimate plus a tailored breakdown by email.</p>
+                  <input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="you@company.com" style={{width:"100%",boxSizing:"border-box",padding:"12px 14px",borderRadius:10,border:"1px solid rgba(255,255,255,.25)",background:"rgba(255,255,255,.1)",color:"#fff",fontFamily:"var(--in)",fontSize:14,marginBottom:10}}/>
+                  <button type="submit" disabled={sending} className="cc-send" style={{width:"100%",justifyContent:"center",display:"inline-flex",alignItems:"center",gap:8,background:"#fff",color:"var(--blue)",border:"none",borderRadius:50,padding:"13px",fontFamily:"var(--jk)",fontSize:14.5,fontWeight:700,cursor:sending?"default":"pointer",opacity:sending?.7:1}}>{sending?"Sending…":<>Email me the estimate <Arr s={15} c="var(--blue)"/></>}</button>
+                  {err&&<p style={{fontFamily:"var(--in)",fontSize:12,color:"#ffd7d7",margin:"10px 0 0"}}>Something went wrong. Email hello@lumo-lab.com and we'll send it over.</p>}
+                </form>}
+            <button onClick={()=>go("contact")} style={{width:"100%",marginTop:10,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}>Book a free tech assessment</button>
+            <p style={{fontFamily:"var(--in)",fontSize:11.5,color:"rgba(255,255,255,.55)",margin:"16px 0 0",lineHeight:1.5}}>Ballpark only. Every product is different — book a 30-minute assessment for a precise, no-obligation quote.</p>
+          </div>
+        </div>
+      </div>
+    </W></section>
+    {/* SEO + AEO body */}
+    <section style={{padding:"0 0 88px"}}><W>
+      <div style={{maxWidth:760,margin:"0 auto"}}>
+        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.6vw,28px)",fontWeight:800,color:"var(--txt)",margin:"0 0 16px",letterSpacing:"-0.02em"}}>How much does it cost to build an app?</h2>
+        <p style={{fontSize:16.5,color:"var(--txt2)",lineHeight:1.85,margin:"0 0 18px"}}>With a senior EU team, a simple MVP typically costs <strong>€10k–€18k</strong>, a polished consumer app <strong>€25k–€45k</strong>, and an enterprise or AI-heavy platform <strong>€45k–€75k+</strong>. The biggest cost drivers are the number of platforms (iOS, Android, web), the depth of custom design, backend complexity, and specialist features like AI, IoT, payments, or real-time data.</p>
+        <p style={{fontSize:16.5,color:"var(--txt2)",lineHeight:1.85,margin:"0 0 32px"}}>The calculator above gives a realistic range based on the way we scope and ship products at Lumo Lab — senior engineers, no hand-offs to juniors. For a precise, fixed quote, book a free assessment and we'll pressure-test your scope before quoting a number.</p>
+        <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.6vw,28px)",fontWeight:800,color:"var(--txt)",margin:"0 0 20px",letterSpacing:"-0.02em"}}>Frequently asked questions</h2>
+        {[
+          {q:"What drives app development cost the most?",a:"Platforms and features. Each additional platform (iOS, Android, web) adds meaningful engineering, and specialist features — AI/ML, IoT, payments, real-time sync — carry the highest cost because they demand deeper architecture and testing."},
+          {q:"How long does it take to build an app?",a:"A focused MVP usually ships in 6–12 weeks. A full consumer app runs 10–20 weeks, and enterprise or AI platforms 16–32 weeks. Fast-tracking is possible with a larger senior team, at a premium."},
+          {q:"Does AI-assisted development make it cheaper and faster?",a:"Often, yes. We build with AI-assisted engineering — LLM pair-programming, code generation, and automated testing — which speeds up the repetitive work and can trim both cost and timeline. Senior engineers still own architecture, quality, and the hard calls; AI accelerates delivery, it doesn't replace judgment."},
+          {q:"Is this estimate accurate?",a:"It's a ballpark to set expectations, not a quote. Real pricing depends on scope detail, integrations, compliance needs, and design fidelity. We give a precise, fixed number after a short assessment."},
+          {q:"Do you work fixed-bid or time & materials?",a:"Both. We offer fixed-bid for well-defined scope (an assessment, an MVP, a migration) and retainers for ongoing product work. We avoid fixed-bid on exploratory work and propose a time-boxed discovery instead."},
+          {q:"What's included in the price?",a:"Product strategy, UX/UI design, engineering, QA, and delivery. We're a senior team that scopes, designs, and ships end-to-end — not a body shop billing junior hours."},
+        ].map((f,i)=>(
+          <div key={i} style={{padding:"18px 0",borderTop:"1px solid var(--brd)"}}>
+            <p style={{fontFamily:"var(--jk)",fontSize:16.5,fontWeight:700,color:"var(--txt)",margin:"0 0 8px"}}>{f.q}</p>
+            <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,margin:0}}>{f.a}</p>
+          </div>
+        ))}
+        <div style={{marginTop:40,background:"var(--bg2)",border:"1px solid var(--brd)",borderRadius:16,padding:"clamp(24px,4vw,36px)",textAlign:"center"}}>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.6vw,26px)",fontWeight:800,color:"var(--txt)",margin:"0 0 10px",letterSpacing:"-0.02em"}}>Want a precise quote?</h3>
+          <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.7,margin:"0 0 20px",maxWidth:460,marginInline:"auto"}}>Book a free 30-minute assessment. A senior engineer will pressure-test your scope and give you a real number — no pitch decks, no sales pressure.</p>
+          <button onClick={()=>go("contact")} className="cta-m" style={{display:"inline-flex"}}>Book a tech assessment <Arr s={15} c="#fff"/></button>
+        </div>
+      </div>
+    </W></section>
+    {/* Mobile sticky estimate bar */}
+    <div className="cc-mobilebar" style={{position:"fixed",left:0,right:0,bottom:0,zIndex:120,background:"var(--blue)",color:"#fff",padding:"11px 16px calc(11px + env(safe-area-inset-bottom))",alignItems:"center",justifyContent:"space-between",gap:12,boxShadow:"0 -6px 24px rgba(0,20,34,.28)"}}>
+      <div style={{minWidth:0}}>
+        <span style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:800,lineHeight:1}}>{ccFmt(mid)}</span>
+        <span style={{fontFamily:"var(--in)",fontSize:12,color:"rgba(255,255,255,.75)",marginLeft:8}}>{ccFmt(low)}–{ccFmt(high)} · {wl}–{wh} wks</span>
+      </div>
+      <button onClick={()=>{const el=document.getElementById("cc-estimate");if(el)el.scrollIntoView({behavior:"smooth",block:"center"});}} style={{flexShrink:0,background:"#fff",color:"var(--blue)",border:"none",borderRadius:50,padding:"9px 16px",fontFamily:"var(--jk)",fontSize:13.5,fontWeight:700,cursor:"pointer"}}>Get estimate</button>
+    </div>
+  </div>;
+}
+
+// Once-per-session CTA popup — fires after a dwell delay or on exit-intent
+function SessionPopup({go,page}:{go:(p:string,id?:string)=>void,page:string}){
+  const[show,setShow]=useState(false);const[vis,setVis]=useState(false);
+  useEffect(()=>{
+    if(page==="contact")return;
+    let done=false;
+    try{if(sessionStorage.getItem("lumo_cta_seen"))return;}catch{}
+    const open=()=>{
+      if(done)return;done=true;
+      try{sessionStorage.setItem("lumo_cta_seen","1");}catch{}
+      setShow(true);setTimeout(()=>setVis(true),30);
+    };
+    const t=setTimeout(open,18000);
+    const onLeave=(e:MouseEvent)=>{if(e.clientY<=0&&!e.relatedTarget)open();};
+    document.addEventListener("mouseout",onLeave);
+    return()=>{clearTimeout(t);document.removeEventListener("mouseout",onLeave);};
+  },[page]);
+  const close=()=>{setVis(false);setTimeout(()=>setShow(false),280);};
+  useEffect(()=>{
+    if(!show)return;
+    const onKey=(e:KeyboardEvent)=>{if(e.key==="Escape")close();};
+    window.addEventListener("keydown",onKey);return()=>window.removeEventListener("keydown",onKey);
+  },[show]);
+  if(!show)return null;
+  return (
+    <div onClick={close} role="dialog" aria-modal="true" aria-label="Book a technical assessment" className="cta-pop-back" style={{position:"fixed",inset:0,zIndex:400,display:"flex",alignItems:"center",justifyContent:"center",padding:20,background:"rgba(0,20,34,.55)",backdropFilter:"blur(4px)",WebkitBackdropFilter:"blur(4px)",opacity:vis?1:0,transition:"opacity .28s ease"}}>
+      <div onClick={e=>e.stopPropagation()} className="cta-pop-card" style={{position:"relative",width:"100%",maxWidth:440,background:"var(--bg)",borderRadius:20,border:"1px solid var(--brd)",boxShadow:"0 40px 100px rgba(0,16,28,.4)",padding:"clamp(28px,5vw,40px)",transform:vis?"none":"scale(.96) translateY(10px)",opacity:vis?1:0,transition:"transform .3s cubic-bezier(.23,1,.32,1), opacity .28s ease"}}>
+        <button onClick={close} aria-label="Close" className="cta-pop-x" style={{position:"absolute",top:14,right:14,width:32,height:32,borderRadius:"50%",border:"none",background:"var(--bg2)",color:"var(--txt3)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .2s, color .2s"}}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+        <span style={{display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--teal)",marginBottom:14}}>
+          <span aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:"var(--teal)"}}/>Free technical assessment
+        </span>
+        <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,3.4vw,27px)",fontWeight:800,color:"var(--txt)",lineHeight:1.15,letterSpacing:"-0.02em",margin:"0 0 12px"}}>Talk to an engineer, not a salesperson.</h3>
+        <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"var(--txt3)",lineHeight:1.6,margin:"0 0 24px"}}>Bring your hardest technical problem: feasibility, architecture, a build you're unsure about. 30 focused minutes with a senior engineer who's shipped products like yours.</p>
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          <button onClick={()=>{close();go("contact");}} className="cta-m" style={{width:"100%",justifyContent:"center",padding:"13px 20px",fontSize:14.5}}>Book a discovery call<Arr s={15} c="#fff"/></button>
+          <button onClick={close} style={{width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,color:"var(--txt3)",padding:"6px"}}>Maybe later</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default function App(){
   const init=parseFromPath();
   const[page,setPage]=useState(init.page);
@@ -2918,9 +3291,10 @@ export default function App(){
     window.scrollTo({top:0,behavior:"auto"});
   };
   const pageKey=subId?`${page}/${subId}`:page;
-  return <div className={`lumo${dark?" dark":""}`} style={{fontFamily:"var(--in)",color:"var(--txt)",background:"var(--bg)",lineHeight:1.6,overflowX:"hidden",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+  return <div className={`lumo${dark?" dark":""}`} style={{fontFamily:"var(--in)",color:"var(--txt)",background:"var(--bg)",lineHeight:1.6,overflowX:"clip",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
     <style>{css}</style>
 <Nav page={page} go={go} dark={dark} toggleDark={toggleDark}/>
+    <SessionPopup go={go} page={page}/>
     <div style={{flex:1}}>
     <div key={pageKey} className="page-enter">
     {page==="home"&&<Home go={go}/>}
@@ -2932,6 +3306,7 @@ export default function App(){
     {page==="press"&&<Press go={go}/>}
     {page==="privacy"&&<Privacy/>}
     {page==="contact"&&<Contact type={subId==="job"?"job":"project"}/>}
+    {page==="calc"&&<CostCalc go={go}/>}
     {page==="notfound"&&<NotFound go={go}/>}
     </div>
     </div>
@@ -2977,7 +3352,7 @@ export default function App(){
               <div>
                 <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Navigate</p>
                 <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                  {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+                  {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"},{l:"Cost Calculator",p:"calc"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
                 </div>
               </div>
               <div>

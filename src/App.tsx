@@ -2658,7 +2658,9 @@ function getSeo(page:string,subId:string|null):SeoMeta{
     }
   }
   const d=SEO_DEFAULTS[page]||SEO_DEFAULTS.home;
-  return{title:d.title,description:d.description,url:`${SITE_URL}${d.path}`,image:DEFAULT_OG,imageAlt:"Lumo Lab. We advise, guide, and deliver.",type:"website",keywords:d.keywords};
+  const pageImg=page==="calc"?`${SITE_URL}/og-cost-calculator.jpg`:DEFAULT_OG;
+  const pageImgAlt=page==="calc"?"Lumo Lab App Development Cost Calculator":"Lumo Lab. We advise, guide, and deliver.";
+  return{title:d.title,description:d.description,url:`${SITE_URL}${d.path}`,image:pageImg,imageAlt:pageImgAlt,type:"website",keywords:d.keywords};
 }
 function setMeta(attr:"name"|"property",key:string,content:string){
   let el=document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);

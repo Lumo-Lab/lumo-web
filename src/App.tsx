@@ -3186,6 +3186,65 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
     try{await navigator.clipboard.writeText(window.location.href);setCopied(true);setTimeout(()=>setCopied(false),2000);}catch{}
   };
   const reset=()=>{setNeed("build");setMaturity("mvp");setIndustry("");setPlatforms([]);setDesign("standard");setDsn([]);setFeats([]);setCustomCap("");setAi([]);setHasHardware(false);setIntegrations([]);setCompliance([]);setScale("pilot");setRush(false);};
+  const downloadPdf=()=>{
+    const esc=(s:string)=>String(s).replace(/[&<>]/g,c=>(({"&":"&amp;","<":"&lt;",">":"&gt;"}as{[k:string]:string})[c]));
+    const dt=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+    const needLabel=CC_NEEDS.find(n=>n.k===need)?.label||need;
+    const scope:[string,string][]=[["Engagement",needLabel],["Target stage",m.label]];
+    if(industry)scope.push(["Industry",industry]);
+    scope.push(["Platforms",platLabels.join(", ")||"—"]);
+    if(includeDesign)scope.push(["Design",designItems.join(", ")]);
+    if(includeDev)scope.push(["Scale",CC_SCALE[scale].label]);
+    scope.push(["Pace",rush?"Fast-track":"Standard"]);
+    if(includeDev)scope.push(["Hardware",hasHardware?"Yes":"No"]);
+    const scopeHtml=scope.map(r=>`<tr><td class="k">${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("");
+    const lineHtml=lines.map(x=>`<tr><td>${esc(x.label)}</td><td class="num">${ccFmt((x.l+x.h)/2)}</td></tr>`).join("");
+    const capHtml=capItems.length?capItems.map(c=>`<span class="tag">${esc(c)}</span>`).join(""):'<span class="muted">Core scope</span>';
+    const customHtml=customCap.trim()?`<div class="box"><div class="blbl">Custom / not listed</div><div>${esc(customCap.trim())}</div></div>`:"";
+    const html=`<!doctype html><html><head><meta charset="utf-8"><title>Lumo Lab — App Cost Estimate</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#0F1C24;padding:38px 42px;font-size:12px;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #004C73;padding-bottom:15px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:22px;letter-spacing:-.3px;color:#004C73}
+.doc{font-size:11px;color:#6B8394;text-align:right;line-height:1.5}
+.hl{background:#004C73;color:#fff;border-radius:12px;padding:20px 22px;margin-bottom:22px}
+.hl .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#9EE0DA;font-weight:700;margin-bottom:7px}
+.hl .big{font-size:31px;font-weight:800;letter-spacing:-.02em}
+.hl .meta{margin-top:8px;font-size:12px;color:rgba(255,255,255,.82)}
+h2{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:#6B8394;margin-bottom:8px}
+.cols{display:flex;gap:26px}
+.col{flex:1}
+table{width:100%;border-collapse:collapse}
+td{padding:5px 0;vertical-align:top;border-bottom:1px solid #EAEFF2;font-size:11.5px}
+td.k{color:#6B8394;width:40%}
+td.num{text-align:right;font-weight:700;white-space:nowrap;color:#004C73}
+.caps{margin-top:22px}
+.tag{display:inline-block;background:#EAF3F7;color:#004C73;border-radius:20px;padding:4px 11px;font-size:11px;font-weight:600;margin:0 5px 6px 0}
+.muted{color:#6B8394}
+.box{margin-top:14px;background:#F6F8FA;border:1px solid #E4EBEF;border-radius:10px;padding:12px 14px;font-size:11.5px}
+.box .blbl{font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:#6B8394;font-weight:700;margin-bottom:5px}
+.foot{margin-top:26px;padding-top:14px;border-top:1px solid #EAEFF2;font-size:10.5px;color:#6B8394;line-height:1.65}
+.foot a{color:#004C73;text-decoration:none;font-weight:600}
+@page{size:A4;margin:0}
+</style></head><body>
+<div class="top"><div class="brand"><svg height="30" viewBox="90 95 135 110" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="#004C73" d="m123.83,138.8h-23.8v31.7c0,16.71,12.37,28.13,29.73,28.13h30.1v-23.8h-36.03v-36.03Z"/><ellipse fill="#004C73" cx="112.92" cy="112.91" rx="12.92" ry="12.91"/><path fill="#004C73" fill-opacity=".5" d="m125.83,112.91c0,7.13-5.78,12.91-12.92,12.91-2.22,0-4.32-.56-6.15-1.55l91.86,50.55v-74.81h-85.71c7.13,0,12.92,5.78,12.92,12.91Z"/></svg><span>lumo lab</span></div><div class="doc">App Cost Estimate<br>${dt}</div></div>
+<div class="hl"><div class="l">Ballpark estimate</div><div class="big">${ccFmt(low)}–${ccFmt(high)}</div><div class="meta">Typical &asymp; ${ccFmt((low+high)/2)} &middot; Timeline ${wl}&ndash;${wh} weeks &middot; Discovery included free</div></div>
+<div class="cols"><div class="col"><h2>Project scope</h2><table>${scopeHtml}</table></div><div class="col"><h2>What shapes this estimate</h2><table>${lineHtml}</table></div></div>
+<div class="caps"><h2>Capabilities</h2>${capHtml}</div>
+${customHtml}
+<div class="foot">Ballpark only &mdash; a realistic range based on your selections, not a fixed quote. Every project starts with a free Discovery, where a senior engineer pressure-tests your scope and gives a precise, fixed number. No cost, no obligation.<br><a href="mailto:hello@lumo-lab.com">hello@lumo-lab.com</a> &middot; <a href="https://lumo-lab.com">lumo-lab.com</a><br>Reopen this configuration: ${esc(window.location.href)}</div>
+</body></html>`;
+    const iframe=document.createElement("iframe");
+    iframe.setAttribute("aria-hidden","true");
+    iframe.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
+    document.body.appendChild(iframe);
+    const cw=iframe.contentWindow!;const doc=cw.document;
+    doc.open();doc.write(html);doc.close();
+    cw.onafterprint=()=>{try{document.body.removeChild(iframe);}catch{}};
+    setTimeout(()=>{try{cw.focus();cw.print();}catch{}},350);
+    setTimeout(()=>{try{if(iframe.parentNode)document.body.removeChild(iframe);}catch{}},60000);
+  };
   const isDiscovery=need==="discovery";
   const includeDev=need==="dev"||need==="build";
   const includeDesign=need==="design"||need==="build";
@@ -3402,6 +3461,7 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
                   {err&&<p style={{fontFamily:"var(--in)",fontSize:12,color:"#ffd7d7",margin:"9px 0 0"}}>Something went wrong. Email hello@lumo-lab.com and we'll follow up.</p>}
                 </form>}
             <button onClick={()=>go("contact")} style={{width:"100%",marginTop:10,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}>Prefer to talk? Book a call</button>
+            {!isDiscovery&&<button onClick={downloadPdf} style={{width:"100%",marginTop:10,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download 1-page PDF</button>}
             <button onClick={copyLink} style={{width:"100%",marginTop:10,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:7,background:"none",border:"none",color:"rgba(255,255,255,.7)",padding:"6px",fontFamily:"var(--in)",fontSize:12.5,fontWeight:600,cursor:"pointer"}}>{copied
               ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Link copied</>
               : <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy shareable link</>}</button>
@@ -3454,7 +3514,7 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
 function SessionPopup({go,page}:{go:(p:string,id?:string)=>void,page:string}){
   const[show,setShow]=useState(false);const[vis,setVis]=useState(false);
   useEffect(()=>{
-    if(page==="contact")return;
+    if(page==="contact"||page==="calc")return;
     let done=false;
     try{if(sessionStorage.getItem("lumo_cta_seen"))return;}catch{}
     const open=()=>{

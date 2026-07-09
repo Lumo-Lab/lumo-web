@@ -390,6 +390,9 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .cc-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:36px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;background-size:12px}
 .cc-select option{color:#1E293B}
 .cc-input::placeholder{color:rgba(255,255,255,.55)}
+.cc-chip[data-tip]{position:relative}
+.cc-chip[data-tip]:hover::after,.cc-chip[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);background:var(--txt);color:var(--bg);padding:9px 11px;border-radius:9px;font-family:var(--in);font-size:12px;font-weight:500;line-height:1.45;width:max-content;max-width:230px;white-space:normal;text-align:left;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.22);pointer-events:none}
+.cc-chip[data-tip]:hover::before,.cc-chip[data-tip]:focus-visible::before{content:"";position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--txt);z-index:60;pointer-events:none}
 .cc-mobilebar{display:none;transition:transform .3s cubic-bezier(.23,1,.32,1)}
 .cc-mobilebar.cc-hide{transform:translateY(130%)}
 @media(max-width:820px){.cc-grid{grid-template-columns:1fr}.cc-cards{grid-template-columns:1fr}.cc-result>div{position:static!important}.cc-mobilebar{display:flex}.cc-page{padding-bottom:76px}}
@@ -3111,9 +3114,24 @@ function CCOptCard({active,onClick,label,sub}:{active:boolean,onClick:()=>void,l
     {sub&&<span style={{display:"block",fontFamily:"var(--in)",fontSize:12,color:"var(--txt3)",marginTop:3}}>{sub}</span>}
   </button>;
 }
-function CCChip({active,onClick,label}:{active:boolean,onClick:()=>void,label:string}){
-  return <button type="button" onClick={onClick} className="cc-chip" style={{padding:"8px 14px",borderRadius:50,border:`1.5px solid ${active?"var(--blue)":"var(--brd)"}`,background:active?"var(--blue)":"var(--bg)",color:active?"#fff":"var(--txt2)",fontFamily:"var(--jk)",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{label}</button>;
+function CCChip({active,onClick,label,hint}:{active:boolean,onClick:()=>void,label:string,hint?:string}){
+  return <button type="button" onClick={onClick} className="cc-chip" data-tip={hint||undefined} style={{padding:"8px 14px",borderRadius:50,border:`1.5px solid ${active?"var(--blue)":"var(--brd)"}`,background:active?"var(--blue)":"var(--bg)",color:active?"#fff":"var(--txt2)",fontFamily:"var(--jk)",fontSize:13,fontWeight:600,cursor:"pointer",transition:"all .2s"}}>{label}{hint&&<span aria-hidden="true" style={{marginLeft:6,opacity:.6,fontSize:11}}>ⓘ</span>}</button>;
 }
+const CC_HINTS:{[k:string]:string}={
+  hipaa:"US law protecting health data — drives access controls, encryption, and audit logging.",
+  fda:"Software as a Medical Device — regulated clinical software that needs formal validation.",
+  gdpr:"EU data-protection rules — consent, data residency, and the right to erasure.",
+  soc2:"A security & controls audit that enterprise buyers often require before signing.",
+  pci:"The security standard for handling credit-card payments.",
+  llm:"Large language models — generative text, chat, and summarisation features.",
+  rag:"Retrieval-augmented generation — let users chat with your own documents/data.",
+  model:"A bespoke machine-learning model trained on your data.",
+  vision:"Computer vision — detecting, classifying, or reading images and video.",
+  mlops:"The pipeline to train, deploy, version, and monitor models in production.",
+  reco:"Predictive scoring or personalised recommendations.",
+  ehr:"Electronic Health Record integration via the FHIR healthcare data standard.",
+  sso:"Single sign-on / enterprise authentication (Okta, Azure AD, etc.).",
+};
 function CCGroup({label,children}:{label:string,children:React.ReactNode}){
   return <div style={{marginBottom:32}}>
     <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"var(--txt4)",marginBottom:14}}>{label}</p>
@@ -3121,24 +3139,53 @@ function CCGroup({label,children}:{label:string,children:React.ReactNode}){
   </div>;
 }
 function CostCalc({go}:{go:(p:string,id?:string)=>void}){
-  const[need,setNeed]=useState("build");
-  const[maturity,setMaturity]=useState("mvp");
-  const[industry,setIndustry]=useState("Digital Health / MedTech");
-  const[platforms,setPlatforms]=useState<string[]>(["ios"]);
-  const[design,setDesign]=useState("custom");
-  const[dsn,setDsn]=useState<string[]>([]);
-  const[feats,setFeats]=useState<string[]>([]);
-  const[customCap,setCustomCap]=useState("");
-  const[ai,setAi]=useState<string[]>([]);
-  const[hasHardware,setHasHardware]=useState(false);
-  const[integrations,setIntegrations]=useState<string[]>([]);
-  const[compliance,setCompliance]=useState<string[]>([]);
-  const[scale,setScale]=useState("growth");
-  const[rush,setRush]=useState(false);
+  // Config can be pre-loaded from a shareable URL (?need=…&stage=…&feat=…)
+  const q0=typeof window!=="undefined"?new URLSearchParams(window.location.search):new URLSearchParams();
+  const qs=(k:string,d:string)=>q0.get(k)||d;
+  const qa=(k:string)=>{const v=q0.get(k);return v?v.split(","):[];};
+  const[need,setNeed]=useState(()=>qs("need","build"));
+  const[maturity,setMaturity]=useState(()=>qs("stage","mvp"));
+  const[industry,setIndustry]=useState(()=>qs("ind",""));
+  const[platforms,setPlatforms]=useState<string[]>(()=>qa("plat"));
+  const[design,setDesign]=useState(()=>qs("design","standard"));
+  const[dsn,setDsn]=useState<string[]>(()=>qa("dsn"));
+  const[feats,setFeats]=useState<string[]>(()=>qa("feat"));
+  const[customCap,setCustomCap]=useState(()=>qs("custom",""));
+  const[ai,setAi]=useState<string[]>(()=>qa("ai"));
+  const[hasHardware,setHasHardware]=useState(()=>q0.get("hw")==="1");
+  const[integrations,setIntegrations]=useState<string[]>(()=>qa("intg"));
+  const[compliance,setCompliance]=useState<string[]>(()=>qa("comp"));
+  const[scale,setScale]=useState(()=>qs("scale","pilot"));
+  const[rush,setRush]=useState(()=>q0.get("rush")==="1");
+  const[copied,setCopied]=useState(false);
   const[email,setEmail]=useState("");const[company,setCompany]=useState("");const[timeline,setTimeline]=useState("");
   const[sent,setSent]=useState(false);const[sending,setSending]=useState(false);const[err,setErr]=useState(false);const[emailErr,setEmailErr]=useState(false);
   const[nearBottom,setNearBottom]=useState(false);
   useEffect(()=>{const on=()=>{const d=document.documentElement;setNearBottom(window.scrollY+window.innerHeight>=d.scrollHeight-180);};on();window.addEventListener("scroll",on,{passive:true});window.addEventListener("resize",on);return()=>{window.removeEventListener("scroll",on);window.removeEventListener("resize",on);};},[]);
+  // Keep the URL in sync with the current config so it can be bookmarked / shared (only non-defaults are written, to keep it short)
+  useEffect(()=>{
+    const p=new URLSearchParams();
+    if(need!=="build")p.set("need",need);
+    if(maturity!=="mvp")p.set("stage",maturity);
+    if(industry)p.set("ind",industry);
+    if(platforms.length)p.set("plat",platforms.join(","));
+    if(design!=="standard")p.set("design",design);
+    if(dsn.length)p.set("dsn",dsn.join(","));
+    if(feats.length)p.set("feat",feats.join(","));
+    if(ai.length)p.set("ai",ai.join(","));
+    if(integrations.length)p.set("intg",integrations.join(","));
+    if(compliance.length)p.set("comp",compliance.join(","));
+    if(scale!=="pilot")p.set("scale",scale);
+    if(hasHardware)p.set("hw","1");
+    if(rush)p.set("rush","1");
+    if(customCap.trim())p.set("custom",customCap.trim());
+    const str=p.toString();
+    window.history.replaceState(null,"",window.location.pathname+(str?"?"+str:""));
+  },[need,maturity,industry,platforms,design,dsn,feats,ai,integrations,compliance,scale,hasHardware,rush,customCap]);
+  const copyLink=async()=>{
+    try{await navigator.clipboard.writeText(window.location.href);setCopied(true);setTimeout(()=>setCopied(false),2000);}catch{}
+  };
+  const reset=()=>{setNeed("build");setMaturity("mvp");setIndustry("");setPlatforms([]);setDesign("standard");setDsn([]);setFeats([]);setCustomCap("");setAi([]);setHasHardware(false);setIntegrations([]);setCompliance([]);setScale("pilot");setRush(false);};
   const isDiscovery=need==="discovery";
   const includeDev=need==="dev"||need==="build";
   const includeDesign=need==="design"||need==="build";
@@ -3212,10 +3259,10 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
           `Target stage: ${m.label}`,
           `Pace:         ${rush?"Fast-track (+15%)":"Standard"}`,"",
           "ESTIMATE (internal — not shown to visitor)",
-          `Budget:   ${ccFmt(low)} – ${ccFmt(high)}`,
-          `Duration: ${wl}–${wh} weeks`,"",
+          `Estimate: ${ccFmt(low)}–${ccFmt(high)}`,
+          `Timeline: ${wl}–${wh} weeks`,"",
           "SCOPE",
-          `Industry:   ${industry}`,
+          `Industry:   ${industry||"—"}`,
           `Platforms:  ${platLabels.join(", ")||"—"}`,
           `Compliance: ${includeDev?(sel(compliance,CC_COMPLIANCE).join(", ")||"None"):"n/a"}`,
           `Design:     ${includeDesign?designItems.join(", "):"n/a — client supplies designs"}`,
@@ -3242,6 +3289,9 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
       <div className="cc-grid" style={{maxWidth:1080,margin:"0 auto"}}>
         {/* Configurator */}
         <div className="cc-config">
+          <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}>
+            <button type="button" onClick={reset} style={{display:"inline-flex",alignItems:"center",gap:6,background:"none",border:"none",color:"var(--txt3)",fontFamily:"var(--in)",fontSize:12.5,fontWeight:600,cursor:"pointer",padding:"4px 2px"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Start over</button>
+          </div>
           <CCGroup label="What do you need?">
             <div className="cc-cards">{CC_NEEDS.map(n=><CCOptCard key={n.k} active={need===n.k} onClick={()=>setNeed(n.k)} label={n.label} sub={n.sub}/>)}</div>
           </CCGroup>
@@ -3277,14 +3327,14 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
           </CCGroup>
           {includeDev&&<>
           <CCGroup label="AI / ML">
-            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_AI.map(f=><CCChip key={f.k} active={ai.includes(f.k)} onClick={()=>toggle(ai,setAi,f.k)} label={f.label}/>)}</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_AI.map(f=><CCChip key={f.k} active={ai.includes(f.k)} onClick={()=>toggle(ai,setAi,f.k)} label={f.label} hint={CC_HINTS[f.k]}/>)}</div>
           </CCGroup>
           <CCGroup label="Integrations">
-            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_INTEGRATIONS.map(f=><CCChip key={f.k} active={integrations.includes(f.k)} onClick={()=>toggle(integrations,setIntegrations,f.k)} label={f.label}/>)}</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_INTEGRATIONS.map(f=><CCChip key={f.k} active={integrations.includes(f.k)} onClick={()=>toggle(integrations,setIntegrations,f.k)} label={f.label} hint={CC_HINTS[f.k]}/>)}</div>
           </CCGroup>
           </>}
           {showCompliance&&<CCGroup label="Compliance & data">
-            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_COMPLIANCE.map(c=><CCChip key={c.k} active={compliance.includes(c.k)} onClick={()=>toggle(compliance,setCompliance,c.k)} label={c.label}/>)}</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{CC_COMPLIANCE.map(c=><CCChip key={c.k} active={compliance.includes(c.k)} onClick={()=>toggle(compliance,setCompliance,c.k)} label={c.label} hint={CC_HINTS[c.k]}/>)}</div>
           </CCGroup>}
           {includeDev&&<CCGroup label="Scale at launch">
             <div className="cc-cards">{Object.keys(CC_SCALE).map(k=><CCOptCard key={k} active={scale===k} onClick={()=>setScale(k)} label={CC_SCALE[k].label}/>)}</div>
@@ -3322,6 +3372,7 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
                   <div style={{display:"flex",alignItems:"baseline",gap:8,flexWrap:"wrap"}}>
                     <span style={{fontFamily:"var(--jk)",fontSize:"clamp(30px,4.4vw,40px)",fontWeight:800,lineHeight:1,letterSpacing:"-0.02em"}}>{ccFmt(low)}–{ccFmt(high)}</span>
                   </div>
+                  <p style={{fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.6)",margin:"7px 0 0"}}>Typical for this scope ≈ <strong style={{color:"rgba(255,255,255,.85)"}}>{ccFmt((low+high)/2)}</strong></p>
                   <p style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.72)",margin:"10px 0 0",lineHeight:1.5}}>Timeline <strong style={{color:"#fff"}}>{wl}–{wh} weeks</strong> · Discovery included free</p>
                   <div style={{margin:"20px 0 0",padding:"14px 0 2px",borderTop:"1px solid rgba(255,255,255,.16)"}}>
                     <p style={{fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,letterSpacing:1.2,textTransform:"uppercase",color:"rgba(255,255,255,.5)",margin:"0 0 10px"}}>What shapes this estimate</p>
@@ -3336,6 +3387,10 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
                   <p style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.8)",margin:0}}>We'll review your project and follow up within one business day.</p>
                 </div>
               : <form onSubmit={submit} noValidate>
+                  <div style={{display:"flex",alignItems:"flex-start",gap:9,marginBottom:16,paddingBottom:16,borderBottom:"1px solid rgba(255,255,255,.14)"}}>
+                    <div style={{display:"flex",gap:1.5,flexShrink:0,marginTop:1}}>{[0,1,2,3,4].map(i=><svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#FFC24B" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
+                    <span style={{fontFamily:"var(--in)",fontSize:12,color:"rgba(255,255,255,.82)",lineHeight:1.5}}>“Strong communication, timely delivery, and a user-centric approach.” — Jen McCarthy, Drift App</span>
+                  </div>
                   <p style={{fontFamily:"var(--jk)",fontSize:15.5,fontWeight:800,margin:"0 0 4px"}}>Get your free Discovery</p>
                   <p style={{fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.72)",margin:"0 0 14px",lineHeight:1.5}}>Tell us where to send it. A senior engineer reviews every request personally.</p>
                   <input type="email" className="cc-input" value={email} onChange={e=>{setEmail(e.target.value);if(emailErr)setEmailErr(false);}} aria-invalid={emailErr} placeholder="Email" style={{...ccInput,marginBottom:emailErr?5:8,border:`1px solid ${emailErr?"#ff9d9d":"rgba(255,255,255,.25)"}`}}/>
@@ -3347,7 +3402,10 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
                   {err&&<p style={{fontFamily:"var(--in)",fontSize:12,color:"#ffd7d7",margin:"9px 0 0"}}>Something went wrong. Email hello@lumo-lab.com and we'll follow up.</p>}
                 </form>}
             <button onClick={()=>go("contact")} style={{width:"100%",marginTop:10,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}>Prefer to talk? Book a call</button>
-            <p style={{fontFamily:"var(--in)",fontSize:11.5,color:"rgba(255,255,255,.55)",margin:"16px 0 0",lineHeight:1.5}}>Ballpark only — a realistic range based on your selections, not a fixed quote. Discovery is always free, with no obligation, and a senior engineer reviews every request personally.</p>
+            <button onClick={copyLink} style={{width:"100%",marginTop:10,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:7,background:"none",border:"none",color:"rgba(255,255,255,.7)",padding:"6px",fontFamily:"var(--in)",fontSize:12.5,fontWeight:600,cursor:"pointer"}}>{copied
+              ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Link copied</>
+              : <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy shareable link</>}</button>
+            <p style={{fontFamily:"var(--in)",fontSize:11.5,color:"rgba(255,255,255,.55)",margin:"14px 0 0",lineHeight:1.5}}>Ballpark only — a realistic range based on your selections, not a fixed quote. Discovery is always free, with no obligation, and a senior engineer reviews every request personally.</p>
           </div>
         </div>
       </div>

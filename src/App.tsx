@@ -3190,9 +3190,41 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
     if(!/^\S+@\S+\.\S+$/.test(email.trim())){setEmailErr(true);return;}
     setEmailErr(false);setSending(true);setErr(false);
     const needLabel=CC_NEEDS.find(n=>n.k===need)?.label||need;
+    const div="────────────────────────────";
+    const bullets=(items:string[])=>items.map(x=>"  •  "+x).join("\n");
+    const contact=[
+      "CONTACT",
+      `Company:  ${company||"—"}`,
+      `Email:    ${email}`,
+      `Timeline: ${timeline||"—"}`,
+    ];
     const summary=isDiscovery
-      ? `New Discovery request.\n\nContact: ${company||"—"} <${email}>\nNeeds: Discovery & scoping\nTimeline: ${timeline||"—"}\n\nWants a scoping call — no configuration provided.`
-      : `New Discovery request.\n\nContact: ${company||"—"} <${email}>\nNeeds: ${needLabel}\nTarget stage: ${m.label}\nTimeline: ${timeline||"—"}\nBallpark estimate (internal): ${ccFmt(low)}–${ccFmt(high)} · ${wl}–${wh} weeks\n\n— Scope —\nIndustry: ${industry}\nPlatforms: ${platLabels.join(", ")||"—"}\nCompliance: ${includeDev?(sel(compliance,CC_COMPLIANCE).join(", ")||"none"):"n/a"}\nDesign: ${includeDesign?designItems.join(", "):"n/a — client supplies designs"}\nCapabilities: ${capItems.join(", ")||"core scope"}\nCustom / not listed: ${customCap.trim()||"—"}\nHardware / device: ${includeDev&&hasHardware?"Yes — wants to discuss":"No"}\nScale: ${includeDev?CC_SCALE[scale].label:"n/a"}\nPace: ${rush?"Fast-track":"Standard"}`;
+      ? [
+          "NEW LEAD — Cost Calculator (Discovery)",div,"",
+          ...contact,"",
+          "Wants a scoping call — no configuration provided.",
+        ].join("\n")
+      : [
+          "NEW LEAD — Cost Calculator",div,"",
+          ...contact,"",
+          "REQUEST",
+          `Needs:        ${needLabel}`,
+          `Target stage: ${m.label}`,
+          `Pace:         ${rush?"Fast-track (+15%)":"Standard"}`,"",
+          "ESTIMATE (internal — not shown to visitor)",
+          `Budget:   ${ccFmt(low)} – ${ccFmt(high)}`,
+          `Duration: ${wl}–${wh} weeks`,"",
+          "SCOPE",
+          `Industry:   ${industry}`,
+          `Platforms:  ${platLabels.join(", ")||"—"}`,
+          `Compliance: ${includeDev?(sel(compliance,CC_COMPLIANCE).join(", ")||"None"):"n/a"}`,
+          `Design:     ${includeDesign?designItems.join(", "):"n/a — client supplies designs"}`,
+          `Scale:      ${includeDev?CC_SCALE[scale].label:"n/a"}`,
+          `Hardware:   ${includeDev&&hasHardware?"Yes — wants to discuss":"No"}`,"",
+          "CAPABILITIES",
+          capItems.length?bullets(capItems):"Core scope only",
+          ...(customCap.trim()?["","CUSTOM / NOT LISTED",customCap.trim()]:[]),
+        ].join("\n");
     try{
       await emailjs.send(process.env.REACT_APP_EMAILJS_SERVICE_ID!,process.env.REACT_APP_EMAILJS_CONTACT_TEMPLATE_ID!,{from_name:company||"Cost calculator lead",from_email:email,company:company||"Cost calculator lead",message:summary},process.env.REACT_APP_EMAILJS_PUBLIC_KEY!);
       setSent(true);

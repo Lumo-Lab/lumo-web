@@ -130,6 +130,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo .hero-s{min-height:100vh!important;min-height:100dvh!important;padding-top:100px!important;padding-bottom:48px!important;justify-content:center!important}
   /* Hero asymmetric split — stack on mobile, showcase below content */
   .lumo .hero-split{display:flex!important;flex-direction:column!important;gap:36px!important}
+  .lumo .hero-2col{grid-template-columns:1fr!important;gap:28px!important}
+  .lumo .hero-outcomes{max-width:520px}
   .lumo .hero-showcase{order:2;align-items:stretch!important}
   .lumo .nav-links{display:none!important}
   .ham-btn{display:flex!important}
@@ -399,6 +401,23 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .contact-choice-card:active{transform:scale(.99)}
 @media(max-width:560px){.contact-choices{grid-template-columns:1fr!important}}
 @media(max-width:820px){.selfselect-grid{grid-template-columns:1fr!important}}
+.proof-item{transition:background .2s}
+.proof-item:hover{background:var(--bl)}
+.selfselect-row{transition:background .2s}
+.selfselect-row:hover{background:var(--bl)}
+.selfselect-row:hover .selfselect-cta{gap:12px}
+.selfselect-cta{transition:gap .2s}
+@media(max-width:560px){.selfselect-cta-txt{display:none}}
+.flagship-card{transition:box-shadow .25s, border-color .25s}
+.flagship-card:hover{box-shadow:0 16px 40px rgba(0,30,50,.12)}
+.flagship-card:hover .flagship-cta{gap:11px}
+.flagship-cta{transition:gap .2s}
+.flagship-card .flagship-img img{transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.flagship-card:hover .flagship-img img{transform:scale(1.04)}
+.flagship-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:900px){.flagship-grid{grid-template-columns:1fr!important}.flagship-desc{-webkit-line-clamp:3}}
+@media(prefers-reduced-motion:reduce){.flagship-card .flagship-img img{transition:none}.flagship-card:hover .flagship-img img{transform:none}}
+@media(max-width:640px){.proof-strip{grid-template-columns:1fr 1fr!important}.proof-item{border-left:none!important}.proof-item:nth-child(even){border-left:1px solid var(--brd)!important}.proof-item:nth-child(n+3){border-top:1px solid var(--brd)}}
 @media(prefers-reduced-motion:reduce){.contact-choice-card,.cc-send,.cta-m{transition:none!important}}
 .cc-mobilebar{display:none;transition:transform .3s cubic-bezier(.23,1,.32,1)}
 .cc-mobilebar.cc-hide{transform:translateY(130%)}
@@ -917,8 +936,8 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
           <span className="logo-txt" style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:600,color:"var(--blue)",letterSpacing:-.3}}>lumo lab</span>
         </button>
         <div className="nav-links" style={{display:"flex",alignItems:"center",gap:2}}>
-          {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"}].map(({l,p})=>
-            <button key={l} onClick={()=>nav(p)} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
+          {[{l:"Services",p:"services"},{l:"Work",p:"cases"},{l:"About",p:"about"},{l:"Insights",p:"blog"}].map(({l,p})=>
+            <button key={l} onClick={()=>nav(p)} aria-current={page===p?"page":undefined} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
           )}
           <button onClick={()=>{trackCta("Let's talk","nav_desktop","/contact");nav("contact");}} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
           <button onClick={toggleDark} aria-label="Toggle dark mode" style={{background:"none",border:"1px solid var(--brd)",borderRadius:20,cursor:"pointer",width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",marginLeft:6,transition:"all .2s",flexShrink:0}}>
@@ -938,8 +957,8 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
         {/* Nav links */}
         <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",paddingBottom:24,padding:"0 clamp(24px,6vw,64px)"}}>
           <div style={{display:"flex",flexDirection:"column"}}>
-            {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Careers",p:"careers"}].map(({l,p},i)=>(
-              <button key={l} onClick={()=>nav(p)} style={{background:"none",border:"none",borderBottom:"1px solid rgba(0,30,50,.06)",cursor:"pointer",fontFamily:"var(--jk)",fontSize:32,fontWeight:700,color:page===p?"var(--blue)":"var(--txt)",padding:"18px 0",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"color .2s",opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transitionDelay:`${.05+i*.05}s`}}>
+            {[{l:"Services",p:"services"},{l:"Work",p:"cases"},{l:"About",p:"about"},{l:"Insights",p:"blog"}].map(({l,p},i)=>(
+              <button key={l} onClick={()=>nav(p)} aria-current={page===p?"page":undefined} style={{background:"none",border:"none",borderBottom:"1px solid rgba(0,30,50,.06)",cursor:"pointer",fontFamily:"var(--jk)",fontSize:32,fontWeight:700,color:page===p?"var(--blue)":"var(--txt)",padding:"18px 0",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"color .2s",opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transitionDelay:`${.05+i*.05}s`}}>
                 {l}
                 {page===p?<span style={{width:8,height:8,borderRadius:"50%",background:"var(--blue)",flexShrink:0}}/>:<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="var(--txt4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
               </button>
@@ -975,7 +994,8 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
 }
 function Back({go,to,label}:{go:(to:string)=>void,to:string,label:string}){return <button onClick={()=>go(to)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",color:"var(--txt3)",fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:32,fontFamily:"var(--jk)",padding:0}}><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>{label}</button>;}
 
-/* ── CASES SLIDER — shared between Home and About. Magazine split, auto-advance, brand-blue stage. ── */
+/* ── CASES SLIDER — retired from the homepage (replaced by static flagship cards). Kept for reference. ── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function CasesSlider({go}:{go:(p:string,id?:string,q?:string)=>void}){
   const SLIDE_MS=6500;
   const[cIdx,setCIdx]=useState(0);
@@ -1251,19 +1271,32 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       <div aria-hidden="true" style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(900px 620px at 12% 24%, rgba(0,76,115,.55), transparent 55%), radial-gradient(1100px 760px at 92% -10%, rgba(125,185,232,.22), transparent 55%), linear-gradient(180deg, rgba(0,28,46,.5), rgba(0,28,46,.66))"}}/>
       <div className="hero-grain"/>
       <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:128,paddingBottom:96,color:"var(--on-dark)",minHeight:"calc(100vh - 60px)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
-        <div className="hero-2col" style={{display:"grid",gridTemplateColumns:"1fr",gap:"clamp(36px,5vw,72px)",alignItems:"center",width:"100%"}}>
+        <div className="hero-2col" style={{display:"grid",gridTemplateColumns:"minmax(0,1.25fr) minmax(0,0.82fr)",gap:"clamp(28px,4vw,64px)",alignItems:"center",width:"100%"}}>
           {/* LEFT — message */}
           <div className="hero-content">
             <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:32,height:2,background:"var(--accent)"}}/>Product · AI · IoT engineering</span>
             <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(40px,6vw,80px)",fontWeight:800,lineHeight:1.04,letterSpacing:"-0.035em",margin:0,marginBottom:"var(--space-8)",maxWidth:860}}>You've got the idea. <span style={{color:"var(--accent)"}}>We bring the tech.</span></h1>
-            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(17px,1.7vw,22px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-10)",maxWidth:640}}>Senior product engineers for software that has to work in the real world. We help HealthTech, AgTech and IoT teams design, build and scale complex products—from edge AI and device connectivity to native apps and cloud platforms.</p>
+            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(17px,1.7vw,22px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-10)",maxWidth:640}}>Senior product engineers for complex digital products—from AI and connected devices to native mobile apps and scalable cloud platforms.</p>
             <div className="fi d4" style={{display:"flex",alignItems:"center",gap:"var(--space-4)",flexWrap:"wrap"}}>
               <button onClick={()=>{trackCta("Talk through your product","home_hero","/contact");go("contact");}} className="hero-cta">Talk through your product <Arr s={14} c="var(--blue)"/></button>
               <button onClick={()=>{trackCta("See our work","home_hero","/work");go("cases");}} className="hero-ghost">See our work <Arr s={14} c="currentColor"/></button>
             </div>
             <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.55)",margin:0,marginTop:"var(--space-4)"}}>30 minutes · no pitch decks · a senior engineer, not a salesperson.</p>
           </div>
-          {/* Product dashboards hidden for a simpler hero — re-enable with <HeroDashboards go={go}/> */}
+          {/* RIGHT — compact "Selected outcomes" panel (verified, links to case studies) */}
+          <aside className="fi d4 hero-outcomes" aria-label="Selected outcomes" style={{alignSelf:"center",width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.14)",borderRadius:16,padding:"22px 22px 10px",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
+            <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--accent)",margin:"0 0 6px"}}>Selected outcomes</p>
+            {([
+              {id:"nomo",n:"Nomo Smart Care",o:"Live across all 50 US states · sub-second caregiver alerts"},
+              {id:"farmwave",n:"Farmwave",o:"2025 AI Harvest Vision — Solution of the Year"},
+              {id:"noctrix",n:"Noctrix Health",o:"$340M acquisition by ResMed"},
+            ]).map(x=>(
+              <button key={x.id} onClick={()=>{trackCta("Selected outcome: "+x.n,"home_hero_outcomes","/work/"+x.id);go("cases",x.id);}} style={{width:"100%",textAlign:"left",background:"none",border:"none",borderTop:"1px solid rgba(255,255,255,.12)",cursor:"pointer",padding:"13px 0",display:"block"}}>
+                <span style={{display:"block",fontFamily:"var(--jk)",fontSize:13.5,fontWeight:800,color:"#fff",marginBottom:3}}>{x.n}</span>
+                <span style={{display:"block",fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.72)",lineHeight:1.5}}>{x.o}</span>
+              </button>
+            ))}
+          </aside>
         </div>
         {/* PROOF ROW — in the fold */}
         <div className="fi d4 hero-proof-row" style={{display:"flex",alignItems:"center",gap:"12px 18px",flexWrap:"wrap",marginTop:"clamp(28px,4vh,52px)"}}>
@@ -1286,30 +1319,25 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
         </div>
       </W>
     </section>
-    {/* TRUST STRIP — combined: award (clickable, left) + scrolling brand marquee (right). One credibility row. */}
-    <section className="trust-strip" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
-      <W className="trust-strip-row" style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
-        {/* Award — clickable, prominent, on the left */}
-        <div className="trust-award" onClick={()=>go("cases","farmwave")} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"){go("cases","farmwave");}}} style={{display:"flex",alignItems:"center",gap:14,padding:"16px clamp(20px,3vw,32px) 16px 0",cursor:"pointer",borderRight:"1px solid var(--brd)",flexShrink:0,transition:"opacity .2s"}} onMouseEnter={e=>e.currentTarget.style.opacity=".7"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-          <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:36,height:36,borderRadius:10,background:"var(--blue)",color:"#fff",flexShrink:0,boxShadow:"0 4px 12px rgba(0,76,115,.22)"}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M17 5h3v2a3 3 0 01-3 3"/><path d="M7 5H4v2a3 3 0 003 3"/></svg>
-          </span>
-          <div style={{display:"flex",flexDirection:"column",gap:2}}>
-            <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase"}}>2025 Award winner</span>
-            <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt)",lineHeight:1.2}}>AI Harvest Vision Solution <span style={{color:"var(--txt3)",fontWeight:500}}>· Farmwave case →</span></span>
-          </div>
-        </div>
-        {/* Brand marquee — anchored by a "20+ PARTNERS" label in flow (solid bg, real layout), then scrolling brand names beside it */}
-        <div className="trust-marquee" style={{flex:1,minWidth:0,display:"flex",alignItems:"center"}}>
-          {/* Anchor in flow — solid block, won't have z-index conflicts with the moving marquee */}
-          <div style={{flexShrink:0,paddingLeft:"clamp(20px,3vw,32px)",paddingRight:18,display:"flex",alignItems:"center",gap:10,background:"var(--bg2)",alignSelf:"stretch"}}>
-            <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>20+ partners since 2017</span>
-            <span style={{width:14,height:1,background:"var(--brd)",flexShrink:0}}/>
-          </div>
-          {/* Scrolling brand names — flex:1, overflow:hidden, hard-clipped at the edges */}
-          <div style={{flex:1,minWidth:0,overflow:"hidden",position:"relative",alignSelf:"stretch",display:"flex",alignItems:"center",paddingRight:"clamp(20px,3vw,32px)"}}>
-            <div className="mq-t">{cl3.map((c,i)=><span key={i} style={{fontFamily:"var(--jk)",fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",letterSpacing:".005em",display:"flex",alignItems:"center",gap:12}}>{c}<span style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/></span>)}</div>
-          </div>
+    {/* STATIC PROOF STRIP — verified outcomes, no auto-scroll. Each links to its source. */}
+    <section className="trust-strip" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)"}}>
+      <W>
+        <div className="proof-strip" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",alignItems:"stretch"}}>
+          {([
+            {v:"All 50 US states",l:"Nomo live nationwide",act:()=>go("cases","nomo")},
+            {v:"Award-winning AI",l:"2025 AI Harvest Vision",act:()=>go("cases","farmwave")},
+            {v:"$340M acquisition",l:"Noctrix → ResMed",act:()=>go("cases","noctrix")},
+            {v:"5.0 on Clutch",l:"verified client reviews",href:"https://clutch.co/profile/lumo-lab"},
+          ]).map((x,i)=>{
+            const inner=<>
+              <span style={{fontFamily:"var(--jk)",fontSize:"clamp(15px,1.6vw,18px)",fontWeight:800,color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.15}}>{x.v}</span>
+              <span style={{fontFamily:"var(--in)",fontSize:12,color:"var(--txt3)",lineHeight:1.4}}>{x.l}</span>
+            </>;
+            const st:CSSProperties={display:"flex",flexDirection:"column",gap:4,padding:"18px clamp(16px,2.4vw,26px)",borderLeft:i===0?"none":"1px solid var(--brd)",textAlign:"left",background:"none",cursor:"pointer",textDecoration:"none"};
+            return x.href
+              ? <a key={i} className="proof-item" href={x.href} target="_blank" rel="noopener noreferrer" style={st}>{inner}</a>
+              : <button key={i} className="proof-item" onClick={x.act} style={{...st,border:"none",borderLeft:i===0?"none":"1px solid var(--brd)"}}>{inner}</button>;
+          })}
         </div>
       </W>
     </section>
@@ -1317,18 +1345,54 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
     <section style={{padding:"clamp(64px,8vw,96px) 0"}}><W>
       <SL ch="How can we help?"/>
       <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)",letterSpacing:"-.02em",marginBottom:"clamp(28px,4vw,44px)",maxWidth:640}}>Start with the situation you're in.</h2>
-      <div className="selfselect-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
+      <div style={{borderTop:"1px solid var(--brd)"}}>
         {([
           {need:"new-product",t:"Build a new product",d:"Turn an early concept, validated idea or existing specification into a production-ready product.",a:"Talk about a new product"},
           {need:"existing-product",t:"Rescue or scale an existing product",d:"Reduce technical debt, improve performance and reliability, or add delivery capacity without losing ownership of the product.",a:"Talk about an existing product"},
           {need:"ai-iot",t:"Solve a complex AI or IoT challenge",d:"Work through edge AI, connected devices, sensor data, cloud infrastructure or difficult integrations with a senior technical team.",a:"Talk about a technical challenge"},
         ]).map(c=>(
-          <button key={c.need} type="button" onClick={()=>{trackCta(c.a,"home_self_select","/contact",c.need);go("contact",undefined,`need=${c.need}`);}} className="card svc-card" style={{textAlign:"left",display:"flex",flexDirection:"column",padding:"28px 26px",cursor:"pointer",minHeight:210,background:"var(--bg)"}}>
-            <h3 style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:800,margin:0,marginBottom:10,color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.2}}>{c.t}</h3>
-            <p style={{fontSize:13.5,color:"var(--txt3)",lineHeight:1.6,margin:0,marginBottom:18,flex:1}}>{c.d}</p>
-            <span style={{display:"inline-flex",alignItems:"center",gap:7,fontFamily:"var(--jk)",fontSize:13.5,fontWeight:700,color:"var(--blue)"}}>{c.a}<Arr s={13} c="var(--blue)"/></span>
+          <button key={c.need} type="button" onClick={()=>{trackCta(c.a,"home_self_select","/contact",c.need);go("contact",undefined,`need=${c.need}`);}} className="selfselect-row" style={{width:"100%",textAlign:"left",display:"flex",alignItems:"center",gap:"clamp(16px,4vw,48px)",padding:"clamp(20px,3vw,28px) 4px",borderBottom:"1px solid var(--brd)",background:"none",border:"none",borderBottomWidth:1,borderBottomStyle:"solid",borderBottomColor:"var(--brd)",cursor:"pointer"}}>
+            <div style={{flex:1,minWidth:0}}>
+              <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(18px,2vw,22px)",fontWeight:800,margin:"0 0 6px",color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.2}}>{c.t}</h3>
+              <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.6,margin:0,maxWidth:640}}>{c.d}</p>
+            </div>
+            <span className="selfselect-cta" style={{flexShrink:0,display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--blue)",whiteSpace:"nowrap"}}><span className="selfselect-cta-txt">{c.a}</span><Arr s={14} c="var(--blue)"/></span>
           </button>
         ))}
+      </div>
+    </W></section>
+    {/* FLAGSHIP CASE STUDIES — three static cards (no carousel), before services */}
+    <section style={{padding:"clamp(56px,7vw,88px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}><W>
+      <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:"clamp(28px,4vw,40px)",flexWrap:"wrap"}}>
+        <div>
+          <SL ch="Selected work"/>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)",letterSpacing:"-.02em",margin:0}}>Products we designed, built <span style={{color:"var(--blue)"}}>and scaled.</span></h2>
+        </div>
+        <p style={{fontFamily:"var(--in)",fontSize:14,color:"var(--txt3)",lineHeight:1.6,margin:0,maxWidth:360}}>A few flagship products—across healthcare, agriculture and connected hardware—shipped end to end.</p>
+      </div>
+      <div className="flagship-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
+        {(["nomo","farmwave","noctrix"] as const).map(id=>{
+          const c=cases.find(x=>x.id===id)!;
+          const img={nomo:"/images/nomo_header_1.png",farmwave:"/images/farmwave_tablet.jpeg",noctrix:"/images/noctrix_showcase.png"}[id];
+          return (
+            <button key={id} onClick={()=>go("cases",id)} className="flagship-card card" style={{textAlign:"left",display:"flex",flexDirection:"column",padding:0,overflow:"hidden",cursor:"pointer",background:"var(--bg)"}}>
+              <div className="flagship-img" style={{position:"relative",aspectRatio:"16 / 10",overflow:"hidden",background:id==="nomo"?"#eef1f4":c.cover}}>
+                <img src={process.env.PUBLIC_URL+img} alt={`${c.name} — ${c.cat} case study`} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+                <span style={{position:"absolute",top:12,left:12,fontFamily:"var(--jk)",fontSize:10,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"#fff",background:"rgba(0,0,0,.4)",backdropFilter:"blur(8px)",padding:"4px 10px",borderRadius:6}}>{c.cat}</span>
+              </div>
+              <div style={{padding:"20px 20px 22px",display:"flex",flexDirection:"column",flex:1}}>
+                <h3 style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:800,margin:"0 0 8px",color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.2}}>{c.name}</h3>
+                <p className="flagship-desc" style={{fontSize:13.5,color:"var(--txt3)",lineHeight:1.6,margin:"0 0 14px"}}>{c.brief}</p>
+                {CASE_OUTCOME[id]&&<span style={{display:"inline-flex",alignItems:"center",gap:7,alignSelf:"flex-start",background:"var(--bl)",border:"1px solid var(--brd)",color:"var(--blue)",padding:"5px 12px",borderRadius:50,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,marginBottom:14}}><span aria-hidden="true" style={{width:5,height:5,borderRadius:"50%",background:"var(--teal)",flexShrink:0}}/>{CASE_OUTCOME[id]}</span>}
+                <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:16}}>{c.tags.slice(0,3).map(t=><span key={t} className="ft">{t}</span>)}</div>
+                <span className="flagship-cta" style={{marginTop:"auto",display:"inline-flex",alignItems:"center",gap:7,fontFamily:"var(--jk)",fontSize:13.5,fontWeight:700,color:"var(--blue)"}}>View case study <Arr s={13} c="var(--blue)"/></span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <div style={{marginTop:22,display:"flex",justifyContent:"center"}}>
+        <button onClick={()=>{trackCta("View all work","home_cases","/work");go("cases");}} className="cta-g">View all work <Arr s={14} c="currentColor"/></button>
       </div>
     </W></section>
     {/* SERVICES */}
@@ -1345,10 +1409,10 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
             <span style={{flex:1,height:1,background:"var(--brd)"}}/>
           </div>
           <h3 style={{fontFamily:"var(--jk)",fontSize:s.span?22:18,fontWeight:800,margin:0,marginBottom:8,color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.15}}>{s.t}</h3>
-          <p style={{fontSize:s.span?15:13.5,fontWeight:600,color:"var(--txt2)",lineHeight:1.5,margin:0,marginBottom:8}}>{s.hl}</p>
-          <p style={{fontSize:13,color:"var(--txt3)",lineHeight:1.6,margin:0,marginBottom:18,flex:1}}>{s.d}</p>
+          <p style={{fontSize:s.span?15:14,fontWeight:600,color:"var(--txt2)",lineHeight:1.55,margin:0,marginBottom:16,flex:1}}>{s.hl}</p>
+          <p style={{fontSize:12.5,color:"var(--txt3)",lineHeight:1.6,margin:0,marginBottom:18}}>{(s.del||[]).slice(0,3).join(" · ")}</p>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginTop:"auto"}}>
-            <div style={{display:"flex",flexWrap:"wrap",gap:5}}>{s.tech.slice(0,s.span?5:3).map(t=><span key={t} className="ft">{t}</span>)}</div>
+            <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)"}}>Learn more</span>
             <span className="svc-go" style={{flexShrink:0,display:"inline-flex",alignItems:"center",justifyContent:"center",width:34,height:34,borderRadius:"50%",background:"var(--blue)",color:"#fff"}}><Arr s={14} c="#fff"/></span>
           </div>
         </div>)}
@@ -1357,7 +1421,6 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
         <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:8,background:"none",border:"none",cursor:"pointer",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",letterSpacing:.2,padding:0,transition:"gap .2s"}} onMouseEnter={e=>e.currentTarget.style.gap="12px"} onMouseLeave={e=>e.currentTarget.style.gap="8px"}>See all services in depth <Arr s={13} c="currentColor"/></button>
       </div>
     </W></section>
-    <CasesSlider go={go}/>
     {/* PROCESS — compact horizontal 4-step row, ~120px tall instead of 800px. Sticky timeline + sparse layout retired. */}
     <section style={{padding:"clamp(56px,8vh,80px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
       <W>
@@ -1970,7 +2033,8 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string,q?:strin
       <h2 className="reveal d2" style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"#fff",marginBottom:8,lineHeight:1.15}}>{c.name}</h2>
       {CASE_OUTCOME[c.id]&&<span className="reveal d2" style={{display:"inline-flex",alignItems:"center",gap:6,marginBottom:10,background:"rgba(255,255,255,.14)",border:"1px solid rgba(255,255,255,.22)",color:"#fff",padding:"4px 11px",borderRadius:50,fontFamily:"var(--jk)",fontSize:11,fontWeight:700}}><span aria-hidden="true" style={{width:5,height:5,borderRadius:"50%",background:"#8FE3D9",flexShrink:0}}/>{CASE_OUTCOME[c.id]}</span>}
       <p className="reveal d3" style={{fontSize:13,color:"rgba(255,255,255,.6)",lineHeight:1.6,marginBottom:12}}>{c.brief}</p>
-      <div className="reveal d3" style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.tags.map(t=><span key={t} style={{fontSize:10,color:"rgba(255,255,255,.7)",fontWeight:600,border:"1px solid rgba(255,255,255,.18)",padding:"3px 9px",borderRadius:4,fontFamily:"var(--jk)",background:"rgba(255,255,255,.08)"}}>{t}</span>)}</div>
+      <div className="reveal d3" style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:14}}>{c.tags.map(t=><span key={t} style={{fontSize:10,color:"rgba(255,255,255,.7)",fontWeight:600,border:"1px solid rgba(255,255,255,.18)",padding:"3px 9px",borderRadius:4,fontFamily:"var(--jk)",background:"rgba(255,255,255,.08)"}}>{t}</span>)}</div>
+      <span className="reveal d3 case-grid-cta" style={{display:"inline-flex",alignItems:"center",gap:6,fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,color:"#fff"}}>View case study <Arr s={12} c="#fff"/></span>
     </div>
   </div></div>;
 }
@@ -2039,6 +2103,16 @@ function Cases({go,sel}:{go:(p:string,id?:string,q?:string)=>void,sel:string|nul
           <div><span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,opacity:.55}}>{String(i+1).padStart(2,"0")} / {s.l.split(" ").pop()?.toUpperCase()}</span><h3 style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:800,marginTop:6,color:"var(--txt)"}}>{s.l}</h3></div>
           <div className="case-section-body"><p style={{fontSize:15,color:"var(--txt2)",lineHeight:1.8}}>{s.t}</p></div>
         </div>)}
+        {/* Contextual conversion block — after the Outcome */}
+        <div style={{margin:"36px 0 8px",padding:"clamp(26px,4vw,36px)",borderRadius:18,background:"var(--blue)",color:"#fff"}}>
+          <span style={{display:"inline-block",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"var(--accent)",marginBottom:10}}>Have a similar challenge?</span>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.6vw,28px)",fontWeight:800,lineHeight:1.15,letterSpacing:"-0.01em",margin:"0 0 12px",maxWidth:620}}>Talk through the architecture with the team that built this.</h3>
+          <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"rgba(255,255,255,.82)",lineHeight:1.65,margin:"0 0 20px",maxWidth:600}}>Share what you're building, where the technical risk sits and what stage you're at. We'll reply with an honest recommendation on where to start.</p>
+          <div style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+            <button onClick={()=>{trackCta("Send your project brief","case_study_cta","/contact",undefined);go("contact",undefined,`source=${ac.id}-case`);}} style={{display:"inline-flex",alignItems:"center",gap:8,background:"#fff",color:"var(--blue)",border:"none",borderRadius:50,padding:"13px 24px",fontFamily:"var(--jk)",fontSize:14,fontWeight:700,cursor:"pointer"}}>Send your project brief <Arr s={14} c="var(--blue)"/></button>
+            <button onClick={()=>{trackCta("Book a 30-minute call","case_study_cta","/contact?mode=call",undefined);go("contact",undefined,`mode=call&source=${ac.id}-case`);}} style={{display:"inline-flex",alignItems:"center",gap:7,background:"none",border:"1px solid rgba(255,255,255,.4)",color:"#fff",borderRadius:50,padding:"13px 22px",fontFamily:"var(--jk)",fontSize:14,fontWeight:700,cursor:"pointer"}}>Book a 30-minute call</button>
+          </div>
+        </div>
         {/* Key features */}
         {(ac as any).features?.length>0&&<div id="features" style={{padding:"32px 0",borderTop:"1px solid var(--brd)"}}>
           <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--blue)",letterSpacing:2,textTransform:"uppercase",opacity:.4,marginBottom:20}}>Key Features</p>
@@ -2504,8 +2578,8 @@ function Contact({type="project"}:{type?:"project"|"job"}){
   const NEED_LABELS:{[k:string]:string}={"new-product":"Build a new product","existing-product":"Rescue or scale an existing product","ai-iot":"Solve a complex AI or IoT challenge"};
   const need=(()=>{const n=q.get("need");return n&&NEED_LABELS[n]?n:"";})();
   const source=q.get("source")||undefined;
-  // Two contact choices: "call" (lazy Calendly) or "brief" (project form). Auto-open brief when a need is passed.
-  const[mode,setMode]=useState<null|"call"|"brief">(isJob?"brief":(need?"brief":null));
+  // Two contact choices: "call" (lazy Calendly) or "brief" (project form). Brief is default; ?mode=call opens the call option.
+  const[mode,setMode]=useState<null|"call"|"brief">(!isJob&&q.get("mode")==="call"?"call":"brief");
   const panelRef=useRef<HTMLDivElement|null>(null);
   // Visitor's local timezone — Calendly auto-shows slots in this zone; we surface it to kill the "what time is that for me?" doubt for US visitors.
   const tz=(()=>{try{return (Intl.DateTimeFormat().resolvedOptions().timeZone||"").replace(/_/g," ");}catch{return "";}})();
@@ -2526,9 +2600,10 @@ function Contact({type="project"}:{type?:"project"|"job"}){
     window.addEventListener("message",onMsg);
     return()=>window.removeEventListener("message",onMsg);
   },[isJob,mode,source,need]);
-  // Move focus to the revealed panel when a choice is made (keyboard-friendly)
-  useEffect(()=>{if(mode&&!isJob&&panelRef.current)panelRef.current.focus();},[mode,isJob]);
-  const chooseMode=(m:"call"|"brief")=>{setMode(m);trackContactOption(m,source,need||undefined);};
+  // Move focus to the revealed panel only after a user makes a choice (not on initial mount — avoids a load-time scroll jump)
+  const choiceMadeRef=useRef(false);
+  useEffect(()=>{if(choiceMadeRef.current&&mode&&!isJob&&panelRef.current)panelRef.current.focus({preventScroll:true});},[mode,isJob]);
+  const chooseMode=(m:"call"|"brief")=>{choiceMadeRef.current=true;setMode(m);trackContactOption(m,source,need||undefined);};
   const inputStyle:CSSProperties={width:"100%",padding:"12px 16px",border:"1px solid var(--brd)",borderRadius:10,fontFamily:"var(--in)",fontSize:14,color:"var(--txt)",background:"#fff",outline:"none",transition:"border-color .2s"};
   const labelStyle:CSSProperties={display:"block",fontSize:12,fontWeight:600,color:"var(--txt2)",fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:1.2,marginBottom:6};
   const field=(label:string,key:string,t="text",placeholder="")=>(
@@ -2612,8 +2687,8 @@ function Contact({type="project"}:{type?:"project"|"job"}){
             {/* Two contact choices */}
             <div className="contact-choices" role="group" aria-label="How would you like to get in touch?" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:mode?26:8}}>
               {([
-                {k:"call" as const,t:"Book a 30-minute call",d:"Pick a time that works for you. No deck, no sales pitch—just an honest conversation about the product and the engineering behind it.",a:"Choose a time"},
                 {k:"brief" as const,t:"Send a project brief",d:"Share the idea, current situation, timeline and constraints. We'll review it and reply in writing before asking you to book anything.",a:"Send the brief"},
+                {k:"call" as const,t:"Book a 30-minute call",d:"Pick a time that works for you. No deck, no sales pitch—just an honest conversation about the product and the engineering behind it.",a:"Choose a time"},
               ]).map(c=>{const on=mode===c.k;return (
                 <button key={c.k} type="button" onClick={()=>chooseMode(c.k)} aria-expanded={on} aria-controls="contact-panel" className="contact-choice-card" style={{textAlign:"left",display:"flex",flexDirection:"column",gap:8,padding:"18px 18px 16px",borderRadius:14,border:`1.5px solid ${on?"var(--blue)":"var(--brd)"}`,background:on?"var(--bl)":"var(--bg)",cursor:"pointer",transition:"border-color .2s, background .2s"}}>
                   <span style={{fontFamily:"var(--jk)",fontSize:15.5,fontWeight:800,color:on?"var(--blue)":"var(--txt)"}}>{c.t}</span>
@@ -3781,7 +3856,7 @@ export default function App(){
               <div>
                 <p style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt)",textTransform:"uppercase",letterSpacing:2,marginBottom:14}}>Navigate</p>
                 <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                  {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"},{l:"Blog",p:"blog"},{l:"Cost Calculator",p:"calc"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
+                  {[{l:"Home",p:"home"},{l:"Services",p:"services"},{l:"Work",p:"cases"},{l:"About",p:"about"},{l:"Insights",p:"blog"},{l:"Cost Calculator",p:"calc"}].map(({l,p})=><button key={l} onClick={()=>go(p)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"var(--in)",fontSize:13,fontWeight:500,color:"var(--txt3)",padding:0,textAlign:"left"}}>{l}</button>)}
                 </div>
               </div>
               <div>

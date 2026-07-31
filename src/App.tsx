@@ -131,7 +131,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   /* Hero asymmetric split — stack on mobile, showcase below content */
   .lumo .hero-split{display:flex!important;flex-direction:column!important;gap:36px!important}
   .lumo .hero-2col{grid-template-columns:1fr!important;gap:28px!important}
-  .lumo .hero-outcomes{max-width:520px}
+  .lumo .hero-outcomes{max-width:520px;margin-left:auto;margin-right:auto}
   .lumo .hero-showcase{order:2;align-items:stretch!important}
   .lumo .nav-links{display:none!important}
   .ham-btn{display:flex!important}
@@ -407,7 +407,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .selfselect-row:hover{background:var(--bl)}
 .selfselect-row:hover .selfselect-cta{gap:12px}
 .selfselect-cta{transition:gap .2s}
-@media(max-width:560px){.selfselect-cta-txt{display:none}}
+@media(max-width:640px){.selfselect-row{flex-direction:column!important;align-items:flex-start!important;gap:12px!important;padding:20px 2px!important}}
 .flagship-card{transition:box-shadow .25s, border-color .25s}
 .flagship-card:hover{box-shadow:0 16px 40px rgba(0,30,50,.12)}
 .flagship-card:hover .flagship-cta{gap:11px}
@@ -417,7 +417,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .flagship-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 @media(max-width:900px){.flagship-grid{grid-template-columns:1fr!important}.flagship-desc{-webkit-line-clamp:3}}
 @media(prefers-reduced-motion:reduce){.flagship-card .flagship-img img{transition:none}.flagship-card:hover .flagship-img img{transform:none}}
-@media(max-width:640px){.proof-strip{grid-template-columns:1fr 1fr!important}.proof-item{border-left:none!important}.proof-item:nth-child(even){border-left:1px solid var(--brd)!important}.proof-item:nth-child(n+3){border-top:1px solid var(--brd)}}
+@media(max-width:820px){.proof-section{display:none!important}}
 @media(prefers-reduced-motion:reduce){.contact-choice-card,.cc-send,.cta-m{transition:none!important}}
 .cc-mobilebar{display:none;transition:transform .3s cubic-bezier(.23,1,.32,1)}
 .cc-mobilebar.cc-hide{transform:translateY(130%)}
@@ -1284,7 +1284,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
             <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.55)",margin:0,marginTop:"var(--space-4)"}}>30 minutes · no pitch decks · a senior engineer, not a salesperson.</p>
           </div>
           {/* RIGHT — compact "Selected outcomes" panel (verified, links to case studies) */}
-          <aside className="fi d4 hero-outcomes" aria-label="Selected outcomes" style={{alignSelf:"center",width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.14)",borderRadius:16,padding:"22px 22px 10px",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
+          <aside className="hero-outcomes" aria-label="Selected outcomes" style={{alignSelf:"center",width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.14)",borderRadius:16,padding:"22px 22px 10px",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
             <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--accent)",margin:"0 0 6px"}}>Selected outcomes</p>
             {([
               {id:"nomo",n:"Nomo Smart Care",o:"Live across all 50 US states · sub-second caregiver alerts"},
@@ -1320,7 +1320,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </W>
     </section>
     {/* STATIC PROOF STRIP — verified outcomes, no auto-scroll. Each links to its source. */}
-    <section className="trust-strip" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)"}}>
+    <section className="proof-section" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)"}}>
       <W>
         <div className="proof-strip" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",alignItems:"stretch"}}>
           {([

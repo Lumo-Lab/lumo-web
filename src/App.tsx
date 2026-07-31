@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, ReactNode, CSSProperties } from "react";
 import emailjs from "@emailjs/browser";
+import { track, trackPageView, trackCta, trackContactOption, trackContactFormStart, trackContactFormSubmit, trackContactFormError, trackCaseStudyView, trackArticleCtaClick } from "./analytics";
 
 const css = `
 *{margin:0;padding:0;box-sizing:border-box}
@@ -393,6 +394,12 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .cc-chip[data-tip]{position:relative}
 .cc-chip[data-tip]:hover::after,.cc-chip[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);background:var(--txt);color:var(--bg);padding:9px 11px;border-radius:9px;font-family:var(--in);font-size:12px;font-weight:500;line-height:1.45;width:max-content;max-width:230px;white-space:normal;text-align:left;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.22);pointer-events:none}
 .cc-chip[data-tip]:hover::before,.cc-chip[data-tip]:focus-visible::before{content:"";position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--txt);z-index:60;pointer-events:none}
+.contact-choice-card{transition:border-color .2s, background .2s, transform .18s}
+.contact-choice-card:hover{border-color:var(--blue)}
+.contact-choice-card:active{transform:scale(.99)}
+@media(max-width:560px){.contact-choices{grid-template-columns:1fr!important}}
+@media(max-width:820px){.selfselect-grid{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){.contact-choice-card,.cc-send,.cta-m{transition:none!important}}
 .cc-mobilebar{display:none;transition:transform .3s cubic-bezier(.23,1,.32,1)}
 .cc-mobilebar.cc-hide{transform:translateY(130%)}
 @media(max-width:820px){.cc-grid{grid-template-columns:1fr}.cc-cards{grid-template-columns:1fr}.cc-result>div{position:static!important}.cc-mobilebar{display:flex}.cc-page{padding-bottom:76px}}
@@ -913,7 +920,7 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
           {[{l:"Home",p:"home"},{l:"About",p:"about"},{l:"For Clients",p:"services"},{l:"Work",p:"cases"}].map(({l,p})=>
             <button key={l} onClick={()=>nav(p)} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
           )}
-          <button onClick={()=>nav("contact")} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
+          <button onClick={()=>{trackCta("Let's talk","nav_desktop","/contact");nav("contact");}} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
           <button onClick={toggleDark} aria-label="Toggle dark mode" style={{background:"none",border:"1px solid var(--brd)",borderRadius:20,cursor:"pointer",width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",marginLeft:6,transition:"all .2s",flexShrink:0}}>
             {dark?<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v1M12 20v1M4.22 4.22l.71.71M18.36 18.36l.71.71M3 12h1M20 12h1M4.93 19.07l.71-.71M18.36 5.64l.71-.71M12 7a5 5 0 100 10A5 5 0 0012 7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>:<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
           </button>
@@ -938,7 +945,7 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
               </button>
             ))}
           </div>
-          <button onClick={()=>nav("contact")} className="cta-m" style={{marginTop:28,justifyContent:"center",fontSize:14,opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transition:"opacity .3s, transform .3s",transitionDelay:".4s"}}>Let's talk</button>
+          <button onClick={()=>{trackCta("Let's talk","nav_mobile","/contact");nav("contact");}} className="cta-m" style={{marginTop:28,justifyContent:"center",fontSize:14,opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transition:"opacity .3s, transform .3s",transitionDelay:".4s"}}>Let's talk</button>
         </div>
       </div>
       {/* Footer strip */}
@@ -969,7 +976,7 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
 function Back({go,to,label}:{go:(to:string)=>void,to:string,label:string}){return <button onClick={()=>go(to)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",color:"var(--txt3)",fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:32,fontFamily:"var(--jk)",padding:0}}><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>{label}</button>;}
 
 /* ── CASES SLIDER — shared between Home and About. Magazine split, auto-advance, brand-blue stage. ── */
-function CasesSlider({go}:{go:(p:string,id?:string)=>void}){
+function CasesSlider({go}:{go:(p:string,id?:string,q?:string)=>void}){
   const SLIDE_MS=6500;
   const[cIdx,setCIdx]=useState(0);
   const[cPaused,setCPaused]=useState(false);
@@ -1199,7 +1206,7 @@ function DashPanel({accent,title,tiles,children}:{accent:string,title:string,til
   );
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function HeroDashboards({go}:{go:(p:string,id?:string)=>void}){
+function HeroDashboards({go}:{go:(p:string,id?:string,q?:string)=>void}){
   const slides=[
     {id:"nomo",label:"Nomo Smart Care",node:<DashPanel accent="#F5A623" title="Nomo Smart Care"><DashFeed rows={[{txt:"Morning routine on track",time:"8:42",c:"#F5A623",done:true},{txt:"Kitchen activity detected",time:"9:15",c:"#F5A623"},{txt:"Medication taken",time:"9:30",c:"#F5A623",done:true},{txt:"Fall check — all clear",time:"now",c:"#F5A623",done:true}]}/></DashPanel>},
     {id:"farmwave",label:"Farmwave",node:<DashPanel accent="#1E88D8" title="Farmwave AI Harvest Vision" tiles={[{l:"Left header",v:"5",c:"#1E88D8"},{l:"Right header",v:"16",c:"#1E88D8"},{l:"Rear combine",v:"12",c:"#1E88D8"}]}><DashSpark color="#1E88D8" label="Grain loss · bu/acre — last 60 min" d="M0,150 C60,128 100,160 150,118 C200,84 250,128 300,96 C360,62 420,100 480,64 C540,38 580,58 600,46" d2="M0,175 C70,165 110,182 160,150 C215,118 265,150 320,138 C380,124 430,150 490,118 C545,92 580,108 600,100"/></DashPanel>},
@@ -1224,7 +1231,7 @@ function HeroDashboards({go}:{go:(p:string,id?:string)=>void}){
     </div>
   );
 }
-function Home({go}:{go:(p:string,id?:string)=>void}){
+function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
   const[at,setAt]=useState(0);const[ap,setAp]=useState(0);const tlR=useRef<HTMLElement>(null);
   // Hero rotating product showcase — cycles through best cases with image + outcome stat
   const heroShowcase=[
@@ -1241,10 +1248,6 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
   return <div>
     {/* HERO — proof-led split: message (left) · real product visual (right) · proof row in the fold */}
     <section className="hero-s" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"var(--blue)"}}>
-      <video autoPlay muted loop playsInline preload="auto" aria-hidden="true" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0,opacity:.18}}>
-        <source src={process.env.PUBLIC_URL + "/videos/hero.mp4"} type="video/mp4"/>
-        <source src={process.env.PUBLIC_URL + "/videos/hero.mov"} type="video/quicktime"/>
-      </video>
       <div aria-hidden="true" style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(900px 620px at 12% 24%, rgba(0,76,115,.55), transparent 55%), radial-gradient(1100px 760px at 92% -10%, rgba(125,185,232,.22), transparent 55%), linear-gradient(180deg, rgba(0,28,46,.5), rgba(0,28,46,.66))"}}/>
       <div className="hero-grain"/>
       <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:128,paddingBottom:96,color:"var(--on-dark)",minHeight:"calc(100vh - 60px)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
@@ -1253,10 +1256,10 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
           <div className="hero-content">
             <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:32,height:2,background:"var(--accent)"}}/>Product · AI · IoT engineering</span>
             <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(40px,6vw,80px)",fontWeight:800,lineHeight:1.04,letterSpacing:"-0.035em",margin:0,marginBottom:"var(--space-8)",maxWidth:860}}>You've got the idea. <span style={{color:"var(--accent)"}}>We bring the tech.</span></h1>
-            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(17px,1.7vw,22px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-10)",maxWidth:620}}>From AI and IoT to high-fidelity product design, we architect, build, and ship the hard parts. Trusted by teams whose products got acquired.</p>
+            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(17px,1.7vw,22px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-10)",maxWidth:640}}>Senior product engineers for software that has to work in the real world. We help HealthTech, AgTech and IoT teams design, build and scale complex products—from edge AI and device connectivity to native apps and cloud platforms.</p>
             <div className="fi d4" style={{display:"flex",alignItems:"center",gap:"var(--space-4)",flexWrap:"wrap"}}>
-              <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" className="hero-cta">Book a tech assessment <Arr s={14} c="var(--blue)"/></a>
-              <button onClick={()=>go("cases")} className="hero-ghost">See our work <Arr s={14} c="currentColor"/></button>
+              <button onClick={()=>{trackCta("Talk through your product","home_hero","/contact");go("contact");}} className="hero-cta">Talk through your product <Arr s={14} c="var(--blue)"/></button>
+              <button onClick={()=>{trackCta("See our work","home_hero","/work");go("cases");}} className="hero-ghost">See our work <Arr s={14} c="currentColor"/></button>
             </div>
             <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.55)",margin:0,marginTop:"var(--space-4)"}}>30 minutes · no pitch decks · a senior engineer, not a salesperson.</p>
           </div>
@@ -1310,6 +1313,24 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
         </div>
       </W>
     </section>
+    {/* SELF-SELECTION — help visitors recognise which situation they're in */}
+    <section style={{padding:"clamp(64px,8vw,96px) 0"}}><W>
+      <SL ch="How can we help?"/>
+      <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)",letterSpacing:"-.02em",marginBottom:"clamp(28px,4vw,44px)",maxWidth:640}}>Start with the situation you're in.</h2>
+      <div className="selfselect-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
+        {([
+          {need:"new-product",t:"Build a new product",d:"Turn an early concept, validated idea or existing specification into a production-ready product.",a:"Talk about a new product"},
+          {need:"existing-product",t:"Rescue or scale an existing product",d:"Reduce technical debt, improve performance and reliability, or add delivery capacity without losing ownership of the product.",a:"Talk about an existing product"},
+          {need:"ai-iot",t:"Solve a complex AI or IoT challenge",d:"Work through edge AI, connected devices, sensor data, cloud infrastructure or difficult integrations with a senior technical team.",a:"Talk about a technical challenge"},
+        ]).map(c=>(
+          <button key={c.need} type="button" onClick={()=>{trackCta(c.a,"home_self_select","/contact",c.need);go("contact",undefined,`need=${c.need}`);}} className="card svc-card" style={{textAlign:"left",display:"flex",flexDirection:"column",padding:"28px 26px",cursor:"pointer",minHeight:210,background:"var(--bg)"}}>
+            <h3 style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:800,margin:0,marginBottom:10,color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.2}}>{c.t}</h3>
+            <p style={{fontSize:13.5,color:"var(--txt3)",lineHeight:1.6,margin:0,marginBottom:18,flex:1}}>{c.d}</p>
+            <span style={{display:"inline-flex",alignItems:"center",gap:7,fontFamily:"var(--jk)",fontSize:13.5,fontWeight:700,color:"var(--blue)"}}>{c.a}<Arr s={13} c="var(--blue)"/></span>
+          </button>
+        ))}
+      </div>
+    </W></section>
     {/* SERVICES */}
     <section className="grid-bg" style={{padding:"100px 0"}}><W>
       <SL ch="Services"/>
@@ -1485,7 +1506,7 @@ function Home({go}:{go:(p:string,id?:string)=>void}){
 }
 
 /* ── ABOUT ── */
-function About({go}:{go:(p:string,id?:string)=>void}){return <div style={{paddingTop:76}}>
+function About({go}:{go:(p:string,id?:string,q?:string)=>void}){return <div style={{paddingTop:76}}>
   <section style={{padding:"48px 0 64px"}}><W><SL ch="About Us"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver. We handle the tech so you can focus on the <span style={{color:"var(--blue)"}}>big picture.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480}}>A technology consultancy based in Croatia, advising startups and enterprises worldwide.</p>
@@ -1880,7 +1901,17 @@ function ClutchWidget(){
 }
 
 /* ── CASES ── */
-function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void}){
+// One verified headline outcome per case (sourced from each case's own metrics — no invented data).
+const CASE_OUTCOME:{[id:string]:string}={
+  nomo:"Live across all 50 US states",
+  farmwave:"2025 AI Harvest Vision — Solution of the Year",
+  muvr:"Acquired by Exactech",
+  noctrix:"$340M acquisition by ResMed",
+  beunity:"500+ member organisations",
+  drift:"Industry-first crop & trait sharing",
+  crossiety:"Deployed across Switzerland & Germany",
+};
+function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string,q?:string)=>void}){
   const ref=useReveal(0.1);
   const imgRef=useRef<HTMLDivElement>(null);
   useEffect(()=>{
@@ -1904,6 +1935,7 @@ function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
     </div>
     <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"40px"}}>
       <h2 className="reveal d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,color:"#fff",marginBottom:14,lineHeight:1.05,maxWidth:700}}>{c.name}</h2>
+      {CASE_OUTCOME[c.id]&&<span className="reveal d2" style={{display:"inline-flex",alignItems:"center",gap:7,marginBottom:16,background:"rgba(255,255,255,.14)",border:"1px solid rgba(255,255,255,.22)",backdropFilter:"blur(8px)",color:"#fff",padding:"6px 14px",borderRadius:50,fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700}}><span aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:"#8FE3D9",flexShrink:0}}/>{CASE_OUTCOME[c.id]}</span>}
       <p className="reveal d3" style={{fontSize:15,color:"rgba(255,255,255,.65)",lineHeight:1.7,maxWidth:580,marginBottom:24}}>{c.brief}</p>
       <div className="reveal d4" style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
         <span style={{display:"inline-flex",alignItems:"center",gap:8,background:"#fff",color:"var(--blue)",padding:"10px 22px",borderRadius:50,fontSize:13,fontWeight:700,fontFamily:"var(--jk)"}}>View case study <Arr s={13} c="var(--blue)"/></span>
@@ -1912,7 +1944,7 @@ function CaseHeroCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
     </div>
   </div>;
 }
-function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void}){
+function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string,q?:string)=>void}){
   const ref=useReveal(0.1);
   const cardRef=useRef<HTMLDivElement>(null);
   const onMove=(e:React.MouseEvent<HTMLDivElement>)=>{
@@ -1936,13 +1968,14 @@ function CaseGridCard({c,go}:{c:typeof cases[0],go:(p:string,id?:string)=>void})
     </div>
     <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"22px 24px"}}>
       <h2 className="reveal d2" style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"#fff",marginBottom:8,lineHeight:1.15}}>{c.name}</h2>
+      {CASE_OUTCOME[c.id]&&<span className="reveal d2" style={{display:"inline-flex",alignItems:"center",gap:6,marginBottom:10,background:"rgba(255,255,255,.14)",border:"1px solid rgba(255,255,255,.22)",color:"#fff",padding:"4px 11px",borderRadius:50,fontFamily:"var(--jk)",fontSize:11,fontWeight:700}}><span aria-hidden="true" style={{width:5,height:5,borderRadius:"50%",background:"#8FE3D9",flexShrink:0}}/>{CASE_OUTCOME[c.id]}</span>}
       <p className="reveal d3" style={{fontSize:13,color:"rgba(255,255,255,.6)",lineHeight:1.6,marginBottom:12}}>{c.brief}</p>
       <div className="reveal d3" style={{display:"flex",flexWrap:"wrap",gap:5}}>{c.tags.map(t=><span key={t} style={{fontSize:10,color:"rgba(255,255,255,.7)",fontWeight:600,border:"1px solid rgba(255,255,255,.18)",padding:"3px 9px",borderRadius:4,fontFamily:"var(--jk)",background:"rgba(255,255,255,.08)"}}>{t}</span>)}</div>
     </div>
   </div></div>;
 }
 
-function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const fil=filt==="All"?cases:cases.filter(c=>c.cat===filt);const ac=sel?cases.find(c=>c.id===sel):null;
+function Cases({go,sel}:{go:(p:string,id?:string,q?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const fil=filt==="All"?cases:cases.filter(c=>c.cat===filt);const ac=sel?cases.find(c=>c.id===sel):null;
   const acIdx=ac?cases.findIndex(c=>c.id===ac.id):-1;
   const[lbImg,setLbImg]=useState<{src:string,alt:string,caption?:string}|null>(null);
   const[parallaxY,setParallaxY]=useState(0);
@@ -2081,7 +2114,7 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
   return <div style={{paddingTop:76}}><section style={{padding:"48px 0 80px"}}><W>
     <SL ch="Case Studies"/>
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,color:"var(--txt)",marginBottom:16}}>Real challenges. <span style={{color:"var(--blue)"}}>Real outcomes.</span></h1>
-    <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:460,marginBottom:36}}>We've advised clients across healthcare, agriculture, fintech, and beyond.</p>
+    <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:560,marginBottom:36}}>We've designed, built and scaled products across healthcare, agriculture, mobility and SaaS—often across mobile, cloud, AI and connected hardware.</p>
     <div style={{display:"flex",gap:6,marginBottom:40,flexWrap:"wrap"}}>{catList.map(c=><button key={c} className={`fb${filt===c?" active":""}`} onClick={()=>setFilt(c)}>{c}</button>)}</div>
     {fil.length>0&&<>
       {/* Desktop layout: featured hero + grid of the rest */}
@@ -2101,7 +2134,33 @@ function Cases({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[
 
 /* ── BLOG ── */
 const blogSlug=(s:string)=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
-function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const[copied,setCopied]=useState(false);const[activeId,setActiveId]=useState("");const fil=filt==="All"?blogs:blogs.filter(p=>p.cat===filt);const ac=sel?blogs.find(p=>p.id===sel):null;
+// Contextual, in-body article CTAs (not popups). Topic-specific where we have it; generic otherwise.
+type ArtCta={eyebrow:string;heading:string;desc:string;primaryLabel:string;primaryDest:string;secondaryLabel?:string;secondaryDest?:string};
+const ARTICLE_CTAS:{[slug:string]:ArtCta}={
+  "deep-learning-audio-classification":{eyebrow:"Working on something similar?",heading:"Building edge audio or on-device AI?",desc:"We've shipped audio and motion classification in production environments where privacy, latency and reliability matter. Talk through the architecture with a senior engineer.",primaryLabel:"Get an architecture review",primaryDest:"/contact?need=ai-iot&source=audio-article",secondaryLabel:"See the Nomo case study",secondaryDest:"/work/nomo"},
+  "ai-on-microcontrollers":{eyebrow:"Working on something similar?",heading:"Building edge AI or a connected device?",desc:"Get a technical feasibility review covering hardware constraints, model size, connectivity, privacy and the path to production.",primaryLabel:"Review my technical approach",primaryDest:"/contact?need=ai-iot&source=microcontroller-article"},
+  "nomo-smart-care-case-study":{eyebrow:"Working on something similar?",heading:"Building a HealthTech or home-monitoring product?",desc:"Talk through device architecture, native mobile apps, edge intelligence, cloud infrastructure and regulatory constraints with a team that has shipped them together.",primaryLabel:"Talk through the product",primaryDest:"/contact?need=new-product&source=nomo-article"},
+};
+const ARTICLE_CTA_GENERIC:ArtCta={eyebrow:"Working on something similar?",heading:"Have a product like this in mind?",desc:"Talk through the architecture and the path to production with a senior product engineer—no deck, no sales pitch.",primaryLabel:"Talk through your product",primaryDest:"/contact"};
+// Navigate to an internal path string (with optional ?query) via the SPA router.
+function goPath(go:(p:string,id?:string,q?:string)=>void,path:string){
+  const[p,qs]=path.split("?");
+  const parts=p.split("/").filter(Boolean);
+  const map:{[k:string]:string}={work:"cases","for-clients":"services",about:"about",blog:"blog",careers:"careers",press:"press",contact:"contact","app-cost-calculator":"calc"};
+  go(parts.length?(map[parts[0]]||"home"):"home",parts[1],qs||undefined);
+}
+function ArticleCTA({cfg,go,slug}:{cfg:ArtCta;go:(p:string,id?:string,q?:string)=>void;slug:string}){
+  return <aside role="complementary" aria-label="Related next step" style={{margin:"40px 0",padding:"26px 26px 24px",borderRadius:16,border:"1px solid var(--brd)",background:"var(--bg2)"}}>
+    <span style={{display:"inline-block",fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"var(--art, var(--blue))",marginBottom:10}}>{cfg.eyebrow}</span>
+    <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(19px,2.4vw,24px)",fontWeight:800,color:"var(--txt)",lineHeight:1.2,letterSpacing:"-0.01em",margin:"0 0 10px"}}>{cfg.heading}</h3>
+    <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"var(--txt3)",lineHeight:1.65,margin:"0 0 18px",maxWidth:560}}>{cfg.desc}</p>
+    <div style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"center"}}>
+      <button onClick={()=>{trackArticleCtaClick(slug,cfg.primaryLabel,cfg.primaryDest);goPath(go,cfg.primaryDest);}} className="cta-m" style={{display:"inline-flex"}}>{cfg.primaryLabel} <Arr s={14} c="#fff"/></button>
+      {cfg.secondaryLabel&&cfg.secondaryDest&&<button onClick={()=>{trackArticleCtaClick(slug,cfg.secondaryLabel!,cfg.secondaryDest!);goPath(go,cfg.secondaryDest!);}} style={{display:"inline-flex",alignItems:"center",gap:7,background:"none",border:"none",cursor:"pointer",fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--art, var(--blue))",padding:"6px 2px"}}>{cfg.secondaryLabel} <Arr s={13} c="var(--art, var(--blue))"/></button>}
+    </div>
+  </aside>;
+}
+function Blog({go,sel}:{go:(p:string,id?:string,q?:string)=>void,sel:string|null}){const[filt,setFilt]=useState("All");const[copied,setCopied]=useState(false);const[activeId,setActiveId]=useState("");const fil=filt==="All"?blogs:blogs.filter(p=>p.cat===filt);const ac=sel?blogs.find(p=>p.id===sel):null;
   useEffect(()=>{
     if(!ac)return;
     const ids=ac.body.filter(b=>b.type==="heading").map(b=>blogSlug((b as {content:string}).content));
@@ -2168,20 +2227,33 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
           <article style={{minWidth:0,maxWidth:740}}>
             <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,3.6vw,42px)",fontWeight:800,color:"var(--txt)",marginTop:-6,marginBottom:24,lineHeight:1.1,letterSpacing:"-0.025em"}}>{ac.title}</h1>
             <p style={{fontSize:"clamp(18px,2vw,20px)",color:"var(--txt2)",lineHeight:1.7,fontWeight:500,marginBottom:40,paddingBottom:36,borderBottom:"1px solid var(--brd)"}}>{ac.excerpt}</p>
-            {ac.body.map((block:BlogBlock,i:number)=>{
-              if(block.type==="img")return <figure key={i} style={{margin:"26px 0"}}>
-                <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
-                {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
-              </figure>;
-              if(block.type==="heading")return <div key={i} id={slugify(block.content)} style={{scrollMarginTop:100,marginTop:56,marginBottom:18}}>
-                <span aria-hidden="true" style={{display:"block",width:40,height:3,borderRadius:2,background:"linear-gradient(90deg, var(--art, var(--blue)), var(--art, var(--accent)))",marginBottom:16}}/>
-                <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(21px,2.5vw,27px)",fontWeight:800,color:"var(--txt)",lineHeight:1.2,letterSpacing:"-0.01em",margin:0}}>{block.content}</h2>
-              </div>;
-              if(block.type==="code")return <pre key={i} style={{margin:"18px 0",padding:"18px 20px",background:"#0f1c24",color:"#e6edf3",borderRadius:10,fontSize:12.5,lineHeight:1.6,overflowX:"auto",fontFamily:"ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace",border:"1px solid rgba(255,255,255,.06)"}}><code>{block.content}</code></pre>;
-              if(block.type==="quote")return <blockquote key={i} style={{margin:"36px 0",padding:"22px 26px",borderLeft:"3px solid var(--art, var(--blue))",background:"color-mix(in srgb, var(--art, var(--blue)) 8%, transparent)",borderRadius:"0 12px 12px 0",fontFamily:"var(--jk)",fontSize:"clamp(18px,2.3vw,23px)",fontWeight:600,color:"var(--txt)",lineHeight:1.5,letterSpacing:"-0.01em"}}>{renderRichText(block.content)}</blockquote>;
-              if(block.type==="list")return <ul key={i} className="blog-list" style={{paddingLeft:24,marginBottom:24,fontSize:16.5,color:"var(--txt2)",lineHeight:1.9}}>{block.items.map((it,j)=><li key={j} style={{marginBottom:10}}>{renderRichText(it)}</li>)}</ul>;
-              return <p key={i} style={{fontSize:16.5,color:"var(--txt2)",lineHeight:1.9,marginBottom:24}}>{renderRichText(block.content)}</p>;
-            })}
+            {(()=>{
+              const renderBlock=(block:BlogBlock,i:number)=>{
+                if(block.type==="img")return <figure key={i} style={{margin:"26px 0"}}>
+                  <img src={block.src} alt={block.caption||""} loading="lazy" decoding="async" style={{width:"100%",borderRadius:12,display:"block"}}/>
+                  {block.caption&&<figcaption style={{fontSize:12,color:"var(--txt4)",textAlign:"center",marginTop:8}}>{block.caption}</figcaption>}
+                </figure>;
+                if(block.type==="heading")return <div key={i} id={slugify(block.content)} style={{scrollMarginTop:100,marginTop:56,marginBottom:18}}>
+                  <span aria-hidden="true" style={{display:"block",width:40,height:3,borderRadius:2,background:"linear-gradient(90deg, var(--art, var(--blue)), var(--art, var(--accent)))",marginBottom:16}}/>
+                  <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(21px,2.5vw,27px)",fontWeight:800,color:"var(--txt)",lineHeight:1.2,letterSpacing:"-0.01em",margin:0}}>{block.content}</h2>
+                </div>;
+                if(block.type==="code")return <pre key={i} style={{margin:"18px 0",padding:"18px 20px",background:"#0f1c24",color:"#e6edf3",borderRadius:10,fontSize:12.5,lineHeight:1.6,overflowX:"auto",fontFamily:"ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace",border:"1px solid rgba(255,255,255,.06)"}}><code>{block.content}</code></pre>;
+                if(block.type==="quote")return <blockquote key={i} style={{margin:"36px 0",padding:"22px 26px",borderLeft:"3px solid var(--art, var(--blue))",background:"color-mix(in srgb, var(--art, var(--blue)) 8%, transparent)",borderRadius:"0 12px 12px 0",fontFamily:"var(--jk)",fontSize:"clamp(18px,2.3vw,23px)",fontWeight:600,color:"var(--txt)",lineHeight:1.5,letterSpacing:"-0.01em"}}>{renderRichText(block.content)}</blockquote>;
+                if(block.type==="list")return <ul key={i} className="blog-list" style={{paddingLeft:24,marginBottom:24,fontSize:16.5,color:"var(--txt2)",lineHeight:1.9}}>{block.items.map((it,j)=><li key={j} style={{marginBottom:10}}>{renderRichText(it)}</li>)}</ul>;
+                return <p key={i} style={{fontSize:16.5,color:"var(--txt2)",lineHeight:1.9,marginBottom:24}}>{renderRichText(block.content)}</p>;
+              };
+              // Insert the contextual mid-article CTA after the most relevant technical section (2nd heading, else midpoint).
+              const headIdx=ac.body.map((b,i)=>b.type==="heading"?i:-1).filter(i=>i>=0);
+              const cut=headIdx.length>=2?headIdx[1]:(headIdx[0]??Math.floor(ac.body.length/2));
+              const midCfg=ARTICLE_CTAS[ac.id]||ARTICLE_CTA_GENERIC;
+              return <>
+                {ac.body.slice(0,cut).map((b,i)=>renderBlock(b,i))}
+                <ArticleCTA cfg={midCfg} go={go} slug={ac.id}/>
+                {ac.body.slice(cut).map((b,i)=>renderBlock(b,i+cut))}
+              </>;
+            })()}
+            {/* End-of-article CTA */}
+            <ArticleCTA cfg={ARTICLE_CTA_GENERIC} go={go} slug={ac.id}/>
             {/* Author bio */}
             <div style={{marginTop:48,paddingTop:30,borderTop:"1px solid var(--brd)",display:"flex",gap:16,alignItems:"center"}}>
               <img src={ac.authorImg||(process.env.PUBLIC_URL + "/images/default_user.png")} alt={ac.author} loading="lazy" decoding="async" width={56} height={56} onError={(e)=>{(e.target as HTMLImageElement).src=process.env.PUBLIC_URL + "/images/default_user.png";}} style={{width:56,height:56,borderRadius:"50%",objectFit:"cover",objectPosition:"top",flexShrink:0}}/>
@@ -2249,7 +2321,7 @@ function Blog({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const[f
 }
 
 /* ── CAREERS ── */
-function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){const ac=sel?roles.find(r=>r.id===sel):null;
+function Careers({go,sel}:{go:(p:string,id?:string,q?:string)=>void,sel:string|null}){const ac=sel?roles.find(r=>r.id===sel):null;
   if(ac)return <div style={{paddingTop:76}}><section style={{padding:"48px 0 80px"}}><W>
     <Back go={()=>go("careers")} to="" label="All positions"/>
     <div style={{display:"flex",gap:8,marginBottom:12}}><span className="ft">{ac.team}</span><span style={{fontSize:12,color:"var(--txt4)"}}>{ac.type}</span><span style={{fontSize:12,color:"var(--txt4)"}}>{ac.loc}</span></div>
@@ -2284,7 +2356,7 @@ function Careers({go,sel}:{go:(p:string,id?:string)=>void,sel:string|null}){cons
 }
 
 /* ── PRESS ── */
-function Press({go}:{go:(p:string,id?:string)=>void}){
+function Press({go}:{go:(p:string,id?:string,q?:string)=>void}){
   return <div style={{paddingTop:76}}>
     <section style={{padding:"48px 0 24px"}}><W>
       <SL ch="Press"/>
@@ -2324,7 +2396,7 @@ function Press({go}:{go:(p:string,id?:string)=>void}){
 
 /* ── PRIVACY POLICY ── */
 /* ── 404 ── */
-function NotFound({go}:{go:(p:string,id?:string)=>void}){
+function NotFound({go}:{go:(p:string,id?:string,q?:string)=>void}){
   return <div style={{paddingTop:76,minHeight:"calc(100vh - 160px)",display:"flex",alignItems:"center"}}>
     <W style={{maxWidth:720}}>
       <section style={{padding:"80px 0 120px",textAlign:"center"}}>
@@ -2426,15 +2498,37 @@ function Contact({type="project"}:{type?:"project"|"job"}){
   const[dragOver,setDragOver]=useState(false);
   const[form,setForm]=useState({name:"",email:"",company:"",budget:"",message:"",role:"",portfolio:""});
   const set=(k:string)=>(e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>)=>setForm(f=>({...f,[k]:e.target.value}));
+  const[startedTracked,setStartedTracked]=useState(false);
+  // Need / source context passed from homepage self-selection or article CTAs
+  const q=typeof window!=="undefined"?new URLSearchParams(window.location.search):new URLSearchParams();
+  const NEED_LABELS:{[k:string]:string}={"new-product":"Build a new product","existing-product":"Rescue or scale an existing product","ai-iot":"Solve a complex AI or IoT challenge"};
+  const need=(()=>{const n=q.get("need");return n&&NEED_LABELS[n]?n:"";})();
+  const source=q.get("source")||undefined;
+  // Two contact choices: "call" (lazy Calendly) or "brief" (project form). Auto-open brief when a need is passed.
+  const[mode,setMode]=useState<null|"call"|"brief">(isJob?"brief":(need?"brief":null));
+  const panelRef=useRef<HTMLDivElement|null>(null);
   // Visitor's local timezone — Calendly auto-shows slots in this zone; we surface it to kill the "what time is that for me?" doubt for US visitors.
   const tz=(()=>{try{return (Intl.DateTimeFormat().resolvedOptions().timeZone||"").replace(/_/g," ");}catch{return "";}})();
+  // Load the Calendly script only once the visitor chooses the call option, and wire booking analytics.
   useEffect(()=>{
-    if(isJob)return;
+    if(isJob||mode!=="call")return;
     const id="calendly-widget-js";
     if(!document.getElementById(id)){
       const s=document.createElement("script");s.id=id;s.src="https://assets.calendly.com/assets/external/widget.js";s.async=true;document.body.appendChild(s);
     }
-  },[isJob]);
+    const onMsg=(e:MessageEvent)=>{
+      if(typeof e.data!=="object"||!e.data||!(e.data as any).event)return;
+      const ev=(e.data as any).event as string;
+      if(ev==="calendly.profile_page_viewed"||ev==="calendly.event_type_viewed")track("calendly_view",{source,selected_need:need});
+      else if(ev==="calendly.date_and_time_selected")track("calendly_date_selected",{source,selected_need:need});
+      else if(ev==="calendly.event_scheduled")track("calendly_booking_completed",{source,selected_need:need});
+    };
+    window.addEventListener("message",onMsg);
+    return()=>window.removeEventListener("message",onMsg);
+  },[isJob,mode,source,need]);
+  // Move focus to the revealed panel when a choice is made (keyboard-friendly)
+  useEffect(()=>{if(mode&&!isJob&&panelRef.current)panelRef.current.focus();},[mode,isJob]);
+  const chooseMode=(m:"call"|"brief")=>{setMode(m);trackContactOption(m,source,need||undefined);};
   const inputStyle:CSSProperties={width:"100%",padding:"12px 16px",border:"1px solid var(--brd)",borderRadius:10,fontFamily:"var(--in)",fontSize:14,color:"var(--txt)",background:"#fff",outline:"none",transition:"border-color .2s"};
   const labelStyle:CSSProperties={display:"block",fontSize:12,fontWeight:600,color:"var(--txt2)",fontFamily:"var(--jk)",textTransform:"uppercase",letterSpacing:1.2,marginBottom:6};
   const field=(label:string,key:string,t="text",placeholder="")=>(
@@ -2442,6 +2536,12 @@ function Contact({type="project"}:{type?:"project"|"job"}){
   );
   const submit=async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
+    // Lightweight validation (preserves existing required-field behaviour, adds email sanity check)
+    if(!form.name.trim()||!/^\S+@\S+\.\S+$/.test(form.email.trim())){
+      setError("Please add your name and a valid email so we can reply.");
+      trackContactFormError("validation",source);
+      return;
+    }
     setLoading(true);
     setError(null);
     try{
@@ -2462,60 +2562,84 @@ function Contact({type="project"}:{type?:"project"|"job"}){
         }
         await emailjs.sendForm(serviceId,process.env.REACT_APP_EMAILJS_JOB_TEMPLATE_ID!,tempForm,publicKey);
       }else{
+        const category=need?NEED_LABELS[need]:"";
         await emailjs.send(serviceId,process.env.REACT_APP_EMAILJS_CONTACT_TEMPLATE_ID!,{
           from_name:form.name,
           from_email:form.email,
           company:form.company,
-          message:form.message,
+          message:(category?`[Need: ${category}]\n\n`:"")+form.message,
+          project_category:category,
         },publicKey);
       }
       setSent(true);
+      trackContactFormSubmit(source,need||undefined);
     }catch(err){
       setError("Something went wrong. Please try again or email us directly.");
+      trackContactFormError("provider",source);
     }finally{
       setLoading(false);
     }
   };
+  // Fire contact_form_start once, when the visitor first edits the project form
+  const onFormInteract=()=>{if(!startedTracked){setStartedTracked(true);trackContactFormStart(source,need||undefined);}};
   return <div style={{paddingTop:76}}>
     <section style={{padding:"72px 0 80px",background:"var(--bg)"}}>
       <W>
         <div style={{maxWidth:680,margin:"0 auto"}}>
           <SL ch={isJob?"Join us":"Contact"}/>
-          <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,5vw,56px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,letterSpacing:-1.5}}>
-            {isJob?(<>Join the<br/><span style={{color:"var(--blue)"}}>team.</span></>):(<>Let's build something<br/><span style={{color:"var(--blue)"}}>together.</span></>)}
+          <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(34px,5vw,52px)",fontWeight:800,lineHeight:1.02,color:"var(--txt)",marginBottom:16,letterSpacing:-1.5}}>
+            {isJob?(<>Join the<br/><span style={{color:"var(--blue)"}}>team.</span></>):(<>Let's talk about what you're building.</>)}
           </h1>
-          <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.7,marginBottom:40}}>
-            {isJob?"Tell us about yourself and what you're looking for. We read every application.":"Tell us about your project. We'll get back to you within 1 to 2 business days."}
+          <p style={{fontSize:16,color:"var(--txt2)",lineHeight:1.7,marginBottom:isJob?40:28}}>
+            {isJob?"Tell us about yourself and what you're looking for. We read every application.":"Choose a time or send us the context first. You'll hear directly from a senior product engineer within one business day."}
           </p>
           {!isJob&&<>
-            {/* US trust strip */}
-            <div style={{display:"flex",alignItems:"center",gap:"10px 18px",flexWrap:"wrap",padding:"14px 0",marginBottom:32,borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
-              <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--txt4)",letterSpacing:1.5,textTransform:"uppercase"}}>Trusted by US companies</span>
+            {/* Trust strip (kept, secondary to the two choices) */}
+            <div style={{display:"flex",alignItems:"center",gap:"8px 16px",flexWrap:"wrap",padding:"12px 0",marginBottom:20,borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
+              <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--txt4)",letterSpacing:1.5,textTransform:"uppercase"}}>Trusted by</span>
               {["Nomo","Farmwave","Noctrix → ResMed"].map(n=><span key={n} style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--txt2)"}}>{n}</span>)}
               <span style={{display:"inline-flex",alignItems:"center",gap:6,marginLeft:"auto"}}><span aria-hidden="true" style={{color:"#E8A33D",fontSize:11,letterSpacing:-1}}>★★★★★</span><span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt2)"}}>5.0 · Clutch</span></span>
             </div>
-            {/* Book a call — timezone aware */}
-            <div style={{marginBottom:36}}>
-              <h2 style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"var(--txt)",marginBottom:6}}>Grab a 30-minute slot</h2>
-              <p style={{display:"flex",alignItems:"center",gap:8,fontSize:13.5,color:"var(--txt3)",lineHeight:1.55,marginBottom:16}}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                <span>Times shown in your timezone{tz?` (${tz})`:""} — we keep hours that overlap with US business days.</span>
-              </p>
-              <div className="calendly-inline-widget" data-url="https://calendly.com/jurica-lumo-lab/30min?hide_gdpr_banner=1" style={{minWidth:320,height:680,border:"1px solid var(--brd)",borderRadius:14,overflow:"hidden"}}/>
+            {/* Founder / human element */}
+            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:22}}>
+              <img src={process.env.PUBLIC_URL+"/images/jurica.png"} alt="Jurica Mlinarić, founder of Lumo Lab" width={40} height={40} loading="lazy" style={{width:40,height:40,borderRadius:"50%",objectFit:"cover",flexShrink:0,border:"1px solid var(--brd)"}}/>
+              <p style={{fontSize:13.5,color:"var(--txt3)",lineHeight:1.5,margin:0}}>You'll speak with <strong style={{color:"var(--txt2)",fontWeight:700}}>Jurica Mlinarić</strong>, founder of Lumo Lab, or another senior product engineer—not a salesperson.</p>
             </div>
-            {/* divider */}
-            <div style={{display:"flex",alignItems:"center",gap:16,margin:"4px 0 30px"}}>
-              <span style={{flex:1,height:1,background:"var(--brd)"}}/>
-              <span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"var(--txt4)",letterSpacing:1,textTransform:"uppercase"}}>or send a message</span>
-              <span style={{flex:1,height:1,background:"var(--brd)"}}/>
+            {need&&<div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"8px 14px",borderRadius:50,background:"var(--bl)",border:"1px solid var(--brd)",marginBottom:18}}>
+              <span style={{width:7,height:7,borderRadius:"50%",background:"var(--blue)",flexShrink:0}}/>
+              <span style={{fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,color:"var(--blue)"}}>{NEED_LABELS[need]}</span>
+            </div>}
+            {/* Two contact choices */}
+            <div className="contact-choices" role="group" aria-label="How would you like to get in touch?" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:mode?26:8}}>
+              {([
+                {k:"call" as const,t:"Book a 30-minute call",d:"Pick a time that works for you. No deck, no sales pitch—just an honest conversation about the product and the engineering behind it.",a:"Choose a time"},
+                {k:"brief" as const,t:"Send a project brief",d:"Share the idea, current situation, timeline and constraints. We'll review it and reply in writing before asking you to book anything.",a:"Send the brief"},
+              ]).map(c=>{const on=mode===c.k;return (
+                <button key={c.k} type="button" onClick={()=>chooseMode(c.k)} aria-expanded={on} aria-controls="contact-panel" className="contact-choice-card" style={{textAlign:"left",display:"flex",flexDirection:"column",gap:8,padding:"18px 18px 16px",borderRadius:14,border:`1.5px solid ${on?"var(--blue)":"var(--brd)"}`,background:on?"var(--bl)":"var(--bg)",cursor:"pointer",transition:"border-color .2s, background .2s"}}>
+                  <span style={{fontFamily:"var(--jk)",fontSize:15.5,fontWeight:800,color:on?"var(--blue)":"var(--txt)"}}>{c.t}</span>
+                  <span style={{fontFamily:"var(--in)",fontSize:12.5,color:"var(--txt3)",lineHeight:1.55}}>{c.d}</span>
+                  <span style={{marginTop:"auto",display:"inline-flex",alignItems:"center",gap:6,fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)"}}>{c.a}<Arr s={13} c="var(--blue)"/></span>
+                </button>
+              );})}
+            </div>
+            {/* Revealed panel */}
+            <div id="contact-panel" ref={panelRef} tabIndex={-1} style={{outline:"none",scrollMarginTop:96}}>
+              {mode==="call"&&<div style={{marginBottom:8}}>
+                <p style={{display:"flex",alignItems:"center",gap:8,fontSize:13.5,color:"var(--txt3)",lineHeight:1.55,marginBottom:14}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  <span>Times shown in your timezone{tz?` (${tz})`:""} — we keep hours that overlap with US business days.</span>
+                </p>
+                <div className="calendly-inline-widget" data-url="https://calendly.com/jurica-lumo-lab/30min?hide_gdpr_banner=1" style={{minWidth:320,height:680,border:"1px solid var(--brd)",borderRadius:14,overflow:"hidden"}}/>
+              </div>}
+              {mode==="brief"&&<h2 style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"var(--txt)",margin:"0 0 16px"}}>Send a project brief</h2>}
             </div>
           </>}
-          {sent?<div style={{textAlign:"center",padding:"56px 0"}}>
+          {(isJob||mode==="brief")&&(sent?<div style={{textAlign:"center",padding:"56px 0"}}>
             <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(0,76,115,.08)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--blue)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
             <h3 style={{fontFamily:"var(--jk)",fontSize:22,fontWeight:700,color:"var(--txt)",marginBottom:8}}>Message sent!</h3>
             <p style={{fontSize:15,color:"var(--txt3)"}}>We'll get back to you within 1 to 2 business days.</p>
           </div>:
-          <form onSubmit={submit} style={{display:"flex",flexDirection:"column",gap:20}}>
+          <form onSubmit={submit} onFocusCapture={onFormInteract} style={{display:"flex",flexDirection:"column",gap:20}}>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
               {field("Full name","name","text","Jane Smith")}
               {field("Email","email","email","jane@company.com")}
@@ -2555,7 +2679,7 @@ function Contact({type="project"}:{type?:"project"|"job"}){
             </>}
             {error&&<p style={{fontSize:13,color:"#c0392b",background:"rgba(192,57,43,.07)",border:"1px solid rgba(192,57,43,.2)",borderRadius:8,padding:"10px 14px"}}>{error}</p>}
             <button type="submit" disabled={loading} className="cta-m" style={{alignSelf:"flex-start",marginTop:4,opacity:loading?0.7:1,cursor:loading?"not-allowed":"pointer"}}>{loading?"Sending…":"Send message"} {!loading&&<Arr s={14} c="#fff"/>}</button>
-          </form>}
+          </form>)}
         </div>
       </W>
     </section>
@@ -2990,7 +3114,8 @@ function applySeo(page:string,subId:string|null){
   const seo=getSeo(page,subId);
   document.title=seo.title;
   setMeta("name","description",seo.description);
-  setLink("canonical",seo.url);
+  // 404s are noindex and should be self-referential — never point a not-found URL at another page's canonical.
+  setLink("canonical",page==="notfound"&&typeof window!=="undefined"?window.location.origin+window.location.pathname:seo.url);
   // Open Graph
   setMeta("property","og:type",seo.type);
   setMeta("property","og:site_name",SITE_NAME);
@@ -3138,7 +3263,7 @@ function CCGroup({label,children}:{label:string,children:React.ReactNode}){
     {children}
   </div>;
 }
-function CostCalc({go}:{go:(p:string,id?:string)=>void}){
+function CostCalc({go}:{go:(p:string,id?:string,q?:string)=>void}){
   // Config can be pre-loaded from a shareable URL (?need=…&stage=…&feat=…)
   const q0=typeof window!=="undefined"?new URLSearchParams(window.location.search):new URLSearchParams();
   const qs=(k:string,d:string)=>q0.get(k)||d;
@@ -3183,7 +3308,7 @@ function CostCalc({go}:{go:(p:string,id?:string)=>void}){
     window.history.replaceState(null,"",window.location.pathname+(str?"?"+str:""));
   },[need,maturity,industry,platforms,design,dsn,feats,ai,integrations,compliance,scale,hasHardware,rush,customCap]);
   const copyLink=async()=>{
-    try{await navigator.clipboard.writeText(window.location.href);setCopied(true);setTimeout(()=>setCopied(false),2000);}catch{}
+    try{await navigator.clipboard.writeText(window.location.href);setCopied(true);setTimeout(()=>setCopied(false),2000);track("calculator_share_link",{project_type:need,stage:maturity});}catch{}
   };
   const reset=()=>{setNeed("build");setMaturity("mvp");setIndustry("");setPlatforms([]);setDesign("standard");setDsn([]);setFeats([]);setCustomCap("");setAi([]);setHasHardware(false);setIntegrations([]);setCompliance([]);setScale("pilot");setRush(false);};
   const downloadPdf=()=>{
@@ -3244,6 +3369,7 @@ ${customHtml}
     cw.onafterprint=()=>{try{document.body.removeChild(iframe);}catch{}};
     setTimeout(()=>{try{cw.focus();cw.print();}catch{}},350);
     setTimeout(()=>{try{if(iframe.parentNode)document.body.removeChild(iframe);}catch{}},60000);
+    track("calculator_pdf_download",{project_type:need,stage:maturity,estimate_band:estimateBand});
   };
   const isDiscovery=need==="discovery";
   const includeDev=need==="dev"||need==="build";
@@ -3281,6 +3407,16 @@ ${customHtml}
   const extraH=includeDev?(sumDays(feats,CC_FEATURES)[1]+sumDays(ai,CC_AI)[1]+sumDays(integrations,CC_INTEGRATIONS)[1]):0;
   const wl=Math.max(2,Math.round(m.wk[0]*platMult*(rush?0.85:1)));
   const wh=Math.round(m.wk[1]*platMult+extraH/10);
+  // ── Analytics (non-sensitive params only — never the free-text description) ──
+  const estimateBand=(()=>{if(isDiscovery)return "discovery";const mid=(low+high)/2;if(mid<15000)return "under_15k";if(mid<40000)return "15k_40k";if(mid<80000)return "40k_80k";return "80k_plus";})();
+  const calcParams=()=>({project_type:need,stage:maturity,industry:industry||undefined,platform_count:platforms.length,timeline:timeline||undefined,estimate_band:estimateBand});
+  useEffect(()=>{track("calculator_started");},[]);
+  const completedRef=useRef(false);
+  useEffect(()=>{
+    if(!completedRef.current&&(need==="discovery"||(platforms.length>0&&(feats.length>0||ai.length>0)))){
+      completedRef.current=true;track("calculator_completed",calcParams());
+    }
+  });// eslint-disable-line react-hooks/exhaustive-deps
   const ccInput:React.CSSProperties={width:"100%",boxSizing:"border-box",padding:"11px 13px",borderRadius:10,border:"1px solid rgba(255,255,255,.25)",backgroundColor:"rgba(255,255,255,.1)",color:"#fff",fontFamily:"var(--in)",fontSize:14,marginBottom:8};
   const toggle=(arr:string[],set:(v:string[])=>void,k:string)=>set(arr.includes(k)?arr.filter(x=>x!==k):[...arr,k]);
   // Native (iOS/Android) and cross-platform are mutually exclusive
@@ -3334,6 +3470,7 @@ ${customHtml}
     try{
       await emailjs.send(process.env.REACT_APP_EMAILJS_SERVICE_ID!,process.env.REACT_APP_EMAILJS_CONTACT_TEMPLATE_ID!,{from_name:company||"Cost calculator lead",from_email:email,company:company||"Cost calculator lead",message:summary},process.env.REACT_APP_EMAILJS_PUBLIC_KEY!);
       setSent(true);
+      track("calculator_lead",calcParams());
     }catch{setErr(true);}finally{setSending(false);}
   };
   return <div className="cc-page" style={{paddingTop:76}}>
@@ -3442,22 +3579,22 @@ ${customHtml}
             {sent
               ? <div style={{textAlign:"center",padding:"8px 0"}}>
                   <div style={{width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-                  <p style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,margin:"0 0 6px"}}>Your Discovery is on its way</p>
-                  <p style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.8)",margin:0}}>We'll review your project and follow up within one business day.</p>
+                  <p style={{fontFamily:"var(--jk)",fontSize:16,fontWeight:800,margin:"0 0 6px"}}>Your estimate is on its way</p>
+                  <p style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.8)",margin:0}}>We'll review the scope and follow up with the main technical risks and recommended next step within one business day.</p>
                 </div>
               : <form onSubmit={submit} noValidate>
                   <div style={{display:"flex",alignItems:"flex-start",gap:9,marginBottom:16,paddingBottom:16,borderBottom:"1px solid rgba(255,255,255,.14)"}}>
                     <div style={{display:"flex",gap:1.5,flexShrink:0,marginTop:1}}>{[0,1,2,3,4].map(i=><svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#FFC24B" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
                     <span style={{fontFamily:"var(--in)",fontSize:12,color:"rgba(255,255,255,.82)",lineHeight:1.5}}>“Strong communication, timely delivery, and a user-centric approach.” — Jen McCarthy, Drift App</span>
                   </div>
-                  <p style={{fontFamily:"var(--jk)",fontSize:15.5,fontWeight:800,margin:"0 0 4px"}}>Get your free Discovery</p>
-                  <p style={{fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.72)",margin:"0 0 14px",lineHeight:1.5}}>Tell us where to send it. A senior engineer reviews every request personally.</p>
+                  <p style={{fontFamily:"var(--jk)",fontSize:15.5,fontWeight:800,margin:"0 0 4px"}}>Get this estimate reviewed</p>
+                  <p style={{fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.72)",margin:"0 0 14px",lineHeight:1.5}}>Email yourself the estimate and have a senior engineer add the biggest technical risks and the recommended next step.</p>
                   <input type="email" className="cc-input" value={email} onChange={e=>{setEmail(e.target.value);if(emailErr)setEmailErr(false);}} aria-invalid={emailErr} placeholder="Email" style={{...ccInput,marginBottom:emailErr?5:8,border:`1px solid ${emailErr?"#ff9d9d":"rgba(255,255,255,.25)"}`}}/>
                   {emailErr&&<p style={{fontFamily:"var(--in)",fontSize:12,color:"#ffd7d7",margin:"0 0 9px",display:"flex",alignItems:"center",gap:6}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>Please enter a valid email so we can send your Discovery.</p>}
                   <input type="text" className="cc-input" value={company} onChange={e=>setCompany(e.target.value)} placeholder="Company" style={ccInput}/>
                   <select className="cc-select" value={timeline} onChange={e=>setTimeline(e.target.value)} style={ccInput}><option value="">Timeline</option>{["ASAP","1–3 months","3–6 months","Exploring"].map(o=><option key={o} value={o}>{o}</option>)}</select>
-                  <button type="submit" disabled={sending} className="cc-send" style={{width:"100%",justifyContent:"center",display:"inline-flex",alignItems:"center",gap:8,background:"#fff",color:"var(--blue)",border:"none",borderRadius:50,padding:"13px",marginTop:2,fontFamily:"var(--jk)",fontSize:14.5,fontWeight:700,cursor:sending?"default":"pointer",opacity:sending?.7:1}}>{sending?"Sending…":<>Send my free Discovery <Arr s={15} c="var(--blue)"/></>}</button>
-                  <p style={{fontFamily:"var(--in)",fontSize:11,color:"rgba(255,255,255,.5)",margin:"9px 0 0"}}>No cost, no obligation.</p>
+                  <button type="submit" disabled={sending} className="cc-send" style={{width:"100%",justifyContent:"center",display:"inline-flex",alignItems:"center",gap:8,background:"#fff",color:"var(--blue)",border:"none",borderRadius:50,padding:"13px",marginTop:2,fontFamily:"var(--jk)",fontSize:14.5,fontWeight:700,cursor:sending?"default":"pointer",opacity:sending?.7:1}}>{sending?"Sending…":<>Email me the estimate + engineer notes <Arr s={15} c="var(--blue)"/></>}</button>
+                  <p style={{fontFamily:"var(--in)",fontSize:11,color:"rgba(255,255,255,.5)",margin:"9px 0 0"}}>No cost, no obligation. A senior engineer reviews every request personally.</p>
                   {err&&<p style={{fontFamily:"var(--in)",fontSize:12,color:"#ffd7d7",margin:"9px 0 0"}}>Something went wrong. Email hello@lumo-lab.com and we'll follow up.</p>}
                 </form>}
             <button onClick={()=>go("contact")} style={{width:"100%",marginTop:10,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}>Prefer to talk? Book a call</button>
@@ -3511,7 +3648,7 @@ ${customHtml}
 }
 
 // Once-per-session CTA popup — fires after a dwell delay or on exit-intent
-function SessionPopup({go,page}:{go:(p:string,id?:string)=>void,page:string}){
+function SessionPopup({go,page}:{go:(p:string,id?:string,q?:string)=>void,page:string}){
   const[show,setShow]=useState(false);const[vis,setVis]=useState(false);
   useEffect(()=>{
     if(page==="contact"||page==="calc")return;
@@ -3522,7 +3659,7 @@ function SessionPopup({go,page}:{go:(p:string,id?:string)=>void,page:string}){
       try{sessionStorage.setItem("lumo_cta_seen","1");}catch{}
       setShow(true);setTimeout(()=>setVis(true),30);
     };
-    const t=setTimeout(open,18000);
+    const t=setTimeout(open,20000);
     const onLeave=(e:MouseEvent)=>{if(e.clientY<=0&&!e.relatedTarget)open();};
     document.addEventListener("mouseout",onLeave);
     return()=>{clearTimeout(t);document.removeEventListener("mouseout",onLeave);};
@@ -3565,9 +3702,20 @@ export default function App(){
     return()=>window.removeEventListener("popstate",onPop);
   },[]);
   // SEO: update title, meta tags, canonical, OG, Twitter, and JSON-LD on every route change
-  useEffect(()=>{applySeo(page,subId);},[page,subId]);
-  const go=(p:string,id?:string)=>{
-    window.history.pushState({page:p,id:id||null},"",toPath(p,id));
+  useEffect(()=>{
+    applySeo(page,subId);
+    // SPA page view (first call is suppressed — gtag "config" already sent it)
+    trackPageView(window.location.pathname,document.title);
+    if(page==="cases"&&subId)trackCaseStudyView(subId);
+  },[page,subId]);
+  const go=(p:string,id?:string,query?:string)=>{
+    // Preserve UTM / referral context across in-app navigation, then merge any explicit query (e.g. need=…)
+    const cur=new URLSearchParams(window.location.search);
+    const carry=new URLSearchParams();
+    ["utm_source","utm_medium","utm_campaign","utm_term","utm_content","gclid","ref"].forEach(k=>{const v=cur.get(k);if(v)carry.set(k,v);});
+    if(query)new URLSearchParams(query).forEach((v,k)=>carry.set(k,v));
+    const qs=carry.toString();
+    window.history.pushState({page:p,id:id||null},"",toPath(p,id)+(qs?`?${qs}`:""));
     setPage(p);setSubId(id||null);
     window.scrollTo({top:0,behavior:"auto"});
   };

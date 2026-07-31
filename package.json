@@ -45,8 +45,10 @@
       "/blog/deep-learning-audio-classification",
       "/blog/ai-on-microcontrollers",
       "/careers",
+      "/careers/open",
       "/press",
       "/contact",
+      "/app-cost-calculator",
       "/privacy-policy"
     ],
     "skipThirdPartyRequests": true,

@@ -175,9 +175,9 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
   .lumo div.about-stats>div>div{font-size:26px!important}
   .lumo div.about-stats>div>p{font-size:9px!important;letter-spacing:1.4px!important}
   /* About: team grid — 3 columns on mobile so the photos are smaller */
-  .lumo div.team-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
-  .lumo div.team-grid h3{font-size:13px!important}
-  .lumo div.team-grid p{font-size:10px!important}
+  .lumo div.team-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:14px!important}
+  .lumo div.team-grid h3{font-size:15px!important}
+  .lumo div.team-grid p{font-size:12px!important}
   .lumo div.team-grid>div>div:last-child{padding:14px 14px 16px!important}
   /* Work index: drop the giant hero on mobile, show every case stacked one per row */
   .lumo .work-hero-wrap{display:none!important}
@@ -403,11 +403,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 @media(max-width:820px){.selfselect-grid{grid-template-columns:1fr!important}}
 .proof-item{transition:background .2s}
 .proof-item:hover{background:var(--bl)}
-.selfselect-row{transition:background .2s}
-.selfselect-row:hover{background:var(--bl)}
-.selfselect-row:hover .selfselect-cta{gap:12px}
-.selfselect-cta{transition:gap .2s}
-@media(max-width:640px){.selfselect-row{flex-direction:column!important;align-items:flex-start!important;gap:12px!important;padding:20px 2px!important}}
+.selfselect-row button{transition:gap .2s,color .2s}
+@media(max-width:640px){.selfselect-row{flex-direction:column!important;align-items:flex-start!important;gap:14px!important;padding:20px 2px!important}.selfselect-actions{flex-direction:row!important;gap:18px!important;align-items:center!important}}
 .flagship-card{transition:box-shadow .25s, border-color .25s}
 .flagship-card:hover{box-shadow:0 16px 40px rgba(0,30,50,.12)}
 .flagship-card:hover .flagship-cta{gap:11px}
@@ -416,8 +413,49 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .flagship-card:hover .flagship-img img{transform:scale(1.04)}
 .flagship-desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 @media(max-width:900px){.flagship-grid{grid-template-columns:1fr!important}.flagship-desc{-webkit-line-clamp:3}}
+@keyframes hero-kb{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-1.5%,-1.2%)}}
+.hero-kb{animation:hero-kb 24s ease-in-out infinite alternate;will-change:transform}
+@keyframes hero-co{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+.hero-callout{opacity:0;animation:hero-co .75s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes hero-ripple{0%{transform:scale(.7);opacity:.75}100%{transform:scale(2.8);opacity:0}}
+.hero-pulse-ring{animation:hero-ripple 2.4s ease-out infinite}
+@media(prefers-reduced-motion:reduce){.hero-kb,.hero-callout,.hero-pulse-ring{animation:none!important}.hero-callout{opacity:1}.hero-pulse-ring{opacity:.35}}
+.lumo .hero-s.hero-text{min-height:100vh!important;min-height:100svh!important;min-height:100dvh!important;display:flex!important;align-items:center!important}
+.lumo .hero-s.hero-text .hero-w{min-height:auto!important;justify-content:center!important;width:100%}
+.mq-slow{animation-duration:70s!important}
+@media(prefers-reduced-motion:reduce){.mq-slow{animation:none!important}}
+@media(max-width:640px){.hero-clients>div{flex-direction:column!important}.hero-clients>div>div:first-child{border-right:none!important;border-bottom:1px solid var(--brd)!important;padding:12px 16px!important;width:100%!important}.hero-clients>div>div:last-child{padding:12px 0!important}}
+@media(max-width:640px){.hero-br{display:none}.hero-ctas{flex-direction:column!important;gap:14px!important}.hero-ctas .hero-cta{width:100%;justify-content:center}}
+#hero-review-panel .cc-input::placeholder{color:rgba(255,255,255,.5)}
+.hero-polys{position:absolute;left:-6%;top:-6%;width:112%;height:112%;display:block;will-change:transform;animation:polysPan 120s ease-in-out infinite alternate}
+@keyframes polysPan{from{transform:translate3d(-2.5%,-1.5%,0)}to{transform:translate3d(2.5%,1.5%,0)}}
+.hero-poly{transform-box:fill-box;transform-origin:center;will-change:transform;animation:polyDrift ease-in-out infinite alternate}
+@keyframes polyDrift{from{transform:translate(-90px,-40px) rotate(-6deg) scale(.95)}to{transform:translate(90px,40px) rotate(6deg) scale(1.06)}}
+@media(max-width:640px){.hero-polys{opacity:.7}}
+@media(prefers-reduced-motion:reduce){.hero-poly,.hero-polys{animation:none!important}}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(48px);opacity:.75;will-change:transform;mix-blend-mode:screen}
+@media(max-width:640px){.hero-orb{filter:blur(32px)}}
+@media(prefers-reduced-motion:reduce){.hero-orb{animation:none!important}}
+.hpwall-item{transition:background .2s}
+@media(hover:hover){.hpwall-item:hover{background:var(--bl)}}
+@media(max-width:720px){.hpwall{grid-template-columns:1fr 1fr!important}.hpwall-item{border-left:none!important}.hpwall-item:nth-child(even){border-left:1px solid var(--brd)!important}.hpwall-item:nth-child(n+3){border-top:1px solid var(--brd)}}
+.sw-card{transition:box-shadow .25s}
+.sw-cta{transition:gap .2s}
+.sw-imgbtn img{transition:transform .5s cubic-bezier(.22,1,.36,1)}
+@media(hover:hover){.sw-card:hover{box-shadow:0 18px 46px rgba(0,30,50,.12)}.sw-card:hover .sw-imgbtn img{transform:scale(1.03)}.sw-cta:hover{gap:11px}}
+@media(max-width:820px){.sw-grid{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){.sw-imgbtn img{transition:none!important}.sw-card:hover .sw-imgbtn img{transform:none!important}}
 @media(prefers-reduced-motion:reduce){.flagship-card .flagship-img img{transition:none}.flagship-card:hover .flagship-img img{transform:none}}
 @media(max-width:820px){.proof-section{display:none!important}}
+.hero-metric{transition:padding-left .2s,opacity .2s}
+@media(hover:hover){.hero-metric:hover{padding-left:10px!important}.hero-metric:hover span:last-child{color:rgba(255,255,255,.85)!important}}
+.hero-proj{transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
+@media(hover:hover){.hero-proj:hover{transform:translateY(-4px);box-shadow:0 26px 56px rgba(0,14,24,.42)}}
+@media(prefers-reduced-motion:reduce){.hero-proj{transition:none!important}.hero-proj:hover{transform:none!important}}
+@media(max-width:900px){.hero-visual{max-width:340px;margin:0 auto}}
+@media(max-width:560px){.hero-visual{grid-template-columns:1fr 1fr!important;max-width:420px}.hp-main{grid-column:1 / span 2!important;grid-row:1!important}.hp-main>.hero-proj{aspect-ratio:16 / 10!important}.hp-a{grid-column:1!important;grid-row:2!important}.hp-b{grid-column:2!important;grid-row:2!important}}
+@media(max-width:820px){.founder-grid{grid-template-columns:1fr!important;gap:26px!important;max-width:520px}.founder-photo{max-width:300px;aspect-ratio:1/1!important}}
+@media(max-width:640px){.proc-row{grid-template-columns:1fr!important;gap:22px!important}.proc-row>div[aria-hidden="true"]{display:none!important}}
 @media(prefers-reduced-motion:reduce){.contact-choice-card,.cc-send,.cta-m{transition:none!important}}
 .cc-mobilebar{display:none;transition:transform .3s cubic-bezier(.23,1,.32,1)}
 .cc-mobilebar.cc-hide{transform:translateY(130%)}
@@ -557,7 +595,7 @@ const svcs=[
   {n:"05",t:"AI & Data Strategy",hl:"Turn data into a strategic asset.",d:"AI/ML solutions that automate decisions, surface insights, and create intelligent capabilities.",del:["AI/ML strategy","Data pipelines","Analytics infrastructure","Automation"],tech:["Python","TensorFlow","Data Engineering","ML Ops"]},
 ];
 const engs=[{t:"Technology Strategy & Advisory",d:"We assess your landscape and recommend a clear path forward."},{t:"Embedded Consulting Teams",d:"Our team integrates with yours and delivers alongside you."},{t:"Defined Engagements",d:"Scoped initiative, dedicated team, predictable outcome."},{t:"Knowledge Transfer & Workshops",d:"Sessions that level up your in-house capabilities."},{t:"Startup Partnership",d:"We co-invest our expertise. Risk, vision, and equity shared."}];
-const proc=[{ph:"Assess",n:"01",d:"Deep-dive into your business and technology landscape."},{ph:"Advise",n:"02",d:"Every recommendation backed by research and aligned with objectives."},{ph:"Deliver",n:"03",d:"Clean, scalable solutions in iterative sprints."},{ph:"Evolve",n:"04",d:"Ongoing advisory. We guide your technology evolution."}];
+const proc=[{ph:"Initial discussion",n:"01",d:"A short call to understand the product, the technical challenge, and where you are today."},{ph:"Review the situation",n:"02",d:"We look at the code, architecture or spec and give an honest read on scope and risk."},{ph:"Agree scope & delivery",n:"03",d:"We define what we'll deliver and how we'll work — owning delivery or alongside your team."},{ph:"Begin the work",n:"04",d:"Senior engineers start building, with clear communication throughout."}];
 const tests=[
   {q:"Our partnership with Lumo Lab has been instrumental in shaping our long-term vision. They've consistently delivered innovative solutions that align with our strategic goals. The team's deep understanding of our business, coupled with their technical expertise, has been invaluable. We're excited to continue our journey with Lumo Lab as we embark on new challenges and opportunities.",n:"Kevin Ray",r:"Co-Founder & CTO",co:"Nomo International Inc",linkedin:"https://www.linkedin.com/in/kevinjray/",website:"https://nomosmartcare.com",img:process.env.PUBLIC_URL+"/images/kev.png",caseId:"nomo"},
   {q:"It's been great working with Lumo Lab. Jurica and his team have consistently delivered results with clear communication and a regular cadence of updates and insights into progress. Lumo has done more for us in 7 months than internal teams did in 18 months. We look forward to a long term strategy with Lumo Lab.",n:"Craig Ganssle",r:"CEO",co:"Farmwave Inc",linkedin:"https://www.linkedin.com/in/craigganssle/",website:"https://farmwave.io",img:process.env.PUBLIC_URL+"/images/craig.jpeg",caseId:"farmwave"},
@@ -936,10 +974,10 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
           <span className="logo-txt" style={{fontFamily:"var(--jk)",fontSize:18,fontWeight:600,color:"var(--blue)",letterSpacing:-.3}}>lumo lab</span>
         </button>
         <div className="nav-links" style={{display:"flex",alignItems:"center",gap:2}}>
-          {[{l:"Services",p:"services"},{l:"Work",p:"cases"},{l:"About",p:"about"},{l:"Insights",p:"blog"}].map(({l,p})=>
+          {[{l:"Work",p:"cases"},{l:"Expertise",p:"services"},{l:"About",p:"about"},{l:"Insights",p:"blog"}].map(({l,p})=>
             <button key={l} onClick={()=>nav(p)} aria-current={page===p?"page":undefined} style={{color:page===p?"var(--blue)":"var(--txt3)",background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:page===p?600:500,fontFamily:"var(--in)",padding:"6px 12px",borderRadius:6}}>{l}</button>
           )}
-          <button onClick={()=>{trackCta("Let's talk","nav_desktop","/contact");nav("contact");}} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Let's talk</button>
+          <button onClick={()=>{trackCta("Talk to an engineer","nav_desktop","/contact");nav("contact");}} className="cta-m" style={{padding:"8px 20px",fontSize:12,marginLeft:8}}>Talk to an engineer <Arr s={12} c="#fff"/></button>
           <button onClick={toggleDark} aria-label="Toggle dark mode" style={{background:"none",border:"1px solid var(--brd)",borderRadius:20,cursor:"pointer",width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--txt3)",marginLeft:6,transition:"all .2s",flexShrink:0}}>
             {dark?<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v1M12 20v1M4.22 4.22l.71.71M18.36 18.36l.71.71M3 12h1M20 12h1M4.93 19.07l.71-.71M18.36 5.64l.71-.71M12 7a5 5 0 100 10A5 5 0 0012 7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>:<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
           </button>
@@ -957,14 +995,14 @@ function Nav({page,go,dark,toggleDark}:{page:string,go:(p:string)=>void,dark:boo
         {/* Nav links */}
         <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",paddingBottom:24,padding:"0 clamp(24px,6vw,64px)"}}>
           <div style={{display:"flex",flexDirection:"column"}}>
-            {[{l:"Services",p:"services"},{l:"Work",p:"cases"},{l:"About",p:"about"},{l:"Insights",p:"blog"}].map(({l,p},i)=>(
+            {[{l:"Work",p:"cases"},{l:"Expertise",p:"services"},{l:"About",p:"about"},{l:"Insights",p:"blog"}].map(({l,p},i)=>(
               <button key={l} onClick={()=>nav(p)} aria-current={page===p?"page":undefined} style={{background:"none",border:"none",borderBottom:"1px solid rgba(0,30,50,.06)",cursor:"pointer",fontFamily:"var(--jk)",fontSize:32,fontWeight:700,color:page===p?"var(--blue)":"var(--txt)",padding:"18px 0",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center",transition:"color .2s",opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transitionDelay:`${.05+i*.05}s`}}>
                 {l}
                 {page===p?<span style={{width:8,height:8,borderRadius:"50%",background:"var(--blue)",flexShrink:0}}/>:<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="var(--txt4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
               </button>
             ))}
           </div>
-          <button onClick={()=>{trackCta("Let's talk","nav_mobile","/contact");nav("contact");}} className="cta-m" style={{marginTop:28,justifyContent:"center",fontSize:14,opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transition:"opacity .3s, transform .3s",transitionDelay:".4s"}}>Let's talk</button>
+          <button onClick={()=>{trackCta("Talk to an engineer","nav_mobile","/contact");nav("contact");}} className="cta-m" style={{marginTop:28,justifyContent:"center",fontSize:14,opacity:open?1:0,transform:open?"translateY(0)":"translateY(20px)",transition:"opacity .3s, transform .3s",transitionDelay:".4s"}}>Talk to an engineer</button>
         </div>
       </div>
       {/* Footer strip */}
@@ -1251,148 +1289,178 @@ function HeroDashboards({go}:{go:(p:string,id?:string,q?:string)=>void}){
     </div>
   );
 }
+
+/* ── HERO PROJECT REVIEW — short form opened intentionally from the hero primary CTA; reuses contact handling (EmailJS) ── */
+const HERO_MOTION=typeof window!=="undefined"&&!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+function HeroReview(){
+  const[open,setOpen]=useState(false);
+  const[email,setEmail]=useState("");const[msg,setMsg]=useState("");const[link,setLink]=useState("");const[hp,setHp]=useState("");
+  const[loading,setLoading]=useState(false);const[sent,setSent]=useState(false);const[err,setErr]=useState<string|null>(null);
+  const[started,setStarted]=useState(false);
+  const panelRef=useRef<HTMLDivElement|null>(null);const firstRef=useRef<HTMLInputElement|null>(null);
+  useEffect(()=>{if(open&&firstRef.current)firstRef.current.focus({preventScroll:true});},[open]);
+  const onStart=()=>{if(!started){setStarted(true);trackContactFormStart("hero_review");}};
+  const submit=async(e:React.FormEvent)=>{
+    e.preventDefault();if(loading)return;
+    if(hp.trim()){setSent(true);return;} // honeypot: silently drop bots
+    if(!/^\S+@\S+\.\S+$/.test(email.trim())||!msg.trim()){setErr("Please add a valid email and a few lines about your project.");trackContactFormError("validation","hero_review");return;}
+    setErr(null);setLoading(true);
+    try{
+      await emailjs.send(process.env.REACT_APP_EMAILJS_SERVICE_ID!,process.env.REACT_APP_EMAILJS_CONTACT_TEMPLATE_ID!,{
+        from_name:"Project review request",
+        from_email:email.trim(),
+        company:link.trim()||"—",
+        message:`PROJECT REVIEW REQUEST (homepage hero)\n\nWhat they want to build or improve:\n${msg.trim()}\n\nProduct / brief link: ${link.trim()||"—"}`,
+      },process.env.REACT_APP_EMAILJS_PUBLIC_KEY!);
+      setSent(true);trackContactFormSubmit("hero_review");
+    }catch{
+      setErr("Something went wrong sending your request. Your text is still here — please try again, or email hello@lumo-lab.com.");
+      trackContactFormError("provider","hero_review");
+    }finally{setLoading(false);}
+  };
+  const field:CSSProperties={width:"100%",boxSizing:"border-box",padding:"12px 14px",borderRadius:10,border:"1px solid rgba(255,255,255,.25)",background:"rgba(255,255,255,.08)",color:"#fff",fontFamily:"var(--in)",fontSize:14,outline:"none"};
+  const label:CSSProperties={display:"block",textAlign:"left",fontFamily:"var(--jk)",fontSize:11.5,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"rgba(255,255,255,.7)",marginBottom:6};
+  return <>
+    <div className="fi d4 hero-ctas" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"var(--space-4)",flexWrap:"wrap"}}>
+      <button onClick={()=>{if(!open)trackCta("Get a free project review","home_hero","#project-review");setOpen(o=>!o);}} aria-expanded={open} aria-controls="hero-review-panel" className="hero-cta">Get a free project review <Arr s={14} c="var(--blue)"/></button>
+      <a href="https://calendly.com/jurica-lumo-lab/30min" target="_blank" rel="noopener noreferrer" onClick={()=>trackCta("Book a 30-minute call","home_hero","https://calendly.com/jurica-lumo-lab/30min")} className="hero-ghost">Book a 30-minute call <Arr s={14} c="currentColor"/></a>
+    </div>
+    <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13.5,color:"rgba(255,255,255,.62)",lineHeight:1.55,margin:"var(--space-4) 0 0",maxWidth:560}}>Send us a few lines about your project. Get a short written recommendation within one business day. Free. No call required.</p>
+    <div id="hero-review-panel" ref={panelRef} hidden={!open} style={{width:"100%",maxWidth:560,marginTop:28,textAlign:"left"}}>
+      {open&&(sent
+        ? <div role="status" style={{padding:"22px 22px",borderRadius:16,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.18)",display:"flex",gap:14,alignItems:"flex-start"}}>
+            <span aria-hidden="true" style={{width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <p style={{fontFamily:"var(--in)",fontSize:14.5,color:"#fff",lineHeight:1.6,margin:0}}>Thanks for sharing your project. We'll review it and reply within one business day.</p>
+          </div>
+        : <form onSubmit={submit} onFocusCapture={onStart} noValidate style={{padding:"22px 22px 20px",borderRadius:16,background:"rgba(255,255,255,.07)",border:"1px solid rgba(255,255,255,.18)",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",display:"flex",flexDirection:"column",gap:14}}>
+            <div>
+              <h2 style={{fontFamily:"var(--jk)",fontSize:20,fontWeight:800,color:"#fff",margin:"0 0 4px",letterSpacing:"-.01em"}}>What are you building?</h2>
+              <p style={{fontFamily:"var(--in)",fontSize:13.5,color:"rgba(255,255,255,.7)",margin:0,lineHeight:1.5}}>Tell us about your idea, existing product or technical challenge.</p>
+            </div>
+            <div><label htmlFor="hr-email" style={label}>Email <span aria-hidden="true" style={{color:"var(--accent)"}}>*</span></label><input ref={firstRef} id="hr-email" type="email" required autoComplete="email" value={email} onChange={e=>{setEmail(e.target.value);if(err)setErr(null);}} placeholder="you@company.com" className="cc-input" style={field}/></div>
+            <div><label htmlFor="hr-msg" style={label}>What would you like to build or improve? <span aria-hidden="true" style={{color:"var(--accent)"}}>*</span></label><textarea id="hr-msg" required rows={4} value={msg} onChange={e=>{setMsg(e.target.value);if(err)setErr(null);}} placeholder="A few lines is enough — the idea, where you are today, what's hard." className="cc-input" style={{...field,resize:"vertical",minHeight:104,lineHeight:1.5}}/></div>
+            <div><label htmlFor="hr-link" style={label}>Product or brief link <span style={{fontWeight:500,textTransform:"none",letterSpacing:0,color:"rgba(255,255,255,.45)"}}>(optional)</span></label><input id="hr-link" type="url" value={link} onChange={e=>setLink(e.target.value)} placeholder="https://" className="cc-input" style={field}/></div>
+            {/* honeypot — hidden from humans, filled by bots */}
+            <div aria-hidden="true" style={{position:"absolute",left:-9999,width:1,height:1,overflow:"hidden"}}><label>Website<input tabIndex={-1} autoComplete="off" value={hp} onChange={e=>setHp(e.target.value)}/></label></div>
+            {err&&<p role="alert" style={{fontFamily:"var(--in)",fontSize:13,color:"#ffd7d7",margin:0,display:"flex",gap:7,alignItems:"flex-start"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:2}}><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>{err}</p>}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap",marginTop:2}}>
+              <button type="submit" disabled={loading} className="hero-cta" style={{opacity:loading?.7:1,cursor:loading?"default":"pointer"}}>{loading?"Sending…":<>Get my project review <Arr s={14} c="var(--blue)"/></>}</button>
+              <span style={{fontFamily:"var(--in)",fontSize:12,color:"rgba(255,255,255,.5)"}}>Free · written reply within one business day</span>
+            </div>
+          </form>)}
+    </div>
+  </>;
+}
 function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
   const[at,setAt]=useState(0);const[ap,setAp]=useState(0);const tlR=useRef<HTMLElement>(null);
-  // Hero rotating product showcase — cycles through best cases with image + outcome stat
-  const heroShowcase=[
-    {id:"nomo",src:process.env.PUBLIC_URL+"/images/nomo_header_1.png",name:"NOMO Smart Care",cat:"Health",outcome:"Live in all 50 US states · sub-1s emergency alerts"},
-    {id:"farmwave",src:process.env.PUBLIC_URL+"/images/farmwave_tablet.jpeg",name:"Farmwave",cat:"AgTech",outcome:"2025 Award winner · 3–8 bu/acre recovered every harvest"},
-    {id:"muvr",src:process.env.PUBLIC_URL+"/images/muvr_home.jpg",name:"Muvr",cat:"Health",outcome:"Acquired by Exactech in December 2020"},
-    {id:"noctrix",src:process.env.PUBLIC_URL+"/images/noctrix_showcase.png",name:"Noctrix Health",cat:"Health",outcome:"Acquired by ResMed for $340M · First FDA-authorised non-drug RLS therapy"},
-  ];
-  const[hsIdx,setHsIdx]=useState(0);
-  useEffect(()=>{const i=setInterval(()=>setHsIdx(p=>(p+1)%heroShowcase.length),4200);return()=>clearInterval(i);},[heroShowcase.length]);
   useEffect(()=>{const i=setInterval(()=>setAt(p=>(p+1)%tests.length),5000);return()=>clearInterval(i);},[]);
   useEffect(()=>{const h=()=>{if(!tlR.current)return;const r=tlR.current.getBoundingClientRect();const p=Math.max(0,Math.min(1,(-r.top+200)/(r.height-300)));setAp(Math.min(3,Math.floor(p*4)));};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);},[]);
 
   return <div>
     {/* HERO — proof-led split: message (left) · real product visual (right) · proof row in the fold */}
-    <section className="hero-s" style={{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"var(--blue)"}}>
-      <div aria-hidden="true" style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(900px 620px at 12% 24%, rgba(0,76,115,.55), transparent 55%), radial-gradient(1100px 760px at 92% -10%, rgba(125,185,232,.22), transparent 55%), linear-gradient(180deg, rgba(0,28,46,.5), rgba(0,28,46,.66))"}}/>
+    <section className="hero-s hero-text" style={{position:"relative",display:"flex",alignItems:"center",overflow:"hidden",background:"var(--blue)"}}>
+      <div aria-hidden="true" style={{position:"absolute",inset:0,zIndex:1,background:"radial-gradient(900px 620px at 50% 10%, rgba(0,76,115,.6), transparent 60%), radial-gradient(1100px 760px at 92% -10%, rgba(125,185,232,.2), transparent 55%), linear-gradient(180deg, rgba(0,28,46,.5), rgba(0,28,46,.66))"}}/>
+      {/* low-poly wireframe clusters — drifting, slowly reshaping; centre stays clear */}
+      <div aria-hidden="true" className="hero-flow" style={{position:"absolute",inset:0,zIndex:1,overflow:"hidden",pointerEvents:"none"}}>
+        <svg className="hero-polys" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+          <g className="hero-poly" style={{animationDuration:"70s",animationDelay:"-1s"}}><path fill="none" stroke="#FFFFFF" strokeWidth="1.2" strokeOpacity="0.55" strokeLinecap="round" vectorEffect="non-scaling-stroke" d="M-60 214L-50 243M-60 214L-35 170M5 162L43 55M5 162L-50 243M5 162L-35 170M5 162L109 240M5 162L182 83M43 55L-35 170M43 55L169 48M43 55L182 83M346 241L426 167M346 241L344 231M346 241L302 243M346 241L206 345M395 147L426 167M395 147L326 99M395 147L344 231M395 147L330 130M183 201L182 266M183 201L109 240M183 201L294 130M183 201L219 223M183 201L182 83M182 266L109 240M182 266L219 223M182 266L245 247M182 266L194 307M-50 243L-35 170M-50 243L109 240M426 167L344 231M109 240L182 83M109 240L206 345M109 240L194 307M169 48L326 99M169 48L182 83M294 130L326 99M294 130L344 231M294 130L302 243M294 130L219 223M294 130L182 83M294 130L330 130M326 99L182 83M326 99L330 130M344 231L302 243M344 231L330 130M302 243L219 223M302 243L206 345M302 243L245 247M219 223L245 247M206 345L245 247M206 345L194 307M245 247L194 307">{HERO_MOTION && <animate attributeName="d" dur="44s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" values="M-60 214L-50 243M-60 214L-35 170M5 162L43 55M5 162L-50 243M5 162L-35 170M5 162L109 240M5 162L182 83M43 55L-35 170M43 55L169 48M43 55L182 83M346 241L426 167M346 241L344 231M346 241L302 243M346 241L206 345M395 147L426 167M395 147L326 99M395 147L344 231M395 147L330 130M183 201L182 266M183 201L109 240M183 201L294 130M183 201L219 223M183 201L182 83M182 266L109 240M182 266L219 223M182 266L245 247M182 266L194 307M-50 243L-35 170M-50 243L109 240M426 167L344 231M109 240L182 83M109 240L206 345M109 240L194 307M169 48L326 99M169 48L182 83M294 130L326 99M294 130L344 231M294 130L302 243M294 130L219 223M294 130L182 83M294 130L330 130M326 99L182 83M326 99L330 130M344 231L302 243M344 231L330 130M302 243L219 223M302 243L206 345M302 243L245 247M219 223L245 247M206 345L245 247M206 345L194 307M245 247L194 307;M-71 228L-37 243M-71 228L-33 180M-3 155L51 50M-3 155L-37 243M-3 155L-33 180M-3 155L120 249M-3 155L175 89M51 50L-33 180M51 50L162 40M51 50L175 89M340 229L417 157M340 229L354 234M340 229L300 232M340 229L199 354M384 149L417 157M384 149L318 112M384 149L354 234M384 149L321 136M175 204L178 265M175 204L120 249M175 204L300 143M175 204L206 236M175 204L175 89M178 265L120 249M178 265L206 236M178 265L248 241M178 265L182 300M-37 243L-33 180M-37 243L120 249M417 157L354 234M120 249L175 89M120 249L199 354M120 249L182 300M162 40L318 112M162 40L175 89M300 143L318 112M300 143L354 234M300 143L300 232M300 143L206 236M300 143L175 89M300 143L321 136M318 112L175 89M318 112L321 136M354 234L300 232M354 234L321 136M300 232L206 236M300 232L199 354M300 232L248 241M206 236L248 241M199 354L248 241M199 354L182 300M248 241L182 300;M-59 224L-54 254M-59 224L-21 175M8 156L55 47M8 156L-54 254M8 156L-21 175M8 156L98 227M8 156L189 95M55 47L-21 175M55 47L155 60M55 47L189 95M332 234L432 169M332 234L343 238M332 234L297 257M332 234L213 350M394 134L432 169M394 134L313 103M394 134L343 238M394 134L326 135M173 197L184 256M173 197L98 227M173 197L299 143M173 197L207 224M173 197L189 95M184 256L98 227M184 256L207 224M184 256L253 259M184 256L206 318M-54 254L-21 175M-54 254L98 227M432 169L343 238M98 227L189 95M98 227L213 350M98 227L206 318M155 60L313 103M155 60L189 95M299 143L313 103M299 143L343 238M299 143L297 257M299 143L207 224M299 143L189 95M299 143L326 135M313 103L189 95M313 103L326 135M343 238L297 257M343 238L326 135M297 257L207 224M297 257L213 350M297 257L253 259M207 224L253 259M213 350L253 259M213 350L206 318M253 259L206 318;M-60 214L-50 243M-60 214L-35 170M5 162L43 55M5 162L-50 243M5 162L-35 170M5 162L109 240M5 162L182 83M43 55L-35 170M43 55L169 48M43 55L182 83M346 241L426 167M346 241L344 231M346 241L302 243M346 241L206 345M395 147L426 167M395 147L326 99M395 147L344 231M395 147L330 130M183 201L182 266M183 201L109 240M183 201L294 130M183 201L219 223M183 201L182 83M182 266L109 240M182 266L219 223M182 266L245 247M182 266L194 307M-50 243L-35 170M-50 243L109 240M426 167L344 231M109 240L182 83M109 240L206 345M109 240L194 307M169 48L326 99M169 48L182 83M294 130L326 99M294 130L344 231M294 130L302 243M294 130L219 223M294 130L182 83M294 130L330 130M326 99L182 83M326 99L330 130M344 231L302 243M344 231L330 130M302 243L219 223M302 243L206 345M302 243L245 247M219 223L245 247M206 345L245 247M206 345L194 307M245 247L194 307"/>}</path></g>
+          <g className="hero-poly" style={{animationDirection:"alternate-reverse",animationDuration:"58s",animationDelay:"-29s"}}><path fill="none" stroke="#5CE1E6" strokeWidth="1.2" strokeOpacity="0.6" strokeLinecap="round" vectorEffect="non-scaling-stroke" d="M522 25L418 -22M522 25L522 146M522 25L542 22M522 25L499 -10M522 25L362 55M522 25L522 -30M522 25L417 137M342 39L418 -22M342 39L332 97M342 39L325 36M342 39L362 55M612 86L522 146M612 86L542 22M418 -22L325 36M418 -22L499 -10M418 -22L362 55M418 -22L522 -30M522 146L393 166M522 146L542 22M522 146L417 137M332 97L325 36M332 97L393 166M332 97L377 174M332 97L362 55M332 97L417 137M393 166L377 174M393 166L417 137M542 22L522 -30M499 -10L522 -30M362 55L417 137">{HERO_MOTION && <animate attributeName="d" dur="38s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" values="M522 25L418 -22M522 25L522 146M522 25L542 22M522 25L499 -10M522 25L362 55M522 25L522 -30M522 25L417 137M342 39L418 -22M342 39L332 97M342 39L325 36M342 39L362 55M612 86L522 146M612 86L542 22M418 -22L325 36M418 -22L499 -10M418 -22L362 55M418 -22L522 -30M522 146L393 166M522 146L542 22M522 146L417 137M332 97L325 36M332 97L393 166M332 97L377 174M332 97L362 55M332 97L417 137M393 166L377 174M393 166L417 137M542 22L522 -30M499 -10L522 -30M362 55L417 137;M514 23L432 -23M514 23L510 133M514 23L529 12M514 23L508 -18M514 23L352 42M514 23L526 -32M514 23L421 141M346 39L432 -23M346 39L343 85M346 39L331 38M346 39L352 42M607 95L510 133M607 95L529 12M432 -23L331 38M432 -23L508 -18M432 -23L352 42M432 -23L526 -32M510 133L388 174M510 133L529 12M510 133L421 141M343 85L331 38M343 85L388 174M343 85L375 161M343 85L352 42M343 85L421 141M388 174L375 161M388 174L421 141M529 12L526 -32M508 -18L526 -32M352 42L421 141;M531 38L404 -22M531 38L528 137M531 38L539 30M531 38L511 -4M531 38L351 53M531 38L526 -19M531 38L414 139M348 30L404 -22M348 30L326 93M348 30L331 37M348 30L351 53M611 77L528 137M611 77L539 30M404 -22L331 37M404 -22L511 -4M404 -22L351 53M404 -22L526 -19M528 137L397 173M528 137L539 30M528 137L414 139M326 93L331 37M326 93L397 173M326 93L388 163M326 93L351 53M326 93L414 139M397 173L388 163M397 173L414 139M539 30L526 -19M511 -4L526 -19M351 53L414 139;M522 25L418 -22M522 25L522 146M522 25L542 22M522 25L499 -10M522 25L362 55M522 25L522 -30M522 25L417 137M342 39L418 -22M342 39L332 97M342 39L325 36M342 39L362 55M612 86L522 146M612 86L542 22M418 -22L325 36M418 -22L499 -10M418 -22L362 55M418 -22L522 -30M522 146L393 166M522 146L542 22M522 146L417 137M332 97L325 36M332 97L393 166M332 97L377 174M332 97L362 55M332 97L417 137M393 166L377 174M393 166L417 137M542 22L522 -30M499 -10L522 -30M362 55L417 137"/>}</path></g>
+          <g className="hero-poly" style={{animationDuration:"64s",animationDelay:"-6s"}}><path fill="none" stroke="#9ED0F0" strokeWidth="1.2" strokeOpacity="0.45" strokeLinecap="round" vectorEffect="non-scaling-stroke" d="M440 1021L463 905M440 1021L491 1034M440 1021L333 846M571 743L650 836M571 743L459 859M571 743L702 794M571 743L324 802M571 743L435 849M571 743L591 857M463 905L491 1034M463 905L459 881M463 905L333 846M463 905L615 947M463 905L465 889M463 905L435 849M463 905L591 857M650 836L702 794M650 836L740 825M650 836L615 947M650 836L591 857M650 836L702 808M459 859L459 881M459 859L465 889M459 859L435 849M459 859L591 857M491 1034L615 947M459 881L465 889M459 881L435 849M702 794L740 825M702 794L702 808M336 842L324 802M336 842L316 820M336 842L333 846M336 842L435 849M324 802L316 820M324 802L435 849M316 820L333 846M333 846L435 849M740 825L615 947M740 825L702 808M615 947L591 857M465 889L591 857">{HERO_MOTION && <animate attributeName="d" dur="44s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" values="M440 1021L463 905M440 1021L491 1034M440 1021L333 846M571 743L650 836M571 743L459 859M571 743L702 794M571 743L324 802M571 743L435 849M571 743L591 857M463 905L491 1034M463 905L459 881M463 905L333 846M463 905L615 947M463 905L465 889M463 905L435 849M463 905L591 857M650 836L702 794M650 836L740 825M650 836L615 947M650 836L591 857M650 836L702 808M459 859L459 881M459 859L465 889M459 859L435 849M459 859L591 857M491 1034L615 947M459 881L465 889M459 881L435 849M702 794L740 825M702 794L702 808M336 842L324 802M336 842L316 820M336 842L333 846M336 842L435 849M324 802L316 820M324 802L435 849M316 820L333 846M333 846L435 849M740 825L615 947M740 825L702 808M615 947L591 857M465 889L591 857;M437 1014L474 917M437 1014L478 1027M437 1014L336 856M571 739L661 837M571 739L448 857M571 739L689 784M571 739L330 795M571 739L445 852M571 739L592 867M474 917L478 1027M474 917L465 894M474 917L336 856M474 917L620 958M474 917L452 893M474 917L445 852M474 917L592 867M661 837L689 784M661 837L744 831M661 837L620 958M661 837L592 867M661 837L703 800M448 857L465 894M448 857L452 893M448 857L445 852M448 857L592 867M478 1027L620 958M465 894L452 893M465 894L445 852M689 784L744 831M689 784L703 800M323 836L330 795M323 836L316 820M323 836L336 856M323 836L445 852M330 795L316 820M330 795L445 852M316 820L336 856M336 856L445 852M744 831L620 958M744 831L703 800M620 958L592 867M452 893L592 867;M432 1022L474 908M432 1022L482 1042M432 1022L325 849M574 733L645 827M574 733L462 870M574 733L713 784M574 733L322 815M574 733L441 853M574 733L586 871M474 908L482 1042M474 908L450 870M474 908L325 849M474 908L617 943M474 908L474 885M474 908L441 853M474 908L586 871M645 827L713 784M645 827L749 814M645 827L617 943M645 827L586 871M645 827L711 817M462 870L450 870M462 870L474 885M462 870L441 853M462 870L586 871M482 1042L617 943M450 870L474 885M450 870L441 853M713 784L749 814M713 784L711 817M325 839L322 815M325 839L317 826M325 839L325 849M325 839L441 853M322 815L317 826M322 815L441 853M317 826L325 849M325 849L441 853M749 814L617 943M749 814L711 817M617 943L586 871M474 885L586 871;M440 1021L463 905M440 1021L491 1034M440 1021L333 846M571 743L650 836M571 743L459 859M571 743L702 794M571 743L324 802M571 743L435 849M571 743L591 857M463 905L491 1034M463 905L459 881M463 905L333 846M463 905L615 947M463 905L465 889M463 905L435 849M463 905L591 857M650 836L702 794M650 836L740 825M650 836L615 947M650 836L591 857M650 836L702 808M459 859L459 881M459 859L465 889M459 859L435 849M459 859L591 857M491 1034L615 947M459 881L465 889M459 881L435 849M702 794L740 825M702 794L702 808M336 842L324 802M336 842L316 820M336 842L333 846M336 842L435 849M324 802L316 820M324 802L435 849M316 820L333 846M333 846L435 849M740 825L615 947M740 825L702 808M615 947L591 857M465 889L591 857"/>}</path></g>
+          <g className="hero-poly" style={{animationDirection:"alternate-reverse",animationDuration:"76s",animationDelay:"-20s"}}><path fill="none" stroke="#FFFFFF" strokeWidth="1.2" strokeOpacity="0.4" strokeLinecap="round" vectorEffect="non-scaling-stroke" d="M1186 923L1083 966M1186 923L1195 982M1186 923L1116 858M927 906L905 949M927 906L918 966M927 906L930 871M927 906L995 851M927 906L970 966M1068 969L1083 966M1068 969L1116 858M1068 969L995 851M1068 969L1034 974M1083 966L1195 982M1083 966L1116 858M905 949L918 966M905 949L903 960M905 949L930 871M918 966L903 960M918 966L917 980M918 966L933 988M918 966L970 966M903 960L917 980M930 871L995 851M1116 858L995 851M917 980L933 988M995 851L1034 974M995 851L970 966M933 988L1034 974M933 988L970 966M1034 974L970 966">{HERO_MOTION && <animate attributeName="d" dur="26s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" values="M1186 923L1083 966M1186 923L1195 982M1186 923L1116 858M927 906L905 949M927 906L918 966M927 906L930 871M927 906L995 851M927 906L970 966M1068 969L1083 966M1068 969L1116 858M1068 969L995 851M1068 969L1034 974M1083 966L1195 982M1083 966L1116 858M905 949L918 966M905 949L903 960M905 949L930 871M918 966L903 960M918 966L917 980M918 966L933 988M918 966L970 966M903 960L917 980M930 871L995 851M1116 858L995 851M917 980L933 988M995 851L1034 974M995 851L970 966M933 988L1034 974M933 988L970 966M1034 974L970 966;M1197 911L1080 957M1197 911L1184 974M1197 911L1115 858M920 919L893 950M920 919L918 958M920 919L933 861M920 919L981 844M920 919L971 975M1062 961L1080 957M1062 961L1115 858M1062 961L981 844M1062 961L1035 972M1080 957L1184 974M1080 957L1115 858M893 950L918 958M893 950L893 957M893 950L933 861M918 958L893 957M918 958L925 984M918 958L927 984M918 958L971 975M893 957L925 984M933 861L981 844M1115 858L981 844M925 984L927 984M981 844L1035 972M981 844L971 975M927 984L1035 972M927 984L971 975M1035 972L971 975;M1175 922L1080 979M1175 922L1192 976M1175 922L1117 858M931 908L901 963M931 908L928 968M931 908L930 865M931 908L1000 858M931 908L967 971M1073 982L1080 979M1073 982L1117 858M1073 982L1000 858M1073 982L1036 978M1080 979L1192 976M1080 979L1117 858M901 963L928 968M901 963L906 958M901 963L930 865M928 968L906 958M928 968L911 992M928 968L920 996M928 968L967 971M906 958L911 992M930 865L1000 858M1117 858L1000 858M911 992L920 996M1000 858L1036 978M1000 858L967 971M920 996L1036 978M920 996L967 971M1036 978L967 971;M1186 923L1083 966M1186 923L1195 982M1186 923L1116 858M927 906L905 949M927 906L918 966M927 906L930 871M927 906L995 851M927 906L970 966M1068 969L1083 966M1068 969L1116 858M1068 969L995 851M1068 969L1034 974M1083 966L1195 982M1083 966L1116 858M905 949L918 966M905 949L903 960M905 949L930 871M918 966L903 960M918 966L917 980M918 966L933 988M918 966L970 966M903 960L917 980M930 871L995 851M1116 858L995 851M917 980L933 988M995 851L1034 974M995 851L970 966M933 988L1034 974M933 988L970 966M1034 974L970 966"/>}</path></g>
+          <g className="hero-poly" style={{animationDuration:"66s",animationDelay:"-29s"}}><path fill="none" stroke="#5CE1E6" strokeWidth="1.2" strokeOpacity="0.6" strokeLinecap="round" vectorEffect="non-scaling-stroke" d="M1499 677L1460 587M1499 677L1411 711M1499 677L1524 809M1499 677L1571 776M1499 677L1427 718M1499 677L1494 611M1499 677L1588 630M1713 848L1638 736M1713 848L1790 757M1713 848L1718 900M1713 848L1691 857M1638 736L1790 757M1638 736L1571 776M1638 736L1691 857M1638 736L1588 630M1460 587L1411 711M1460 587L1494 611M1460 587L1368 583M1460 587L1494 574M1411 711L1323 689M1411 711L1427 718M1411 711L1351 808M1411 711L1368 583M1524 809L1398 854M1524 809L1502 1015M1524 809L1571 776M1524 809L1427 718M1524 809L1691 857M1304 812L1323 689M1304 812L1297 685M1304 812L1393 857M1304 812L1351 808M1323 689L1297 685M1323 689L1351 808M1323 689L1368 583M1790 757L1718 900M1790 757L1588 630M1718 900L1502 1015M1718 900L1691 857M1398 854L1502 1015M1398 854L1427 718M1398 854L1393 857M1398 854L1351 808M1297 685L1368 583M1502 1015L1691 857M1502 1015L1393 857M1571 776L1691 857M1571 776L1588 630M1427 718L1351 808M1393 857L1351 808M1494 611L1588 630M1494 611L1494 574M1588 630L1494 574M1368 583L1494 574">{HERO_MOTION && <animate attributeName="d" dur="26s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" values="M1499 677L1460 587M1499 677L1411 711M1499 677L1524 809M1499 677L1571 776M1499 677L1427 718M1499 677L1494 611M1499 677L1588 630M1713 848L1638 736M1713 848L1790 757M1713 848L1718 900M1713 848L1691 857M1638 736L1790 757M1638 736L1571 776M1638 736L1691 857M1638 736L1588 630M1460 587L1411 711M1460 587L1494 611M1460 587L1368 583M1460 587L1494 574M1411 711L1323 689M1411 711L1427 718M1411 711L1351 808M1411 711L1368 583M1524 809L1398 854M1524 809L1502 1015M1524 809L1571 776M1524 809L1427 718M1524 809L1691 857M1304 812L1323 689M1304 812L1297 685M1304 812L1393 857M1304 812L1351 808M1323 689L1297 685M1323 689L1351 808M1323 689L1368 583M1790 757L1718 900M1790 757L1588 630M1718 900L1502 1015M1718 900L1691 857M1398 854L1502 1015M1398 854L1427 718M1398 854L1393 857M1398 854L1351 808M1297 685L1368 583M1502 1015L1691 857M1502 1015L1393 857M1571 776L1691 857M1571 776L1588 630M1427 718L1351 808M1393 857L1351 808M1494 611L1588 630M1494 611L1494 574M1588 630L1494 574M1368 583L1494 574;M1488 687L1465 581M1488 687L1419 699M1488 687L1516 814M1488 687L1583 774M1488 687L1435 713M1488 687L1487 607M1488 687L1584 626M1701 836L1640 736M1701 836L1784 747M1701 836L1714 907M1701 836L1686 855M1640 736L1784 747M1640 736L1583 774M1640 736L1686 855M1640 736L1584 626M1465 581L1419 699M1465 581L1487 607M1465 581L1360 585M1465 581L1502 575M1419 699L1330 695M1419 699L1435 713M1419 699L1348 805M1419 699L1360 585M1516 814L1395 843M1516 814L1514 1028M1516 814L1583 774M1516 814L1435 713M1516 814L1686 855M1292 807L1330 695M1292 807L1303 687M1292 807L1405 868M1292 807L1348 805M1330 695L1303 687M1330 695L1348 805M1330 695L1360 585M1784 747L1714 907M1784 747L1584 626M1714 907L1514 1028M1714 907L1686 855M1395 843L1514 1028M1395 843L1435 713M1395 843L1405 868M1395 843L1348 805M1303 687L1360 585M1514 1028L1686 855M1514 1028L1405 868M1583 774L1686 855M1583 774L1584 626M1435 713L1348 805M1405 868L1348 805M1487 607L1584 626M1487 607L1502 575M1584 626L1502 575M1360 585L1502 575;M1508 679L1446 587M1508 679L1413 712M1508 679L1537 813M1508 679L1564 784M1508 679L1428 725M1508 679L1494 612M1508 679L1594 636M1704 855L1649 730M1704 855L1778 746M1704 855L1724 912M1704 855L1688 853M1649 730L1778 746M1649 730L1564 784M1649 730L1688 853M1649 730L1594 636M1446 587L1413 712M1446 587L1494 612M1446 587L1377 588M1446 587L1504 583M1413 712L1325 697M1413 712L1428 725M1413 712L1363 806M1413 712L1377 588M1537 813L1387 857M1537 813L1506 1008M1537 813L1564 784M1537 813L1428 725M1537 813L1688 853M1312 800L1325 697M1312 800L1287 692M1312 800L1406 862M1312 800L1363 806M1325 697L1287 692M1325 697L1363 806M1325 697L1377 588M1778 746L1724 912M1778 746L1594 636M1724 912L1506 1008M1724 912L1688 853M1387 857L1506 1008M1387 857L1428 725M1387 857L1406 862M1387 857L1363 806M1287 692L1377 588M1506 1008L1688 853M1506 1008L1406 862M1564 784L1688 853M1564 784L1594 636M1428 725L1363 806M1406 862L1363 806M1494 612L1594 636M1494 612L1504 583M1594 636L1504 583M1377 588L1504 583;M1499 677L1460 587M1499 677L1411 711M1499 677L1524 809M1499 677L1571 776M1499 677L1427 718M1499 677L1494 611M1499 677L1588 630M1713 848L1638 736M1713 848L1790 757M1713 848L1718 900M1713 848L1691 857M1638 736L1790 757M1638 736L1571 776M1638 736L1691 857M1638 736L1588 630M1460 587L1411 711M1460 587L1494 611M1460 587L1368 583M1460 587L1494 574M1411 711L1323 689M1411 711L1427 718M1411 711L1351 808M1411 711L1368 583M1524 809L1398 854M1524 809L1502 1015M1524 809L1571 776M1524 809L1427 718M1524 809L1691 857M1304 812L1323 689M1304 812L1297 685M1304 812L1393 857M1304 812L1351 808M1323 689L1297 685M1323 689L1351 808M1323 689L1368 583M1790 757L1718 900M1790 757L1588 630M1718 900L1502 1015M1718 900L1691 857M1398 854L1502 1015M1398 854L1427 718M1398 854L1393 857M1398 854L1351 808M1297 685L1368 583M1502 1015L1691 857M1502 1015L1393 857M1571 776L1691 857M1571 776L1588 630M1427 718L1351 808M1393 857L1351 808M1494 611L1588 630M1494 611L1494 574M1588 630L1494 574M1368 583L1494 574"/>}</path></g>
+          <g className="hero-poly" style={{animationDirection:"alternate-reverse",animationDuration:"54s",animationDelay:"-13s"}}><path fill="none" stroke="#9ED0F0" strokeWidth="1.2" strokeOpacity="0.45" strokeLinecap="round" vectorEffect="non-scaling-stroke" d="M1715 146L1651 212M1715 146L1672 124M1615 110L1571 69M1615 110L1651 212M1615 110L1590 117M1615 110L1622 68M1615 110L1672 124M1571 69L1590 117M1571 69L1479 128M1571 69L1521 145M1571 69L1622 68M1608 296L1609 253M1608 296L1642 292M1651 212L1590 117M1651 212L1609 253M1651 212L1642 292M1651 212L1672 124M1590 117L1609 253M1590 117L1521 145M1479 128L1521 145M1609 253L1521 145M1609 253L1642 292M1622 68L1672 124">{HERO_MOTION && <animate attributeName="d" dur="44s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" values="M1715 146L1651 212M1715 146L1672 124M1615 110L1571 69M1615 110L1651 212M1615 110L1590 117M1615 110L1622 68M1615 110L1672 124M1571 69L1590 117M1571 69L1479 128M1571 69L1521 145M1571 69L1622 68M1608 296L1609 253M1608 296L1642 292M1651 212L1590 117M1651 212L1609 253M1651 212L1642 292M1651 212L1672 124M1590 117L1609 253M1590 117L1521 145M1479 128L1521 145M1609 253L1521 145M1609 253L1642 292M1622 68L1672 124;M1715 139L1645 226M1715 139L1682 124M1602 122L1580 65M1602 122L1645 226M1602 122L1594 109M1602 122L1617 61M1602 122L1682 124M1580 65L1594 109M1580 65L1465 128M1580 65L1527 148M1580 65L1617 61M1609 296L1605 262M1609 296L1632 282M1645 226L1594 109M1645 226L1605 262M1645 226L1632 282M1645 226L1682 124M1594 109L1605 262M1594 109L1527 148M1465 128L1527 148M1605 262L1527 148M1605 262L1632 282M1617 61L1682 124;M1719 160L1661 221M1719 160L1684 112M1609 111L1562 76M1609 111L1661 221M1609 111L1578 110M1609 111L1630 66M1609 111L1684 112M1562 76L1578 110M1562 76L1485 117M1562 76L1534 147M1562 76L1630 66M1594 305L1608 253M1594 305L1652 286M1661 221L1578 110M1661 221L1608 253M1661 221L1652 286M1661 221L1684 112M1578 110L1608 253M1578 110L1534 147M1485 117L1534 147M1608 253L1534 147M1608 253L1652 286M1630 66L1684 112;M1715 146L1651 212M1715 146L1672 124M1615 110L1571 69M1615 110L1651 212M1615 110L1590 117M1615 110L1622 68M1615 110L1672 124M1571 69L1590 117M1571 69L1479 128M1571 69L1521 145M1571 69L1622 68M1608 296L1609 253M1608 296L1642 292M1651 212L1590 117M1651 212L1609 253M1651 212L1642 292M1651 212L1672 124M1590 117L1609 253M1590 117L1521 145M1479 128L1521 145M1609 253L1521 145M1609 253L1642 292M1622 68L1672 124"/>}</path></g>
+        </svg>
+      </div>
       <div className="hero-grain"/>
-      <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:128,paddingBottom:96,color:"var(--on-dark)",minHeight:"calc(100vh - 60px)",display:"flex",flexDirection:"column",justifyContent:"center"}}>
-        <div className="hero-2col" style={{display:"grid",gridTemplateColumns:"minmax(0,1.25fr) minmax(0,0.82fr)",gap:"clamp(28px,4vw,64px)",alignItems:"center",width:"100%"}}>
-          {/* LEFT — message */}
-          <div className="hero-content">
-            <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,letterSpacing:3,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:32,height:2,background:"var(--accent)"}}/>Product · AI · IoT engineering</span>
-            <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(40px,6vw,80px)",fontWeight:800,lineHeight:1.04,letterSpacing:"-0.035em",margin:0,marginBottom:"var(--space-8)",maxWidth:860}}>You've got the idea. <span style={{color:"var(--accent)"}}>We bring the tech.</span></h1>
-            <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(17px,1.7vw,22px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-10)",maxWidth:640}}>Senior product engineers for complex digital products—from AI and connected devices to native mobile apps and scalable cloud platforms.</p>
-            <div className="fi d4" style={{display:"flex",alignItems:"center",gap:"var(--space-4)",flexWrap:"wrap"}}>
-              <button onClick={()=>{trackCta("Talk through your product","home_hero","/contact");go("contact");}} className="hero-cta">Talk through your product <Arr s={14} c="var(--blue)"/></button>
-              <button onClick={()=>{trackCta("See our work","home_hero","/work");go("cases");}} className="hero-ghost">See our work <Arr s={14} c="currentColor"/></button>
+      <W className="hero-w" style={{position:"relative",zIndex:3,paddingTop:"clamp(128px,16vh,176px)",paddingBottom:"clamp(80px,10vh,120px)",color:"var(--on-dark)",display:"flex",flexDirection:"column",alignItems:"center"}}>
+        <div className="hero-content" style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",maxWidth:880,width:"100%"}}>
+          <span className="fi d1" style={{display:"inline-flex",alignItems:"center",gap:"var(--space-3)",fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,letterSpacing:2.5,textTransform:"uppercase",color:"var(--accent)",marginBottom:"var(--space-6)"}}><span aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:"var(--accent)"}}/>Based in Croatia. Building for the US.</span>
+          <h1 className="speakable-hero fi d2" style={{fontFamily:"var(--jk)",fontSize:"clamp(36px,5.6vw,74px)",fontWeight:800,lineHeight:1.04,letterSpacing:"-0.035em",margin:0,marginBottom:"var(--space-6)",maxWidth:880}}>Software for the world<br className="hero-br"/> <span style={{color:"var(--accent)"}}>beyond the screen.</span></h1>
+          <p className="fi d3 speakable-tagline" style={{fontSize:"clamp(16px,1.6vw,20px)",color:"var(--on-dark-muted)",lineHeight:1.6,margin:0,marginBottom:"var(--space-8)",maxWidth:620}}>We build mobile apps, web platforms, AI and connected products.</p>
+          <HeroReview/>
+        </div>
+      </W>
+    </section>
+    {/* CLIENTS & PARTNERS — slow sliding names directly below the hero */}
+    <section className="hero-clients" aria-label="Clients and partners" style={{borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
+      <W style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
+        <div style={{flexShrink:0,display:"flex",alignItems:"center",gap:10,padding:"18px clamp(16px,2.4vw,24px) 18px 0",borderRight:"1px solid var(--brd)",background:"var(--bg2)",position:"relative",zIndex:2}}>
+          <span style={{fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>Clients &amp; partners</span>
+        </div>
+        <div style={{flex:1,minWidth:0,overflow:"hidden",position:"relative",display:"flex",alignItems:"center",paddingLeft:"clamp(16px,2.4vw,28px)",maskImage:"linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)",WebkitMaskImage:"linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)"}}>
+          <div className="mq-t mq-slow">{cl3.map((c,i)=><span key={i} style={{fontFamily:"var(--jk)",fontSize:14,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",letterSpacing:".005em",display:"flex",alignItems:"center",gap:14}}>{c}<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.3}}/></span>)}</div>
+        </div>
+      </W>
+    </section>
+    {/* SELECTED WORK — concrete proof directly below the hero, before the "how can we help" section */}
+    <section id="selected-work" style={{padding:"clamp(56px,7vw,92px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",scrollMarginTop:72}}><W>
+      <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:"clamp(28px,4vw,40px)",flexWrap:"wrap"}}>
+        <div>
+          <SL ch="Selected work"/>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)",letterSpacing:"-.02em",margin:0}}>Products we took from idea <span style={{color:"var(--blue)"}}>to production.</span></h2>
+        </div>
+        <p style={{fontFamily:"var(--in)",fontSize:14,color:"var(--txt3)",lineHeight:1.6,margin:0,maxWidth:360}}>We owned delivery across hardware, mobile, cloud and AI — working alongside each client's team.</p>
+      </div>
+      <div className="sw-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20}}>
+        {([
+          {id:"nomo",cat:"Healthcare · IoT",img:"/images/nomo_header_1.png",imgBg:"#eef1f4",
+           ch:"Families needed to know an aging parent was okay — without cameras, wearables, or constant worry.",
+           co:"We built the full stack: on-device audio and motion AI on the hub, native iOS and Android apps, a resilient AWS backend and a BLE sensor mesh — with a sub-second line to 911 via RapidSOS.",
+           out:"Live on iOS and Android across all 50 US states, with sub-second caregiver alerts.",
+           cta:"See how we built Nomo's connected care platform"},
+          {id:"farmwave",cat:"AgTech · Computer Vision",img:"/images/farmwave_tablet.jpeg",imgBg:"#004C73",
+           ch:"Grain lost out the back of a combine goes unmeasured — quietly costing growers yield every harvest.",
+           co:"We built the computer-vision system: edge AI that retrofits to any combine in hours, capturing and analysing images every three seconds to measure what's being left behind.",
+           out:"3–8+ bu/acre recovered, and named 2025 AI Harvest Vision — Solution of the Year.",
+           cta:"See how we built Farmwave's in-combine computer vision"},
+        ]).map(p=>(
+          <article key={p.id} className="sw-card card" style={{display:"flex",flexDirection:"column",padding:0,overflow:"hidden",background:"var(--bg)"}}>
+            <button onClick={()=>{trackCta(p.cta,"home_selected_work","/work/"+p.id);go("cases",p.id);}} aria-label={p.cta} className="sw-imgbtn" style={{display:"block",padding:0,border:"none",background:p.imgBg,cursor:"pointer",position:"relative",aspectRatio:"16 / 10",overflow:"hidden"}}>
+              <img src={process.env.PUBLIC_URL+p.img} alt={`${p.id==="nomo"?"Nomo Smart Care":"Farmwave"} product`} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+              <span style={{position:"absolute",top:12,left:12,fontFamily:"var(--jk)",fontSize:10,fontWeight:700,letterSpacing:1.2,textTransform:"uppercase",color:"#fff",background:"rgba(0,0,0,.42)",backdropFilter:"blur(8px)",padding:"4px 10px",borderRadius:6}}>{p.cat}</span>
+            </button>
+            <div style={{padding:"22px 22px 24px",display:"flex",flexDirection:"column",flex:1}}>
+              <h3 style={{fontFamily:"var(--jk)",fontSize:21,fontWeight:800,margin:"0 0 14px",color:"var(--txt)",letterSpacing:"-.01em"}}>{p.id==="nomo"?"Nomo Smart Care":"Farmwave"}</h3>
+              <div style={{marginBottom:12}}>
+                <span style={{display:"block",fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--txt4)",marginBottom:4}}>The challenge</span>
+                <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.6,margin:0}}>{p.ch}</p>
+              </div>
+              <div style={{marginBottom:16}}>
+                <span style={{display:"block",fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--blue)",marginBottom:4}}>What Lumo built</span>
+                <p style={{fontSize:14,color:"var(--txt2)",lineHeight:1.6,margin:0}}>{p.co}</p>
+              </div>
+              <span style={{display:"inline-flex",alignItems:"flex-start",gap:8,alignSelf:"flex-start",background:"var(--bl)",border:"1px solid var(--brd)",color:"var(--blue)",padding:"8px 13px",borderRadius:10,fontFamily:"var(--jk)",fontSize:12.5,fontWeight:700,lineHeight:1.4,marginBottom:18}}><span aria-hidden="true" style={{width:6,height:6,borderRadius:"50%",background:"var(--teal)",flexShrink:0,marginTop:5}}/>{p.out}</span>
+              <button onClick={()=>{trackCta(p.cta,"home_selected_work","/work/"+p.id);go("cases",p.id);}} className="sw-cta" style={{marginTop:"auto",alignSelf:"flex-start",display:"inline-flex",alignItems:"center",gap:8,background:"none",border:"none",padding:0,cursor:"pointer",fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--blue)",textAlign:"left"}}>{p.cta} <Arr s={14} c="var(--blue)"/></button>
             </div>
-            <p className="fi d4" style={{fontFamily:"var(--in)",fontSize:13,color:"rgba(255,255,255,.55)",margin:0,marginTop:"var(--space-4)"}}>30 minutes · no pitch decks · a senior engineer, not a salesperson.</p>
-          </div>
-          {/* RIGHT — compact "Selected outcomes" panel (verified, links to case studies) */}
-          <aside className="hero-outcomes" aria-label="Selected outcomes" style={{alignSelf:"center",width:"100%",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.14)",borderRadius:16,padding:"22px 22px 10px",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}>
-            <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--accent)",margin:"0 0 6px"}}>Selected outcomes</p>
-            {([
-              {id:"nomo",n:"Nomo Smart Care",o:"Live across all 50 US states · sub-second caregiver alerts"},
-              {id:"farmwave",n:"Farmwave",o:"2025 AI Harvest Vision — Solution of the Year"},
-              {id:"noctrix",n:"Noctrix Health",o:"$340M acquisition by ResMed"},
-            ]).map(x=>(
-              <button key={x.id} onClick={()=>{trackCta("Selected outcome: "+x.n,"home_hero_outcomes","/work/"+x.id);go("cases",x.id);}} style={{width:"100%",textAlign:"left",background:"none",border:"none",borderTop:"1px solid rgba(255,255,255,.12)",cursor:"pointer",padding:"13px 0",display:"block"}}>
-                <span style={{display:"block",fontFamily:"var(--jk)",fontSize:13.5,fontWeight:800,color:"#fff",marginBottom:3}}>{x.n}</span>
-                <span style={{display:"block",fontFamily:"var(--in)",fontSize:12.5,color:"rgba(255,255,255,.72)",lineHeight:1.5}}>{x.o}</span>
-              </button>
-            ))}
-          </aside>
-        </div>
-        {/* PROOF ROW — in the fold */}
-        <div className="fi d4 hero-proof-row" style={{display:"flex",alignItems:"center",gap:"12px 18px",flexWrap:"wrap",marginTop:"clamp(28px,4vh,52px)"}}>
-          <div className="hero-proof-chips" style={{display:"flex",alignItems:"center",gap:"10px 12px",flexWrap:"wrap"}}>
-            <a href="https://clutch.co/profile/lumo-lab" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,textDecoration:"none",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)"}}><span aria-hidden="true" style={{color:"#E8A33D",fontSize:11,letterSpacing:-1}}>★★★★★</span><span style={{fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#fff"}}>5.0 on Clutch</span></a>
-            <span style={{display:"inline-flex",alignItems:"center",gap:7,height:32,padding:"0 14px",background:"rgba(125,185,232,.12)",border:"1px solid rgba(125,185,232,.3)",borderRadius:50,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,color:"#cfe4f6"}}>🏆 2025 AI Harvest Vision — Solution of the Year</span>
-          </div>
-          <div className="hero-proof-trust" style={{display:"flex",alignItems:"center",gap:"8px 12px",flexWrap:"wrap"}}>
-            <span aria-hidden="true" className="hero-proof-divider" style={{width:1,height:20,background:"rgba(255,255,255,.18)"}}/>
-            <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"rgba(255,255,255,.4)"}}>Trusted by</span>
-            <span style={{display:"inline-flex",alignItems:"center",gap:14}}>
-              {["Farmwave","Nomo","Noctrix"].map((n,i)=>(
-                <span key={n} style={{display:"inline-flex",alignItems:"center",gap:14}}>
-                  {i>0&&<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.28)"}}/>}
-                  <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"rgba(255,255,255,.62)"}}>{n}</span>
-                </span>
-              ))}
-            </span>
-          </div>
-        </div>
-      </W>
-    </section>
-    {/* STATIC PROOF STRIP — verified outcomes, no auto-scroll. Each links to its source. */}
-    <section className="proof-section" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)"}}>
-      <W>
-        <div className="proof-strip" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",alignItems:"stretch"}}>
-          {([
-            {v:"All 50 US states",l:"Nomo live nationwide",act:()=>go("cases","nomo")},
-            {v:"Award-winning AI",l:"2025 AI Harvest Vision",act:()=>go("cases","farmwave")},
-            {v:"$340M acquisition",l:"Noctrix → ResMed",act:()=>go("cases","noctrix")},
-            {v:"5.0 on Clutch",l:"verified client reviews",href:"https://clutch.co/profile/lumo-lab"},
-          ]).map((x,i)=>{
-            const inner=<>
-              <span style={{fontFamily:"var(--jk)",fontSize:"clamp(15px,1.6vw,18px)",fontWeight:800,color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.15}}>{x.v}</span>
-              <span style={{fontFamily:"var(--in)",fontSize:12,color:"var(--txt3)",lineHeight:1.4}}>{x.l}</span>
-            </>;
-            const st:CSSProperties={display:"flex",flexDirection:"column",gap:4,padding:"18px clamp(16px,2.4vw,26px)",borderLeft:i===0?"none":"1px solid var(--brd)",textAlign:"left",background:"none",cursor:"pointer",textDecoration:"none"};
-            return x.href
-              ? <a key={i} className="proof-item" href={x.href} target="_blank" rel="noopener noreferrer" style={st}>{inner}</a>
-              : <button key={i} className="proof-item" onClick={x.act} style={{...st,border:"none",borderLeft:i===0?"none":"1px solid var(--brd)"}}>{inner}</button>;
-          })}
-        </div>
-      </W>
-    </section>
+          </article>
+        ))}
+      </div>
+      <div style={{marginTop:24,display:"flex",justifyContent:"center"}}>
+        <button onClick={()=>{trackCta("View all work","home_selected_work","/work");go("cases");}} className="cta-g">View all work <Arr s={14} c="currentColor"/></button>
+      </div>
+    </W></section>
     {/* SELF-SELECTION — help visitors recognise which situation they're in */}
     <section style={{padding:"clamp(64px,8vw,96px) 0"}}><W>
       <SL ch="How can we help?"/>
       <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)",letterSpacing:"-.02em",marginBottom:"clamp(28px,4vw,44px)",maxWidth:640}}>Start with the situation you're in.</h2>
       <div style={{borderTop:"1px solid var(--brd)"}}>
         {([
-          {need:"new-product",t:"Build a new product",d:"Turn an early concept, validated idea or existing specification into a production-ready product.",a:"Talk about a new product"},
-          {need:"existing-product",t:"Rescue or scale an existing product",d:"Reduce technical debt, improve performance and reliability, or add delivery capacity without losing ownership of the product.",a:"Talk about an existing product"},
-          {need:"ai-iot",t:"Solve a complex AI or IoT challenge",d:"Work through edge AI, connected devices, sensor data, cloud infrastructure or difficult integrations with a senior technical team.",a:"Talk about a technical challenge"},
+          {need:"new-product",t:"Build a new product",d:"Turn an early concept, validated idea or existing specification into a production-ready product.",work:"nomo",wl:"See the Nomo build"},
+          {need:"existing-product",t:"Rescue or scale an existing product",d:"Reduce technical debt, improve performance and reliability, or add delivery capacity without losing ownership of the product.",work:"beunity",wl:"See how we scaled beUnity"},
+          {need:"ai-iot",t:"Solve a complex AI or IoT challenge",d:"Work through edge AI, connected devices, sensor data, cloud infrastructure or difficult integrations with a senior technical team.",work:"farmwave",wl:"See Farmwave's edge AI"},
         ]).map(c=>(
-          <button key={c.need} type="button" onClick={()=>{trackCta(c.a,"home_self_select","/contact",c.need);go("contact",undefined,`need=${c.need}`);}} className="selfselect-row" style={{width:"100%",textAlign:"left",display:"flex",alignItems:"center",gap:"clamp(16px,4vw,48px)",padding:"clamp(20px,3vw,28px) 4px",borderBottom:"1px solid var(--brd)",background:"none",border:"none",borderBottomWidth:1,borderBottomStyle:"solid",borderBottomColor:"var(--brd)",cursor:"pointer"}}>
+          <div key={c.need} className="selfselect-row" style={{width:"100%",textAlign:"left",display:"flex",alignItems:"center",gap:"clamp(16px,4vw,40px)",padding:"clamp(22px,3vw,30px) 4px",borderBottom:"1px solid var(--brd)"}}>
             <div style={{flex:1,minWidth:0}}>
               <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(18px,2vw,22px)",fontWeight:800,margin:"0 0 6px",color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.2}}>{c.t}</h3>
-              <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.6,margin:0,maxWidth:640}}>{c.d}</p>
+              <p style={{fontSize:14,color:"var(--txt3)",lineHeight:1.6,margin:0,maxWidth:560}}>{c.d}</p>
             </div>
-            <span className="selfselect-cta" style={{flexShrink:0,display:"inline-flex",alignItems:"center",gap:8,fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--blue)",whiteSpace:"nowrap"}}><span className="selfselect-cta-txt">{c.a}</span><Arr s={14} c="var(--blue)"/></span>
-          </button>
+            <div className="selfselect-actions" style={{flexShrink:0,display:"flex",flexDirection:"column",gap:9,alignItems:"flex-start"}}>
+              <button type="button" onClick={()=>{trackCta(c.wl,"home_self_select","/work/"+c.work,c.need);go("cases",c.work);}} style={{display:"inline-flex",alignItems:"center",gap:7,background:"none",border:"none",padding:0,cursor:"pointer",fontFamily:"var(--jk)",fontSize:14,fontWeight:700,color:"var(--blue)",whiteSpace:"nowrap"}}>{c.wl} <Arr s={13} c="var(--blue)"/></button>
+              <button type="button" onClick={()=>{trackCta("Talk to us — "+c.t,"home_self_select","/contact",c.need);go("contact",undefined,`need=${c.need}`);}} style={{display:"inline-flex",alignItems:"center",gap:6,background:"none",border:"none",padding:0,cursor:"pointer",fontFamily:"var(--in)",fontSize:12.5,fontWeight:600,color:"var(--txt3)",whiteSpace:"nowrap"}}>Talk to us about this <Arr s={11} c="currentColor"/></button>
+            </div>
+          </div>
         ))}
-      </div>
-    </W></section>
-    {/* FLAGSHIP CASE STUDIES — three static cards (no carousel), before services */}
-    <section style={{padding:"clamp(56px,7vw,88px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}><W>
-      <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:"clamp(28px,4vw,40px)",flexWrap:"wrap"}}>
-        <div>
-          <SL ch="Selected work"/>
-          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)",letterSpacing:"-.02em",margin:0}}>Products we designed, built <span style={{color:"var(--blue)"}}>and scaled.</span></h2>
-        </div>
-        <p style={{fontFamily:"var(--in)",fontSize:14,color:"var(--txt3)",lineHeight:1.6,margin:0,maxWidth:360}}>A few flagship products—across healthcare, agriculture and connected hardware—shipped end to end.</p>
-      </div>
-      <div className="flagship-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
-        {(["nomo","farmwave","noctrix"] as const).map(id=>{
-          const c=cases.find(x=>x.id===id)!;
-          const img={nomo:"/images/nomo_header_1.png",farmwave:"/images/farmwave_tablet.jpeg",noctrix:"/images/noctrix_showcase.png"}[id];
-          return (
-            <button key={id} onClick={()=>go("cases",id)} className="flagship-card card" style={{textAlign:"left",display:"flex",flexDirection:"column",padding:0,overflow:"hidden",cursor:"pointer",background:"var(--bg)"}}>
-              <div className="flagship-img" style={{position:"relative",aspectRatio:"16 / 10",overflow:"hidden",background:id==="nomo"?"#eef1f4":c.cover}}>
-                <img src={process.env.PUBLIC_URL+img} alt={`${c.name} — ${c.cat} case study`} loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-                <span style={{position:"absolute",top:12,left:12,fontFamily:"var(--jk)",fontSize:10,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:"#fff",background:"rgba(0,0,0,.4)",backdropFilter:"blur(8px)",padding:"4px 10px",borderRadius:6}}>{c.cat}</span>
-              </div>
-              <div style={{padding:"20px 20px 22px",display:"flex",flexDirection:"column",flex:1}}>
-                <h3 style={{fontFamily:"var(--jk)",fontSize:19,fontWeight:800,margin:"0 0 8px",color:"var(--txt)",letterSpacing:"-.01em",lineHeight:1.2}}>{c.name}</h3>
-                <p className="flagship-desc" style={{fontSize:13.5,color:"var(--txt3)",lineHeight:1.6,margin:"0 0 14px"}}>{c.brief}</p>
-                {CASE_OUTCOME[id]&&<span style={{display:"inline-flex",alignItems:"center",gap:7,alignSelf:"flex-start",background:"var(--bl)",border:"1px solid var(--brd)",color:"var(--blue)",padding:"5px 12px",borderRadius:50,fontFamily:"var(--jk)",fontSize:12,fontWeight:700,marginBottom:14}}><span aria-hidden="true" style={{width:5,height:5,borderRadius:"50%",background:"var(--teal)",flexShrink:0}}/>{CASE_OUTCOME[id]}</span>}
-                <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:16}}>{c.tags.slice(0,3).map(t=><span key={t} className="ft">{t}</span>)}</div>
-                <span className="flagship-cta" style={{marginTop:"auto",display:"inline-flex",alignItems:"center",gap:7,fontFamily:"var(--jk)",fontSize:13.5,fontWeight:700,color:"var(--blue)"}}>View case study <Arr s={13} c="var(--blue)"/></span>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-      <div style={{marginTop:22,display:"flex",justifyContent:"center"}}>
-        <button onClick={()=>{trackCta("View all work","home_cases","/work");go("cases");}} className="cta-g">View all work <Arr s={14} c="currentColor"/></button>
       </div>
     </W></section>
     {/* SERVICES */}
@@ -1421,32 +1489,51 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
         <button onClick={()=>go("services")} style={{display:"inline-flex",alignItems:"center",gap:8,background:"none",border:"none",cursor:"pointer",fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",letterSpacing:.2,padding:0,transition:"gap .2s"}} onMouseEnter={e=>e.currentTarget.style.gap="12px"} onMouseLeave={e=>e.currentTarget.style.gap="8px"}>See all services in depth <Arr s={13} c="currentColor"/></button>
       </div>
     </W></section>
-    {/* PROCESS — compact horizontal 4-step row, ~120px tall instead of 800px. Sticky timeline + sparse layout retired. */}
+    {/* FOUNDER — you work directly with the founder, not a sales team */}
+    <section style={{padding:"clamp(64px,9vw,104px) 0"}}><W>
+      <div className="founder-grid" style={{display:"grid",gridTemplateColumns:"340px 1fr",gap:"clamp(32px,5vw,64px)",alignItems:"center",maxWidth:1040,margin:"0 auto"}}>
+        <div className="founder-photo" style={{position:"relative",borderRadius:18,overflow:"hidden",aspectRatio:"4 / 5",background:"var(--bg2)",border:"1px solid var(--brd)"}}>
+          <img src={process.env.PUBLIC_URL+"/images/jurica.png"} alt="Jurica Mlinarić, founder of Lumo Lab" loading="lazy" decoding="async" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center",display:"block"}}/>
+        </div>
+        <div>
+          <SL ch="Who you'll work with"/>
+          <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,38px)",fontWeight:800,color:"var(--txt)",lineHeight:1.08,letterSpacing:"-.02em",margin:"0 0 20px"}}>You'll talk to me — <span style={{color:"var(--blue)"}}>not a sales team.</span></h2>
+          <p style={{fontFamily:"var(--in)",fontSize:16.5,color:"var(--txt2)",lineHeight:1.8,margin:"0 0 16px",maxWidth:600}}>I'm Jurica, founder of Lumo Lab. I spent nearly ten years building mobile and connected products across health, agriculture, and IoT before starting Lumo — and I still review the hard technical calls on every project.</p>
+          <p style={{fontFamily:"var(--in)",fontSize:16.5,color:"var(--txt2)",lineHeight:1.8,margin:"0 0 26px",maxWidth:600}}>When you reach out, you get a straight answer from an engineer, not a pitch. We'll talk about what you're building, where the real technical risk sits, and whether we're the right team for it. If we're not, I'll tell you that too.</p>
+          <div style={{display:"flex",alignItems:"center",gap:18,flexWrap:"wrap"}}>
+            <button onClick={()=>{trackCta("Message Jurica directly","home_founder","/contact");go("contact");}} className="cta-m" style={{display:"inline-flex"}}>Message Jurica directly <Arr s={14} c="#fff"/></button>
+            <div style={{lineHeight:1.3}}>
+              <p style={{fontFamily:"var(--jk)",fontSize:14,fontWeight:800,color:"var(--txt)",margin:0}}>Jurica Mlinarić</p>
+              <p style={{fontFamily:"var(--in)",fontSize:12.5,color:"var(--txt3)",margin:0}}>Founder &amp; Engineer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </W></section>
+    {/* HOW IT STARTS — remove the "what happens if I reach out?" fear */}
     <section style={{padding:"clamp(56px,8vh,80px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
       <W>
-        {/* Section header — left-aligned label, single tight headline */}
-        <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:32,flexWrap:"wrap"}}>
+        <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:36,flexWrap:"wrap"}}>
           <div>
-            <SL ch="Process"/>
-            <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.4vw,32px)",fontWeight:800,color:"var(--txt)",lineHeight:1.1,margin:0,letterSpacing:"-.02em"}}>From assessment to <span style={{color:"var(--blue)"}}>impact.</span></h2>
+            <SL ch="How it works"/>
+            <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,2.4vw,32px)",fontWeight:800,color:"var(--txt)",lineHeight:1.1,margin:0,letterSpacing:"-.02em"}}>How an engagement <span style={{color:"var(--blue)"}}>starts.</span></h2>
           </div>
-          <p style={{fontFamily:"var(--in)",fontSize:14,color:"var(--txt3)",lineHeight:1.55,margin:0,maxWidth:380}}>A four-stage rhythm we apply to every engagement.</p>
+          <p style={{fontFamily:"var(--in)",fontSize:14,color:"var(--txt3)",lineHeight:1.55,margin:0,maxWidth:380}}>From first call to shipping code. No deck, no obligation — just a clear path to getting the work done.</p>
         </div>
-        {/* Horizontal 4-step row with connector line */}
         <div style={{position:"relative",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"clamp(16px,2.4vw,32px)"}} className="proc-row">
-          {/* The connecting hairline behind the dots */}
           <div aria-hidden="true" style={{position:"absolute",top:14,left:"calc(12.5% - 8px)",right:"calc(12.5% - 8px)",height:1,background:"var(--brd)"}}/>
           {proc.map((p,i)=>(
             <div key={i} style={{position:"relative",paddingTop:0}}>
-              {/* Dot anchor at the top */}
               <div style={{width:28,height:28,borderRadius:"50%",border:`2px solid ${i===0?"var(--blue)":"var(--brd-strong,rgba(15,23,42,.14))"}`,background:i===0?"var(--blue)":"#fff",display:"flex",alignItems:"center",justifyContent:"center",position:"relative",zIndex:2,marginBottom:18,boxShadow:i===0?"0 0 0 5px rgba(0,76,115,.10)":"0 1px 2px rgba(0,30,50,.08)"}}>
                 <span style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:800,color:i===0?"#fff":"var(--txt3)",fontFeatureSettings:'"tnum"',letterSpacing:0}}>{p.n}</span>
               </div>
-              {/* Phase content */}
               <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(16px,1.4vw,19px)",fontWeight:800,margin:0,marginBottom:6,color:"var(--txt)",letterSpacing:"-.01em"}}>{p.ph}</h3>
               <p style={{fontFamily:"var(--in)",fontSize:13.5,color:"var(--txt3)",lineHeight:1.5,margin:0}}>{p.d}</p>
             </div>
           ))}
+        </div>
+        <div style={{marginTop:36}}>
+          <button onClick={()=>{trackCta("Send your project brief","home_how_it_starts","/contact");go("contact");}} className="cta-m" style={{display:"inline-flex"}}>Send your project brief <Arr s={14} c="#fff"/></button>
         </div>
       </W>
     </section>
@@ -1652,7 +1739,7 @@ function About({go}:{go:(p:string,id?:string,q?:string)=>void}){return <div styl
   <section style={{padding:"80px 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
     <SL ch="Core team"/>
     <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.5vw,28px)",fontWeight:800,color:"var(--txt)",marginBottom:48}}>The people who <span style={{color:"var(--blue)"}}>build it.</span></h2>
-    <div className="team-grid" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:24,maxWidth:980}}>
+    <div className="team-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:32,justifyItems:"center"}}>
       {[
         // `img` is the headshot file; `imgScale` zooms the image inside the circular
         // crop when the source has padding around the subject (Domagoj's photo is a
@@ -1662,16 +1749,16 @@ function About({go}:{go:(p:string,id?:string,q?:string)=>void}){return <div styl
         {n:"Rudolf Lovrencic, PhD",r:"Software Architect",img:"rudi.jpeg",imgScale:1.05,imgPos:"center 28%"},
         {n:"Mato Poslon",r:"Full Stack Engineer"},
         {n:"Matija Sever",r:"Data Scientist",img:"matija.jpeg",imgScale:1.15,imgPos:"center 22%"},
-        {n:"Stefan Petrovic",r:"iOS Engineer",img:"stefan.jpeg",imgScale:1.1,imgPos:"center 28%"},
       ].map((m:any,i)=>{
         const clean=m.n.replace(/,.*$/,"").trim();
         const parts=clean.split(/\s+/);
         const initials=(parts.length>=2?parts[0][0]+parts[parts.length-1][0]:parts[0].slice(0,2)).toUpperCase();
-        return <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+        return <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center",width:"100%"}}>
           <div role={m.img?"img":undefined} aria-label={m.img?m.n:undefined} style={{
-            width:"100%",
-            maxWidth:140,
+            width:"min(100%,161px)",
+            height:"auto",
             aspectRatio:"1/1",
+            flexShrink:0,
             borderRadius:"50%",
             // Photo headshots are rendered as background-image — using an <img> tag
             // with absolute positioning inside a border-radius parent hit a Chrome
@@ -1682,23 +1769,23 @@ function About({go}:{go:(p:string,id?:string,q?:string)=>void}){return <div styl
             backgroundPosition:m.img?(m.imgPos||"center"):"center",
             backgroundRepeat:"no-repeat",
             display:"flex",alignItems:"center",justifyContent:"center",
-            marginBottom:18,
+            marginBottom:21,
             boxShadow:"0 8px 28px rgba(0,76,115,.22), inset 0 1px 0 rgba(255,255,255,.12)",
           }}>
-            {!m.img&&<span aria-hidden="true" style={{fontFamily:"var(--jk)",fontSize:"clamp(26px,3.2vw,38px)",fontWeight:700,color:"#fff",letterSpacing:".5px",lineHeight:1}}>{initials}</span>}
+            {!m.img&&<span aria-hidden="true" style={{fontFamily:"var(--jk)",fontSize:"clamp(30px,3.7vw,44px)",fontWeight:700,color:"#fff",letterSpacing:".5px",lineHeight:1}}>{initials}</span>}
           </div>
-          <h3 style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:700,color:"var(--txt)",marginBottom:4,lineHeight:1.25}}>{m.n}</h3>
-          <p style={{fontSize:12,color:"var(--txt3)",fontWeight:500,lineHeight:1.45}}>{m.r}</p>
+          <h3 style={{fontFamily:"var(--jk)",fontSize:17,fontWeight:700,color:"var(--txt)",marginBottom:5,lineHeight:1.25}}>{m.n}</h3>
+          <p style={{fontSize:14,color:"var(--txt3)",fontWeight:500,lineHeight:1.45}}>{m.r}</p>
         </div>;
       })}
     </div>
   </W></section>
-  <section style={{padding:"80px 0",background:"var(--blue)"}}><W style={{textAlign:"center"}}>
-    <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(22px,3vw,36px)",fontWeight:800,color:"#fff",marginBottom:12,lineHeight:1.1}}>Ready to work together?</h2>
-    <p style={{fontSize:15,color:"rgba(255,255,255,.65)",marginBottom:32,maxWidth:420,margin:"0 auto 32px"}}>Tell us about your challenge. We'll tell you if and how we can help.</p>
-    <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
-      <button onClick={()=>go("services")} className="cta-m" style={{background:"#fff",color:"var(--blue)"}}>See how we work <Arr s={14} c="var(--blue)"/></button>
-      <button onClick={()=>go("cases")} className="cta-g" style={{color:"rgba(255,255,255,.75)",borderColor:"rgba(255,255,255,.2)"}}>View our work</button>
+  <section style={{padding:"clamp(72px,10vw,104px) 0",background:"var(--blue)"}}><W style={{textAlign:"center"}}>
+    <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3.2vw,38px)",fontWeight:800,color:"#fff",marginBottom:14,lineHeight:1.12,letterSpacing:"-.02em",maxWidth:640,marginInline:"auto"}}>Not sure if it's even feasible? That's a good first question.</h2>
+    <p style={{fontSize:16,color:"rgba(255,255,255,.72)",lineHeight:1.6,maxWidth:520,margin:"0 auto 30px"}}>Tell us what you're building. A senior engineer will give you an honest read — scope, risk, and where to start. Reply within one business day.</p>
+    <div className="closing-cta-row" style={{display:"flex",gap:12,justifyContent:"center",alignItems:"center",flexWrap:"wrap"}}>
+      <button onClick={()=>{trackCta("Ask a senior engineer","home_final_cta","/contact");go("contact");}} className="cta-m" style={{background:"#fff",color:"var(--blue)"}}>Ask a senior engineer <Arr s={14} c="var(--blue)"/></button>
+      <button onClick={()=>{trackCta("Get a ballpark estimate","home_final_cta","/app-cost-calculator");go("calc");}} className="cta-g" style={{color:"rgba(255,255,255,.85)",borderColor:"rgba(255,255,255,.25)"}}>Or get a ballpark estimate</button>
     </div>
   </W></section>
 </div>;}
@@ -3672,7 +3759,7 @@ ${customHtml}
                   <p style={{fontFamily:"var(--in)",fontSize:11,color:"rgba(255,255,255,.5)",margin:"9px 0 0"}}>No cost, no obligation. A senior engineer reviews every request personally.</p>
                   {err&&<p style={{fontFamily:"var(--in)",fontSize:12,color:"#ffd7d7",margin:"9px 0 0"}}>Something went wrong. Email hello@lumo-lab.com and we'll follow up.</p>}
                 </form>}
-            <button onClick={()=>go("contact")} style={{width:"100%",marginTop:10,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}>Prefer to talk? Book a call</button>
+            <button onClick={()=>{trackCta("Book a call","calculator_estimate","/contact?mode=call");go("contact",undefined,"mode=call");}} style={{width:"100%",marginTop:10,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}>Prefer to talk? Book a call</button>
             {!isDiscovery&&<button onClick={downloadPdf} style={{width:"100%",marginTop:10,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:8,background:"none",border:"1px solid rgba(255,255,255,.3)",color:"#fff",borderRadius:50,padding:"12px",fontFamily:"var(--jk)",fontSize:14,fontWeight:600,cursor:"pointer"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download 1-page PDF</button>}
             <button onClick={copyLink} style={{width:"100%",marginTop:10,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:7,background:"none",border:"none",color:"rgba(255,255,255,.7)",padding:"6px",fontFamily:"var(--in)",fontSize:12.5,fontWeight:600,cursor:"pointer"}}>{copied
               ? <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Link copied</>
@@ -3706,7 +3793,7 @@ ${customHtml}
         <div style={{marginTop:40,background:"var(--bg2)",border:"1px solid var(--brd)",borderRadius:16,padding:"clamp(24px,4vw,36px)",textAlign:"center"}}>
           <h3 style={{fontFamily:"var(--jk)",fontSize:"clamp(20px,2.6vw,26px)",fontWeight:800,color:"var(--txt)",margin:"0 0 10px",letterSpacing:"-0.02em"}}>Prefer to talk it through?</h3>
           <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.7,margin:"0 0 20px",maxWidth:460,marginInline:"auto"}}>Book a free 30-minute call. A senior engineer will pressure-test your scope and map out the fastest path to a working product — no pitch decks, no sales pressure.</p>
-          <button onClick={()=>go("contact")} className="cta-m" style={{display:"inline-flex"}}>Book a call <Arr s={15} c="#fff"/></button>
+          <button onClick={()=>{trackCta("Book a call","calculator_cta","/contact?mode=call");go("contact",undefined,"mode=call");}} className="cta-m" style={{display:"inline-flex"}}>Book a call <Arr s={15} c="#fff"/></button>
         </div>
       </div>
     </W></section>
@@ -3723,6 +3810,8 @@ ${customHtml}
 }
 
 // Once-per-session CTA popup — fires after a dwell delay or on exit-intent
+// Auto consultation popup retired — no longer rendered. Kept for reference only.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function SessionPopup({go,page}:{go:(p:string,id?:string,q?:string)=>void,page:string}){
   const[show,setShow]=useState(false);const[vis,setVis]=useState(false);
   useEffect(()=>{
@@ -3798,7 +3887,6 @@ export default function App(){
   return <div className={`lumo${dark?" dark":""}`} style={{fontFamily:"var(--in)",color:"var(--txt)",background:"var(--bg)",lineHeight:1.6,overflowX:"clip",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
     <style>{css}</style>
 <Nav page={page} go={go} dark={dark} toggleDark={toggleDark}/>
-    <SessionPopup go={go} page={page}/>
     <div style={{flex:1}}>
     <div key={pageKey} className="page-enter">
     {page==="home"&&<Home go={go}/>}

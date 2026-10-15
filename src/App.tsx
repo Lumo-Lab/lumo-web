@@ -424,7 +424,6 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .lumo .hero-s.hero-text .hero-w{min-height:auto!important;justify-content:center!important;width:100%}
 .mq-slow{animation-duration:70s!important}
 @media(prefers-reduced-motion:reduce){.mq-slow{animation:none!important}}
-@media(max-width:640px){.hero-clients>div{flex-direction:column!important}.hero-clients>div>div:first-child{border-right:none!important;border-bottom:1px solid var(--brd)!important;padding:12px 16px!important;width:100%!important}.hero-clients>div>div:last-child{padding:12px 0!important}}
 @media(max-width:640px){.hero-br{display:none}.hero-ctas{flex-direction:column!important;gap:14px!important}.hero-ctas .hero-cta{width:100%;justify-content:center}}
 #hero-review-panel .cc-input::placeholder{color:rgba(255,255,255,.5)}
 .hero-polys{position:absolute;left:-6%;top:-6%;width:112%;height:112%;display:block;will-change:transform;animation:polysPan 120s ease-in-out infinite alternate}
@@ -1383,13 +1382,16 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </W>
     </section>
     {/* CLIENTS & PARTNERS — slow sliding names directly below the hero */}
-    <section className="hero-clients" aria-label="Clients and partners" style={{borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
-      <W style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
-        <div style={{flexShrink:0,display:"flex",alignItems:"center",gap:10,padding:"18px clamp(16px,2.4vw,24px) 18px 0",borderRight:"1px solid var(--brd)",background:"var(--bg2)",position:"relative",zIndex:2}}>
-          <span style={{fontFamily:"var(--jk)",fontSize:10.5,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>Clients &amp; partners</span>
-        </div>
-        <div style={{flex:1,minWidth:0,overflow:"hidden",position:"relative",display:"flex",alignItems:"center",paddingLeft:"clamp(16px,2.4vw,28px)",maskImage:"linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)",WebkitMaskImage:"linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)"}}>
-          <div className="mq-t mq-slow">{cl3.map((c,i)=><span key={i} style={{fontFamily:"var(--jk)",fontSize:14,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",letterSpacing:".005em",display:"flex",alignItems:"center",gap:14}}>{c}<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.3}}/></span>)}</div>
+    <section className="trust-strip" aria-label="Clients and partners" style={{borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
+      <W className="trust-strip-row" style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
+        <div className="trust-marquee" style={{flex:1,minWidth:0,display:"flex",alignItems:"center",minHeight:52}}>
+          <div style={{flexShrink:0,paddingLeft:"clamp(20px,3vw,32px)",paddingRight:18,display:"flex",alignItems:"center",gap:10,background:"var(--bg2)",alignSelf:"stretch"}}>
+            <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>Clients &amp; partners</span>
+            <span style={{width:14,height:1,background:"var(--brd)",flexShrink:0}}/>
+          </div>
+          <div style={{flex:1,minWidth:0,overflow:"hidden",position:"relative",alignSelf:"stretch",display:"flex",alignItems:"center",paddingRight:"clamp(20px,3vw,32px)"}}>
+            <div className="mq-t mq-slow">{cl3.map((c,i)=><span key={i} style={{fontFamily:"var(--jk)",fontSize:13,color:"var(--txt2)",fontWeight:600,whiteSpace:"nowrap",letterSpacing:".005em",display:"flex",alignItems:"center",gap:12}}>{c}<span aria-hidden="true" style={{width:3,height:3,borderRadius:"50%",background:"var(--blue)",opacity:.25}}/></span>)}</div>
+          </div>
         </div>
       </W>
     </section>
@@ -1464,14 +1466,14 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </div>
     </W></section>
     {/* SERVICES */}
-    <section className="grid-bg" style={{padding:"100px 0"}}><W>
+    <section className="svc-section" style={{padding:"100px 0",background:"linear-gradient(180deg, #EAF3F9 0%, #E1EEF6 100%)",borderTop:"1px solid rgba(0,76,115,.08)",borderBottom:"1px solid rgba(0,76,115,.08)"}}><W>
       <SL ch="Services"/>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,marginBottom:48}}>
         <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)"}}>How we help you <span style={{color:"var(--blue)"}}>move forward.</span></h2>
         <p style={{fontSize:15,color:"var(--txt3)",lineHeight:1.75,paddingTop:4}}>From initial assessment to long-term advisory, always focused on clarity, quality, and measurable outcomes.</p>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}} className="svc-grid">
-        {svcs.map((s,i)=><div key={i} className="card svc-card" style={{gridColumn:s.span?"span 2":"span 1",cursor:"pointer",display:"flex",flexDirection:"column",minHeight:s.span?200:220,padding:"30px 28px"}} onClick={()=>go("services")}>
+        {svcs.map((s,i)=><div key={i} className="card svc-card" style={{border:"1px solid rgba(0,76,115,.12)",boxShadow:"0 6px 24px rgba(0,76,115,.06)",gridColumn:s.span?"span 2":"span 1",cursor:"pointer",display:"flex",flexDirection:"column",minHeight:s.span?200:220,padding:"30px 28px"}} onClick={()=>go("services")}>
           <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:20}}>
             <span style={{fontFamily:"var(--jk)",fontSize:15,fontWeight:700,color:"var(--blue)",letterSpacing:1,fontFeatureSettings:'"tnum"'}}>{s.n}</span>
             <span style={{flex:1,height:1,background:"var(--brd)"}}/>
@@ -1661,7 +1663,7 @@ function About({go}:{go:(p:string,id?:string,q?:string)=>void}){return <div styl
     <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:600}}>We advise, guide, and deliver. We handle the tech so you can focus on the <span style={{color:"var(--blue)"}}>big picture.</span></h1>
     <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:480}}>A technology consultancy based in Croatia, advising startups and enterprises worldwide.</p>
   </W></section>
-  {/* TRUST STRIP — same as on the home page. Award (clickable, left) + 20+ partners marquee (right). */}
+  {/* TRUST STRIP — same as on the home page. Award (clickable, left) + clients & partners marquee (right). */}
   <section className="trust-strip" style={{borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",background:"var(--bg2)",overflow:"hidden"}}>
     <W className="trust-strip-row" style={{display:"flex",alignItems:"stretch",gap:0,padding:0,maxWidth:1240}}>
       <div className="trust-award" onClick={()=>go("cases","farmwave")} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"){go("cases","farmwave");}}} style={{display:"flex",alignItems:"center",gap:14,padding:"16px clamp(20px,3vw,32px) 16px 0",cursor:"pointer",borderRight:"1px solid var(--brd)",flexShrink:0,transition:"opacity .2s"}} onMouseEnter={e=>e.currentTarget.style.opacity=".7"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
@@ -1675,7 +1677,7 @@ function About({go}:{go:(p:string,id?:string,q?:string)=>void}){return <div styl
       </div>
       <div className="trust-marquee" style={{flex:1,minWidth:0,display:"flex",alignItems:"center"}}>
         <div style={{flexShrink:0,paddingLeft:"clamp(20px,3vw,32px)",paddingRight:18,display:"flex",alignItems:"center",gap:10,background:"var(--bg2)",alignSelf:"stretch"}}>
-          <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>20+ partners since 2017</span>
+          <span style={{fontFamily:"var(--jk)",fontSize:10,fontWeight:700,color:"var(--txt4)",letterSpacing:2,textTransform:"uppercase",whiteSpace:"nowrap"}}>Clients &amp; partners</span>
           <span style={{width:14,height:1,background:"var(--brd)",flexShrink:0}}/>
         </div>
         <div style={{flex:1,minWidth:0,overflow:"hidden",position:"relative",alignSelf:"stretch",display:"flex",alignItems:"center",paddingRight:"clamp(20px,3vw,32px)"}}>

@@ -426,6 +426,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 @media(prefers-reduced-motion:reduce){.mq-slow{animation:none!important}}
 @media(max-width:640px){.hero-br{display:none}.hero-ctas{flex-direction:column!important;gap:14px!important}.hero-ctas .hero-cta{width:100%;justify-content:center}}
 #hero-review-panel .cc-input::placeholder{color:rgba(255,255,255,.5)}
+.sec-tint{background:linear-gradient(180deg,#EAF3F9 0%,#E1EEF6 100%);border-top:1px solid rgba(0,76,115,.08);border-bottom:1px solid rgba(0,76,115,.08)}
+.dark .sec-tint{background:linear-gradient(180deg,#0F1A24 0%,#0C1620 100%);border-color:rgba(125,185,232,.12)}
 .hero-polys{position:absolute;left:-6%;top:-6%;width:112%;height:112%;display:block;will-change:transform;animation:polysPan 120s ease-in-out infinite alternate}
 @keyframes polysPan{from{transform:translate3d(-2.5%,-1.5%,0)}to{transform:translate3d(2.5%,1.5%,0)}}
 .hero-poly{transform-box:fill-box;transform-origin:center;will-change:transform;animation:polyDrift ease-in-out infinite alternate}
@@ -1396,7 +1398,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </W>
     </section>
     {/* SELECTED WORK — concrete proof directly below the hero, before the "how can we help" section */}
-    <section id="selected-work" style={{padding:"clamp(56px,7vw,92px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)",scrollMarginTop:72}}><W>
+    <section id="selected-work" className="sec-tint" style={{padding:"clamp(56px,7vw,92px) 0",scrollMarginTop:72}}><W>
       <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:"clamp(28px,4vw,40px)",flexWrap:"wrap"}}>
         <div>
           <SL ch="Selected work"/>
@@ -1466,7 +1468,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </div>
     </W></section>
     {/* SERVICES */}
-    <section className="svc-section" style={{padding:"100px 0",background:"linear-gradient(180deg, #EAF3F9 0%, #E1EEF6 100%)",borderTop:"1px solid rgba(0,76,115,.08)",borderBottom:"1px solid rgba(0,76,115,.08)"}}><W>
+    <section className="svc-section sec-tint" style={{padding:"100px 0"}}><W>
       <SL ch="Services"/>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,marginBottom:48}}>
         <h2 style={{fontFamily:"var(--jk)",fontSize:"clamp(24px,3vw,40px)",fontWeight:800,lineHeight:1.05,color:"var(--txt)"}}>How we help you <span style={{color:"var(--blue)"}}>move forward.</span></h2>
@@ -1513,7 +1515,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </div>
     </W></section>
     {/* HOW IT STARTS — remove the "what happens if I reach out?" fear */}
-    <section style={{padding:"clamp(56px,8vh,80px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",borderBottom:"1px solid var(--brd)"}}>
+    <section className="sec-tint" style={{padding:"clamp(56px,8vh,80px) 0"}}>
       <W>
         <div style={{display:"flex",alignItems:"end",justifyContent:"space-between",gap:24,marginBottom:36,flexWrap:"wrap"}}>
           <div>
@@ -1549,7 +1551,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       const featuredRest=featured.q.replace(pullQuote,"").replace(/\s+/g," ").trim();
       const others=tests.filter(t=>t!==featured);
       const onLink=(t:typeof tests[0])=>{const isBlog=t.caseId==="nomo";return isBlog?()=>go("blog","b1"):()=>go("cases",t.caseId!);};
-      return <section className="voices-section" style={{padding:"clamp(80px,12vh,140px) 0",background:"var(--bg2)",borderTop:"1px solid var(--brd)",position:"relative"}}>
+      return <section className="voices-section" style={{padding:"clamp(80px,12vh,140px) 0",background:"var(--bg)",position:"relative"}}>
         <W>
           {/* Section masthead — anchor + display H2 + meta */}
           <div style={{display:"grid",gridTemplateColumns:"1.1fr 1fr",gap:48,alignItems:"end",marginBottom:"clamp(48px,7vh,72px)"}} className="voices-head">
@@ -1622,7 +1624,7 @@ function Home({go}:{go:(p:string,id?:string,q?:string)=>void}){
       </section>;
     })()}
     {/* ── TECH PARTNER ── qualifying message for the buyer who has vision + budget but needs engineering ── */}
-    <section className="get-started" style={{padding:"clamp(72px,10vh,120px) 0",background:"var(--bg)",borderTop:"1px solid var(--brd)"}}><W>
+    <section className="get-started sec-tint" style={{padding:"clamp(72px,10vh,120px) 0"}}><W>
       <div style={{display:"grid",gridTemplateColumns:"1.15fr 1fr",gap:48,alignItems:"end",marginBottom:"clamp(40px,5vh,56px)"}} className="get-started-head">
         <div>
           <SL ch="Your tech partner"/>

@@ -6,7 +6,7 @@ const css = `
 *{margin:0;padding:0;box-sizing:border-box}
 ::selection{background:rgba(0,76,115,.15);color:#004C73}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#F6F8FA;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04);--accent:#7DB9E8;--on-dark:#fff;--on-dark-muted:rgba(255,255,255,.8);--hero-overlay:rgba(0,30,50,.55);--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;--text-eyebrow:12px;--text-hero:clamp(46px,8vw,120px);--text-proof:clamp(13px,1.1vw,15px);--text-cta:15.5px;--on-teal:#06303a}
+:root{--jk:'Plus Jakarta Sans',sans-serif;--in:'Inter',sans-serif;--blue:#004C73;--teal:#4ECDC4;--bg:#fff;--bg2:#EDF4F9;--txt:#0F1C24;--txt2:#3A4F5C;--txt3:#6B8394;--txt4:#9BB0BD;--brd:rgba(0,30,50,.08);--bl:rgba(0,76,115,.06);--nav-bg:rgba(255,255,255,.88);--nav-border:rgba(0,30,50,.04);--accent:#7DB9E8;--on-dark:#fff;--on-dark-muted:rgba(255,255,255,.8);--hero-overlay:rgba(0,30,50,.55);--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;--text-eyebrow:12px;--text-hero:clamp(46px,8vw,120px);--text-proof:clamp(13px,1.1vw,15px);--text-cta:15.5px;--on-teal:#06303a}
 .dark{--bg:#0D1117;--bg2:#161B22;--txt:#E6EDF3;--txt2:#B1BAC4;--txt3:#8B949E;--txt4:#6E7681;--brd:rgba(255,255,255,.10);--bl:rgba(125,185,232,.10);--nav-bg:rgba(13,17,23,.88);--nav-border:rgba(255,255,255,.06)}
 .dark [style*="color: var(--blue)"],.dark [style*="color:var(--blue)"]{color:#7DB9E8!important}
 .dark .card{background:var(--bg2)}
@@ -450,6 +450,7 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .rev-hint{max-height:80px;overflow:hidden;transition:opacity .3s ease,max-height .5s cubic-bezier(.22,1,.36,1),margin .5s cubic-bezier(.22,1,.36,1)}
 .rev-hint.open{opacity:0;max-height:0;margin-top:0!important}
 @media(prefers-reduced-motion:reduce){.rev-wrap,.rev-card,.rev-arrow,.rev-hint{transition:none!important}.rev-wrap.open .rev-card>*{animation:none!important}}
+@media(max-width:700px){.press-row{grid-template-columns:1fr!important;gap:10px!important;padding:22px 0!important}.press-row>a{justify-self:start}}
 .hero-polys-mob{display:none}
 @media(max-width:640px){.hero-polys-desk{display:none}.hero-polys-mob{display:block}}
 .lumo .hero-s.hero-text{overflow:hidden;overflow:clip}
@@ -1877,30 +1878,38 @@ const weekOne=[
 
 // Press coverage — keep this list as the single source of truth for both the /press page and the schema graph.
 // Sorted by date descending (newest first) at module-evaluation time, so every consumer sees the same order.
-type PressItem={pub:string,year:string,date:string,headline:string,url:string,caseId?:string,kind:"award"|"acquisition"|"feature"|"launch"|"clinical"};
+type PressItem={pub:string,year:string,date:string,approx?:boolean,headline:string,url:string,caseId?:string,kind:"award"|"acquisition"|"feature"|"launch"|"clinical"};
 const pressItems:PressItem[]=(([
   // Noctrix Health — ResMed acquisition + FDA authorisation
-  {pub:"MassDevice",year:"2026",date:"2026-01-01",headline:"ResMed enters merger agreement to acquire Noctrix Health for $340M",url:"https://www.massdevice.com/resmed-enters-merger-agreement-to-acquire-noctrix-health-for-340-million/",caseId:"noctrix",kind:"acquisition"},
+  {pub:"Fast Company",year:"2026",date:"2026-10-06",headline:"Next Big Things in Tech 2026 — Farmwave honoured for using AI to reduce crop loss",url:"https://www.fastcompany.com/91612040/food-agriculture-next-big-things-in-tech-2026",caseId:"farmwave",kind:"award"},
+  {pub:"Resmed Newsroom",year:"2026",date:"2026-06-01",headline:"Resmed completes acquisition of Noctrix Health, expanding clinical sleep health portfolio",url:"https://newsroom.resmed.com/news-releases/news-details/2026/Resmed-Completes-Acquisition-of-Noctrix-Health-Expanding-Clinical-Sleep-Health-Portfolio/default.aspx",caseId:"noctrix",kind:"acquisition"},
+  {pub:"Fierce Biotech",year:"2026",date:"2026-04-30",headline:"ResMed snaps up Noctrix Health in $340M sleep tech deal",url:"https://www.fiercebiotech.com/medtech/resmed-snaps-noctrix-health-340m-sleep-tech-deal",caseId:"noctrix",kind:"feature"},
+  {pub:"iGrow News",year:"2026",date:"2026-06-15",headline:"Farmwave appoints former Climate Corporation CEO Michael Stern to Board of Directors",url:"https://igrownews.com/farmwave-latest-news/",caseId:"farmwave",kind:"feature"},
+  {pub:"PRWeb",year:"2024",date:"2024-02-08",headline:"Havis and Farmwave pioneer AI solutions for harvest optimization",url:"https://www.prweb.com/releases/havis-inc-and-farmwave-pioneer-ai-solutions-for-harvest-optimization-302057080.html",caseId:"farmwave",kind:"launch"},
+  {pub:"PRNewswire",year:"2026",date:"2026-06-23",headline:"Nomo Smart Care brings AI-powered caregiving technology to BrandsMart USA stores across South Florida",url:"https://www.prnewswire.com/news-releases/nomo-smart-care-brings-ai-powered-caregiving-technology-to-brandsmart-usa-stores-across-south-florida-302808044.html",caseId:"nomo",kind:"launch"},
+  {pub:"PRNewswire",year:"2025",date:"2025-06-25",headline:"Elizabeth Dole Foundation and Nomo Smart Care join forces to empower military and veteran caregivers",url:"https://nomosmartcare.com/blogs/nomo-blog/elizabeth-dole-foundation-and-nomo-smart-care-join-forces-to-empower-military-and-veteran-caregivers",caseId:"nomo",kind:"feature"},
+  {pub:"Chain Drug Review",year:"2024",date:"2024-01-04",headline:"Nomo International to show Essential Care Kit at CES — live on Walmart.com",url:"https://chaindrugreview.com/nomo-smart-care-to-show-essential-care-kit-at-ces/",caseId:"nomo",kind:"feature"},
+  {pub:"MassDevice",year:"2026",date:"2026-04-30",headline:"Resmed enters merger agreement to acquire Noctrix Health for $340M",url:"https://www.massdevice.com/resmed-enters-merger-agreement-to-acquire-noctrix-health-for-340-million/",caseId:"noctrix",kind:"acquisition"},
   {pub:"PRNewswire",year:"2023",date:"2023-04-19",headline:"Noctrix Health announces successful RCT outcomes and FDA marketing authorization for its breakthrough TOMAC therapy",url:"https://www.prnewswire.com/news-releases/noctrix-health-announces-successful-randomized-controlled-trial-rct-outcomes-and-fda-marketing-authorization-for-its-breakthrough-tonic-motor-activation-tomac--restless-legs-syndrome-rls-therapy-301802232.html",caseId:"noctrix",kind:"clinical"},
   // Farmwave — 2025 AI Harvest Vision award
-  {pub:"Agribusiness Review Europe",year:"2025",date:"2025-01-01",headline:"AI Harvest Vision Solution of the Year — Farmwave",url:"https://www.agribusinessreview.com/farmwave",caseId:"farmwave",kind:"award"},
-  {pub:"Western Producer",year:"2024",date:"2024-09-01",headline:"Cameras and artificial intelligence spot harvest losses",url:"https://www.producer.com/crops/cameras-and-artificial-intelligence-spot-harvest-losses/",caseId:"farmwave",kind:"feature"},
+  {pub:"Agribusiness Review Europe",year:"2025",date:"2025-04-01",approx:true,headline:"AI Harvest Vision Solution of the Year — Farmwave",url:"https://www.agribusinessreview.com/farmwave",caseId:"farmwave",kind:"award"},
+  {pub:"Western Producer",year:"2023",date:"2023-02-16",headline:"Cameras and artificial intelligence spot harvest losses",url:"https://www.producer.com/crops/cameras-and-artificial-intelligence-spot-harvest-losses/",caseId:"farmwave",kind:"feature"},
   // Nomo Smart Care — CES 2025 launch + RapidSOS partnership
   {pub:"PRNewswire",year:"2025",date:"2025-01-02",headline:"Nomo Smart Care revolutionizes in-home care with AI-powered safety technology (CES 2025)",url:"https://www.prnewswire.com/news-releases/nomo-smart-care-revolutionizes-in-home-care-with-ai-powered-safety-technology-302339442.html",caseId:"nomo",kind:"launch"},
   {pub:"PRNewswire",year:"2023",date:"2023-10-09",headline:"Nomo Smart Care launches the Essential Care Kit with RapidSOS as their emergency services partner",url:"https://www.prnewswire.com/news-releases/nomo-smart-care-launches-the-essential-care-kit-with-rapidsos-as-their-emergency-services-partner-301950156.html",caseId:"nomo",kind:"launch"},
-  {pub:"RapidSOS",year:"2024",date:"2024-01-01",headline:"The real-time safety gap: How Nomo Smart Care protects aging adults",url:"https://rapidsos.com/blog/safety-gap-podcast-how-nomo-protects-aging-adults/",caseId:"nomo",kind:"feature"},
+  {pub:"RapidSOS",year:"2025",date:"2025-03-20",headline:"The real-time safety gap: How Nomo Smart Care protects aging adults",url:"https://rapidsos.com/blog/safety-gap-podcast-how-nomo-protects-aging-adults/",caseId:"nomo",kind:"feature"},
   // Muvr — Exactech acquisition + App Innovation Award
   {pub:"BusinessWire",year:"2020",date:"2020-12-02",headline:"Exactech acquires Muvr — innovative patient wearable and communication solutions for orthopaedic practices",url:"https://www.businesswire.com/news/home/20201202005809/en/Exactech-Acquires-Muvr-Innovative-Patient-Wearable-and-Communication-Solutions-for-Orthopaedic-Practices",caseId:"muvr",kind:"acquisition"},
-  {pub:"Progress Software",year:"2019",date:"2019-10-01",headline:"Progress announces winners of 2019 App Innovation Awards — Muvr",url:"https://investors.progress.com/news-releases/news-release-details/progress-announces-winners-2019-app-innovation-awards",caseId:"muvr",kind:"award"},
+  {pub:"Progress Software",year:"2019",date:"2019-05-16",headline:"Progress announces winners of 2019 App Innovation Awards — Muvr",url:"https://investors.progress.com/news-releases/news-release-details/progress-announces-winners-2019-app-innovation-awards",caseId:"muvr",kind:"award"},
   // Crossiety — Swiss startup coverage on Startupticker
-  {pub:"Startupticker.ch",year:"2020",date:"2020-07-01",headline:"Crossiety spins off its community app — beUnity created to serve associations and clubs",url:"https://www.startupticker.ch/en/news/crossiety-lagert-community-app-aus",caseId:"crossiety",kind:"launch"},
-  {pub:"Startupticker.ch",year:"2020",date:"2020-01-01",headline:"Crossiety expands to Germany — Swiss community-platform startup enters the DACH market",url:"https://www.startupticker.ch/en/news/crossiety-expandiert-nach-deutschland",caseId:"crossiety",kind:"feature"},
-  {pub:"Startupticker.ch",year:"2018",date:"2018-11-01",headline:"Pascale Bruderer joins IT startup Crossiety as shareholder and board member",url:"https://www.startupticker.ch/en/news/november-2018/pascale-bruderer-steigt-bei-it-startup-ein",caseId:"crossiety",kind:"feature"},
+  {pub:"Startupticker.ch",year:"2020",date:"2020-07-20",headline:"Crossiety spins off its community app — beUnity created to serve associations and clubs",url:"https://www.startupticker.ch/en/news/crossiety-lagert-community-app-aus",caseId:"crossiety",kind:"launch"},
+  {pub:"Startupticker.ch",year:"2020",date:"2020-01-28",headline:"Crossiety expands to Germany — Swiss community-platform startup enters the DACH market",url:"https://www.startupticker.ch/en/news/crossiety-expandiert-nach-deutschland",caseId:"crossiety",kind:"feature"},
+  {pub:"Startupticker.ch",year:"2018",date:"2018-11-19",headline:"Pascale Bruderer joins IT startup Crossiety as shareholder and board member",url:"https://www.startupticker.ch/en/news/november-2018/pascale-bruderer-steigt-bei-it-startup-ein",caseId:"crossiety",kind:"feature"},
   // beUnity — the third-party coverage of beUnity's creation is the same Startupticker piece (spin-off from Crossiety)
-  {pub:"Startupticker.ch",year:"2020",date:"2020-07-01",headline:"beUnity launches as Crossiety's community-platform spin-off for associations and clubs",url:"https://www.startupticker.ch/en/news/crossiety-lagert-community-app-aus",caseId:"beunity",kind:"launch"},
+  {pub:"Startupticker.ch",year:"2020",date:"2020-07-20",headline:"beUnity launches as Crossiety's community-platform spin-off for associations and clubs",url:"https://www.startupticker.ch/en/news/crossiety-lagert-community-app-aus",caseId:"beunity",kind:"launch"},
   // Drift App — US ag-tech press
-  {pub:"WCIA News",year:"2022",date:"2022-04-01",headline:"From the Farm: Ditch Drift app offers herbicide spraying solution",url:"https://www.wcia.com/the-morning-show/from-the-farm-ditch-drift-app-offers-herbicide-spraying-solution/",caseId:"drift",kind:"feature"},
-  {pub:"ILSoyAdvisor",year:"2022",date:"2022-05-01",headline:"Mitigate spray drift damage with Drift App",url:"https://www.ilsoyadvisor.com/on-farm/ilsoyadvisor/mitigate-spray-drift-damage-drift-app",caseId:"drift",kind:"feature"},
+  {pub:"WCIA News",year:"2021",date:"2021-05-03",headline:"From the Farm: Ditch Drift app offers herbicide spraying solution",url:"https://www.wcia.com/the-morning-show/from-the-farm-ditch-drift-app-offers-herbicide-spraying-solution/",caseId:"drift",kind:"feature"},
+  {pub:"ILSoyAdvisor",year:"2021",date:"2021-05-27",headline:"Mitigate spray drift damage with Drift App",url:"https://www.ilsoyadvisor.com/on-farm/ilsoyadvisor/mitigate-spray-drift-damage-drift-app",caseId:"drift",kind:"feature"},
 ]) as PressItem[]).sort((a,b)=>b.date.localeCompare(a.date));
 function Services({go}:{go:(p:string)=>void}){const[ex,setEx]=useState(0);const[faqOpen,setFaqOpen]=useState<number|null>(0);return <div>
   <section className="fc-hero" style={{position:"relative",overflow:"hidden",paddingTop:"calc(60px + clamp(40px,6vh,72px))",paddingBottom:"clamp(44px,6vh,68px)",paddingLeft:0,paddingRight:0,background:"#004C73",color:"#fff"}}>
@@ -2590,7 +2599,7 @@ function Press({go}:{go:(p:string,id?:string,q?:string)=>void}){
       <div style={{display:"flex",flexDirection:"column"}}>
         {pressItems.map((p,i)=>(
           <article key={p.url} style={{display:"grid",gridTemplateColumns:"120px 1fr auto",gap:32,alignItems:"center",padding:"28px 0",borderTop:"1px solid var(--brd)",borderBottom:i===pressItems.length-1?"1px solid var(--brd)":"none"}} className="press-row">
-            <span style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",opacity:.5,fontFeatureSettings:'"tnum"'}}>{p.year}</span>
+            <time dateTime={p.approx?p.year:p.date} style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",opacity:.5,fontFeatureSettings:'"tnum"',whiteSpace:"nowrap"}}>{p.approx?p.year:new Date(p.date+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</time>
             <div style={{minWidth:0}}>
               <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--txt4)",letterSpacing:1.8,textTransform:"uppercase",marginBottom:6}}>
                 {p.pub}

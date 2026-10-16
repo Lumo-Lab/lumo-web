@@ -451,6 +451,8 @@ html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 .rev-hint.open{opacity:0;max-height:0;margin-top:0!important}
 @media(prefers-reduced-motion:reduce){.rev-wrap,.rev-card,.rev-arrow,.rev-hint{transition:none!important}.rev-wrap.open .rev-card>*{animation:none!important}}
 @media(max-width:700px){.press-row{grid-template-columns:1fr!important;gap:10px!important;padding:22px 0!important}.press-row>a{justify-self:start}}
+.card-row{transition:background .25s ease}
+@media(hover:hover){.card-row:hover{background:var(--bg2)}}
 .hero-polys-mob{display:none}
 @media(max-width:640px){.hero-polys-desk{display:none}.hero-polys-mob{display:block}}
 .lumo .hero-s.hero-text{overflow:hidden;overflow:clip}
@@ -2589,16 +2591,16 @@ function Careers({go,sel}:{go:(p:string,id?:string,q?:string)=>void,sel:string|n
 
 /* ── PRESS ── */
 function Press({go}:{go:(p:string,id?:string,q?:string)=>void}){
-  return <div style={{paddingTop:76}}>
-    <section style={{padding:"48px 0 24px"}}><W>
+  return <div>
+    <section className="sec-tint" style={{padding:"calc(76px + 56px) 0 40px",borderTop:"none"}}><W>
       <SL ch="Press"/>
       <h1 style={{fontFamily:"var(--jk)",fontSize:"clamp(28px,4vw,48px)",fontWeight:800,lineHeight:1,color:"var(--txt)",marginBottom:16,maxWidth:680}}>What people are <span style={{color:"var(--blue)"}}>writing about.</span></h1>
       <p style={{fontSize:16,color:"var(--txt3)",lineHeight:1.7,maxWidth:560}}>Third-party coverage of the work we've done and the companies we've built with. Updated when something new lands.</p>
     </W></section>
-    <section style={{padding:"24px 0 80px"}}><W>
+    <section style={{padding:"40px 0 80px",background:"var(--bg)"}}><W>
       <div style={{display:"flex",flexDirection:"column"}}>
         {pressItems.map((p,i)=>(
-          <article key={p.url} style={{display:"grid",gridTemplateColumns:"120px 1fr auto",gap:32,alignItems:"center",padding:"28px 0",borderTop:"1px solid var(--brd)",borderBottom:i===pressItems.length-1?"1px solid var(--brd)":"none"}} className="press-row">
+          <article key={p.url} style={{display:"grid",gridTemplateColumns:"120px 1fr auto",gap:32,alignItems:"center",padding:"28px 0",borderTop:"1px solid var(--brd)",borderBottom:i===pressItems.length-1?"1px solid var(--brd)":"none"}} className="press-row card-row">
             <time dateTime={p.approx?p.year:p.date} style={{fontFamily:"var(--jk)",fontSize:13,fontWeight:700,color:"var(--blue)",opacity:.5,fontFeatureSettings:'"tnum"',whiteSpace:"nowrap"}}>{p.approx?p.year:new Date(p.date+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</time>
             <div style={{minWidth:0}}>
               <p style={{fontFamily:"var(--jk)",fontSize:11,fontWeight:700,color:"var(--txt4)",letterSpacing:1.8,textTransform:"uppercase",marginBottom:6}}>
@@ -2613,7 +2615,7 @@ function Press({go}:{go:(p:string,id?:string,q?:string)=>void}){
         ))}
       </div>
     </W></section>
-    <section style={{padding:"56px 0 96px",background:"var(--bg2)",borderTop:"1px solid var(--brd)"}}><W>
+    <section className="sec-tint" style={{padding:"56px 0 96px"}}><W>
       <div style={{display:"grid",gridTemplateColumns:"1fr auto",gap:32,alignItems:"center",flexWrap:"wrap"}} className="press-cta">
         <div>
           <SL ch="For press"/>

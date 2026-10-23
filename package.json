@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "react-snap",
+    "postbuild": "node scripts/seo-shells.mjs && (react-snap || echo \"[postbuild] react-snap failed — keeping SEO shells (per-route title/meta) as fallback\")",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -83,6 +83,7 @@
   "devDependencies": {
     "@types/node": "^25.5.2",
     "husky": "^4.3.8",
-    "react-snap": "^1.23.0"
+    "react-snap": "^1.23.0",
+    "esbuild": "^0.24.2"
   }
 }

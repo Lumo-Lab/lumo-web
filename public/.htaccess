@@ -14,6 +14,11 @@ RewriteRule ^project/(nomo|farmwave|muvr|noctrix|beunity|drift|mobility|crossiet
 #    Legacy /services alias → canonical /for-clients
 RewriteRule ^services/?$ /for-clients [R=301,L,QSA]
 
+# 3a) Pre-rendered route shells: /blog/<slug> → /blog/<slug>/index.html directly
+#     (HTTP 200, no trailing-slash redirect), so link scrapers get per-page title/meta.
+RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+RewriteRule ^(.+?)/?$ /$1/index.html [L]
+
 # 3) Serve real files and pre-rendered route directories as-is (HTTP 200).
 #    react-snap emits one directory per valid route (see package.json > reactSnap.include),
 #    so valid deep links resolve to their own pre-rendered index.html here.

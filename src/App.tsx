@@ -2987,7 +2987,7 @@ function toAbs(src:string|undefined):string|undefined{
   const rel=idx>=0?src.slice(idx+1):src.replace(/^\/+/,"");
   return `${SITE_URL}/${rel}`;
 }
-function getSeo(page:string,subId:string|null):SeoMeta{
+export function getSeo(page:string,subId:string|null):SeoMeta{
   if(page==="cases"&&subId){
     const c=cases.find(x=>x.id===subId);
     if(c){
@@ -3026,6 +3026,18 @@ function getSeo(page:string,subId:string|null):SeoMeta{
   const pageImg=page==="calc"?`${SITE_URL}/og-cost-calculator.jpg`:DEFAULT_OG;
   const pageImgAlt=page==="calc"?"Lumo Lab App Development Cost Calculator":"Lumo Lab. We advise, guide, and deliver.";
   return{title:d.title,description:d.description,url:`${SITE_URL}${d.path}`,image:pageImg,imageAlt:pageImgAlt,type:"website",keywords:d.keywords};
+}
+/** Static routes to pre-generate at build time (see scripts/seo-shells.mjs). */
+export function seoRoutes():{path:string,page:string,subId:string|null}[]{
+  const r:{path:string,page:string,subId:string|null}[]=[
+    {path:"/",page:"home",subId:null},{path:"/about",page:"about",subId:null},{path:"/for-clients",page:"services",subId:null},
+    {path:"/work",page:"cases",subId:null},{path:"/blog",page:"blog",subId:null},{path:"/careers",page:"careers",subId:null},
+    {path:"/careers/open",page:"careers",subId:"open"},{path:"/press",page:"press",subId:null},{path:"/contact",page:"contact",subId:null},{path:"/app-cost-calculator",page:"calc",subId:null},
+    {path:"/privacy-policy",page:"privacy",subId:null},
+  ];
+  cases.forEach(c=>r.push({path:`/work/${c.id}`,page:"cases",subId:c.id}));
+  blogs.forEach(b=>r.push({path:`/blog/${b.id}`,page:"blog",subId:b.id}));
+  return r;
 }
 function setMeta(attr:"name"|"property",key:string,content:string){
   let el=document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
